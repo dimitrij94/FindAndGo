@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/example/dao/DBBean.java" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/example/dao/IDBBean.java" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/example/domain" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/example/services/authorization/MySimpleUrlAuthenticationSuccessHendler.java" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/example/services/authorization/UserDetailsServiceImpl.java" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/example/services/registration/RegistrationService.java" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/example/services/registration/RegistrationServiceImpl.java" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/example/validators/FieldEqualValidator.java" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/example/validators/annotations" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/WEB-INF/pages" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/WEB-INF/test-pages/user_profile.html" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/templates/index.html" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/templates/login.html" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/templates/owner_registration.html" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/templates/place_registration.html" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/pages" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/test-pages/place_registration.html" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/test-pages/user_profile.html" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/static/css/Jcrop.gif" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/static/css/bootstrap-theme.css" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/static/css/bootstrap.css" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/static/css/font-awesome.css" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/static/css/font-awesome.min.css" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/static/css/fonts/FontAwesome.otf" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/static/css/fonts/fontawesome-webfont.eot" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/static/css/fonts/fontawesome-webfont.svg" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/static/css/fonts/fontawesome-webfont.ttf" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/static/css/fonts/fontawesome-webfont.woff" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/static/css/fonts/fontawesome-webfont.woff2" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/static/css/fonts/glyphicons-halflings-regular.eot" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/static/css/fonts/glyphicons-halflings-regular.svg" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/static/css/fonts/glyphicons-halflings-regular.ttf" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/static/css/fonts/glyphicons-halflings-regular.woff" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/static/css/fonts/glyphicons-halflings-regular.woff2" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/static/css/jquery.Jcrop.css" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/static/css/pages/registration.css" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/static/css/style.css" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/static/images/1381543232_party-girls.jpg" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/static/images/background.gif" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/static/js/bootstrap.js" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/static/js/bootstrap.min.js" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/static/js/jquery.autocomplete.js" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/static/js/jquery.min.js" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/static/js/npm.js" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/static/js/salvattore.min.js" charset="windows-1251" />
+  </component>
+</project>
