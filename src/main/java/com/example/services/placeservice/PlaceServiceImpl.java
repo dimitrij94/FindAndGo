@@ -69,6 +69,11 @@ public class PlaceServiceImpl implements PlaceService {
         ArrayList<PlaceMenuOptionalService> servicesList = new ArrayList<>(services.size());
         for(Long l:services)servicesList.add(dao.getMenuServicesById(l));
         dao.newOrder(user,dao.getPlaceById(placeId),dao.getMenuById(menuId),servicesList);
+
+    }
+
+    private int calculateServiceDuration(){
+        return 0;
     }
 
 }

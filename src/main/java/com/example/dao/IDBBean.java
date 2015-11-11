@@ -7,6 +7,7 @@
 package com.example.dao;
 
 
+import com.example.domain.Order;
 import com.example.domain.Place;
 import com.example.domain.PlaceEvent;
 import com.example.domain.menu.PlaceMenu;
@@ -87,4 +88,10 @@ public interface IDBBean {
     PlaceMenuOptionalService getMenuServicesById(Long l);
 
     void newOrder(PlaceUser user, Place placeById, PlaceMenu menuById, ArrayList<PlaceMenuOptionalService> servicesList);
+
+    List<Order> getUserPlaceOrders(long userId, long placeId);
+
+    List<Place> getPlacesWithUserOrder(PlaceUser user);
+
+    boolean isMenuFromPlace(PlaceMenu menu, Place place);
 }

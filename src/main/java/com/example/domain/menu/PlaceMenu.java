@@ -33,9 +33,6 @@ public class PlaceMenu implements Serializable {
     private int menuPrice;
     private int menuFinalRating;
 
-    @ManyToMany(mappedBy = "userOrders")
-    private List<PlaceUser> menuOrders;
-
     @OneToMany(mappedBy = "menu")
     private List<PlaceMenuRating> menuRatings;
 
@@ -52,6 +49,9 @@ public class PlaceMenu implements Serializable {
     @OneToMany(mappedBy = "menu")
     private List<Order>orders;
 
+    private int durationH;
+    private int durationM;
+
     public PlaceMenu() {
     }
 
@@ -65,6 +65,8 @@ public class PlaceMenu implements Serializable {
         this.menuName=menuDTO.getName();
         this.menuDescription=menuDTO.getDescription();
         this.menuPrice=menuDTO.getPrice();
+        this.durationH=menuDTO.getHours();
+        this.durationM=menuDTO.getMinutes();
     }
 
     public static long getSerialVersionUID() {
@@ -77,14 +79,6 @@ public class PlaceMenu implements Serializable {
 
     public void setMenuFinalRating(int menuFinalRating) {
         this.menuFinalRating = menuFinalRating;
-    }
-
-    public List<PlaceUser> getMenuOrders() {
-        return menuOrders;
-    }
-
-    public void setMenuOrders(List<PlaceUser> orderdMenus) {
-        this.menuOrders = orderdMenus;
     }
 
     public Long getId() {
@@ -159,9 +153,40 @@ public class PlaceMenu implements Serializable {
         this.orders = orders;
     }
 
+    public int getDurationH() {
+        return durationH;
+    }
+
+    public void setDurationH(int durationH) {
+        this.durationH = durationH;
+    }
+
+    public int getDurationM() {
+        return durationM;
+    }
+
+    public void setDurationM(int durationM) {
+        this.durationM = durationM;
+    }
+
     @Override
     public String toString() {
         return "entetis.PlaceMenu[ id=" + id + " ]";
     }
-    
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PlaceMenu menu = (PlaceMenu) o;
+
+        return id.equals(menu.id);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

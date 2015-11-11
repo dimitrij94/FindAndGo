@@ -51,12 +51,12 @@ public class DemoSpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .formLogin()
+                .successHandler(authenticationSuccessHandler)
                 .loginPage("/page/login")
                 .failureUrl("/page/login")
                 .loginProcessingUrl("/login")
                 .usernameParameter("j_username")
-                .passwordParameter("j_password")
-                .defaultSuccessUrl("/newplace");
+                .passwordParameter("j_password");
 
         http.
                 userDetailsService(userDetailsService);

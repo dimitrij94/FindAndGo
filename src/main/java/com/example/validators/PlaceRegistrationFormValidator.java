@@ -60,7 +60,7 @@ public class PlaceRegistrationFormValidator implements Validator {
                 .contains(place.getSpecialization()))
             errors.rejectValue("speciality", "field.invalid");
 
-        if (Pattern.compile("[a-z0-9_-]{60,240}").matcher(place.getDescription()).matches())
+        if (Pattern.compile("[a-z0-9_-]{60,250}").matcher(place.getDescription()).matches())
             errors.rejectValue("description", "field.invalid");
 
 

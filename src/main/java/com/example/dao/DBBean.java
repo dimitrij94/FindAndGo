@@ -322,6 +322,31 @@ public class DBBean implements IDBBean {
         em.flush();
     }
 
+    @Override
+    public List<Order> getUserPlaceOrders(long userId, long placeId){
+        return em.createQuery("SELECT e FROM Order e WHERE e.place.id=:placeId AND e.user.id=:userId")
+                .setParameter("placeId",placeId)
+                .setParameter("userId",userId)
+                .getResultList();
+    }
+
+    @Override
+    public List<Place> getPlacesWithUserOrder(PlaceUser user) {
+        return em.createQuery("SELECT e FROM Place e inner join Order o WHERE o.user.id=:userId AND o.place.id=e.id")
+                .setParameter("userId",user.getId())
+                .getResultList();
+    }
+
+    @Override
+    public boolean isMenuFromPlace(PlaceMenu menu, Place place) {
+        return ((int)em.createQuery("SELECT COUNT(e.id) FROM Place e INNER JOIN e.placeMenu m " +
+                "WHERE e.id=:pId AND m.id=:mId")
+                .setParameter("pId",place.getId())
+                .setParameter("mId",menu.getId())
+                .getSingleResult())==0;
+
+    }
+
     private <T> List<T> setIfNotNull(Object object, List<T> list, Class<T> type) {
         if (list == null) return Collections.singletonList(type.cast(object));
         else {

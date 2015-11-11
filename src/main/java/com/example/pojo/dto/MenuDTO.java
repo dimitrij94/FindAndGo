@@ -5,11 +5,12 @@ package com.example.pojo.dto;
  */
 public class MenuDTO {
 
-    String name;
-    String description;
-    int price;
-    PhotoDTO photo;
-
+    private String name;
+    private String description;
+    private int price;
+    private PhotoDTO photo;
+    private int hours;
+    private int minutes;
 
     public String getName() {
         return name;
@@ -41,5 +42,21 @@ public class MenuDTO {
 
     public void setPhoto(PhotoDTO photo) {
         this.photo = photo;
+    }
+
+    public int getHours() {
+        return hours;
+    }
+
+    public void setHours(int hours) {
+        this.hours = hours;
+    }
+
+    public int getMinutes() {
+        return minutes;
+    }
+
+    public void setMinutes(int minutes) {
+        this.minutes = minutes;
     }
 }

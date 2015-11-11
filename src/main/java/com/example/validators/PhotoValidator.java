@@ -21,6 +21,7 @@ public class PhotoValidator implements Validator {
     public void validate(Object target, Errors errors) {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors,"image","field.required");
         PhotoDTO photo = (PhotoDTO)target;
+
         if(photo.getImage().isEmpty()){
             errors.rejectValue("photo","field.required");
         }

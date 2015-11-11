@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Dmitrij on 21.09.2015.
@@ -21,16 +22,12 @@ public class MySimpleUrlAuthenticationSuccessHendler implements AuthenticationSu
     @Override
     public void onAuthenticationSuccess(HttpServletRequest httpServletRequest,
                                         HttpServletResponse httpServletResponse,
-                                        Authentication authentication)
-            throws IOException, ServletException {
-        List<GrantedAuthority> authorities = (List<GrantedAuthority>) authentication.getAuthorities();
-        for (GrantedAuthority g:authorities){
-            if(g.getAuthority()=="ROLE_OWNER"){
-                sendRedirect(httpServletRequest, httpServletResponse, "/owner/profile");
-            }
-            if(g.getAuthority()=="ROLE_USER"){
-                sendRedirect(httpServletRequest,httpServletResponse,"/user");
-            }
+                                        Authentication authentication) throws IOException {
+        if(httpServletRequest.getContextPath().equals("/login")){
+            sendRedirect(httpServletRequest, httpServletResponse, "/");
+        }
+        else{
+            sendRedirect(httpServletRequest, httpServletResponse,httpServletRequest.getContextPath());
         }
 
     }

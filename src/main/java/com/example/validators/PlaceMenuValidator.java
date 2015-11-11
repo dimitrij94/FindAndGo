@@ -8,6 +8,8 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import java.util.regex.Pattern;
+
 /**
  * Created by Dmitrij on 04.11.2015.
  */
@@ -38,15 +40,16 @@ public class PlaceMenuValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "price", "field.required");
 
         MenuDTO menu = (MenuDTO) target;
-        CommonsMultipartFile image = menu.getPhoto().getImage();
+        if(menu.getName().equals("")) errors.rejectValue("name","field.required");
 
-        if (image.isEmpty()) {
-            errors.rejectValue("image", "photo.required");
-        }
+        if(menu.getDescription().equals(""))errors.rejectValue("description","field.required");
 
-        if (!image.getContentType().split("/")[0].equals("image")) {
-            errors.rejectValue("image", "field.type.invalid");
-        }
+        if(menu.getPrice()>100000 ||menu.getPrice()<0) errors.rejectValue("price","field.invalid");
+
+        if(menu.getHours()>24||menu.getHours()<0) errors.rejectValue("hours","field.invalid");
+
+        if(menu.getMinutes()>60||menu.getMinutes()<0) errors.rejectValue("minutes","field.invalid");
+
         try {
             errors.pushNestedPath("photo");
             ValidationUtils.invokeValidator(this.photoValidator, menu.getPhoto(), errors);

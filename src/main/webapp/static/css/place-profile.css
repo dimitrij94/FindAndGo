@@ -22,6 +22,8 @@
     }
 }
 
+
+
 .comment-wrapper{
     border-top: 0;
     margin-bottom: 2px;
@@ -92,14 +94,3 @@
     margin: inherit;
 }
 
-.modal-form-input {
-    width: 300px;
-    left: 50%;
-    margin-left: -150px;
-}
-
-.modal-new-service-input {
-    width: 242px;
-    margin-left: -121px;
-    left: 50%;
-}

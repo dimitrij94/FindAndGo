@@ -82,12 +82,8 @@
             background-color: white;
         }
 
-        .registration-pointers {
-            font-size: 8em;
-        }
-
         .input-group-addon {
-            padding: 0px 0px;
+            padding: 0 0;
             width: 30px;
         }
 
@@ -113,97 +109,25 @@
             border-top: 0;
         }
 
+        .new-menu-form {
+            text-align: center;
+            width:65px;
+            display: inline;
+        }
+        .new-menu-form ::-webkit-input-placeholder{
+            text-align: center;
+        }
+        .new-menu-form ::-moz-placeholder{
+            text-align: center;
+        }
+        .new-menu-form :-ms-input-placeholder{
+            text-align: center;
+        }
+
     </style>
 </head>
 <body>
 
-
-<div class="navbar navbar-inverse navbar-static-top">
-    <div class="container">
-        <div class="navbar-header">
-            <a href="#" class="navbar-brand">MyPlaceToGo</a>
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#responcive-menu">
-                <span class="sr-only">Р’С–РґРєСЂРёС‚Рё РјРµРЅСЋ</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-        </div>
-        <div class="collapse navbar-collapse" id="responcive-menu">
-            <ul class="nav navbar-nav">
-                <li><a href="#">РќР° РіРѕР»РѕРІРЅСѓ</a></li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">РњС–Р№ РїСЂРѕС„С–Р»СЊ<b
-                            class="caret"></b></a>
-                    <ul id="user-menu-dropdown" class="list-group dropdown-menu">
-                        <li id="menu-item-my-page" class="list-group-item"><a href="#"><i class="fa fa-user fa-fw"></i>РњРѕСЏ
-                            СЃС‚РѕСЂС–РЅРєР°</a></li>
-                        <li class="list-group-item"><a href="#"><i class="fa fa-bullhorn fa-fw"></i>РњРѕС—
-                            Р·Р°РјРѕРІР»РµРЅРЅСЏ</a>
-                        </li>
-                        <li class="list-group-item"><a href="#"><i class="fa fa-calendar-check-o fa-fw"></i>РњРѕС—
-                            РїРѕРґС–С—</a></li>
-                        <li class="list-group-item"><a href="#"><i class="fa fa-cutlery fa-fw"></i>РњРѕС— Р·Р°РєР»Р°РґРё</a>
-                        </li>
-                        <li class="list-group-item"><a href="#"><i class="fa fa-power-off fa-fw"></i>Р’РёР№С‚Рё</a></li>
-                    </ul>
-                </li>
-
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">РЈРІС–Р№С‚Рё<b class="caret"></b></a>
-                    <ul id="enter-form" class="dropdown-menu navbar-form">
-                        <li>
-                            <span id="authorization-span"></span>
-
-                            <form action="/login" id="authorization-form" method="POST">
-
-                                <div class="input-group" id="authorization-email">
-                                    <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i></span>
-                                    <input class="form-control" type="text" name="j_username" placeholder="E-mail">
-                                </div>
-                                <br>
-
-                                <div class="input-group" id="authorization-password">
-                                    <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
-                                    <input class="form-control" type="password" name="j_password"
-                                           placeholder="Password">
-                                </div>
-
-                                <div id="authorization-divider" class="divider"></div>
-
-                                <div id="authorization-group" class="btn-group">
-
-                                    <button type="submit" class="btn btn-default authentication-button">
-                                        <i class="fa fa-circle-thin"><span style="padding-right: 4px"></span>РЈРІС–Р№С‚Рё</i>
-                                    </button>
-
-                                    <a href="#" class="btn btn-default authentication-button">
-                                        <i class="fa fa-user-plus"><span
-                                                style="padding-right: 4px"></span>Р РµРµСЃС‚СЂР°С†С–СЏ</i>
-                                    </a>
-                                </div>
-                            </form>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-
-            <form action="" id="search-form" class="navbar-form navbar-right">
-                <div class="input-group">
-                    <input class="form-control" type="text" placeholder="search stuff">
-                    <span class="input-group-btn">
-                        <button class="btn btn-default" type="submit">
-                            <i class="fa fa-search fa-fw"></i>
-                        </button>
-                    </span>
-                </div>
-            </form>
-
-
-        </div>
-    </div>
-</div>
 
 <div class="container">
     <div class="row">
@@ -242,92 +166,6 @@
 
             </ul>
         </div>
-
-        <div id="new-menu" class="modal fade">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <a data-dissmis="modal" data-target="#new-menu"><i class="fa fa-close"></i> </a>
-                    </div>
-                    <div class="modal-body">
-
-                        <div class="row">
-                            <div class="col-xs-5">
-                                <form action="place/{id}/new/service/">
-                                    <table style="margin-bottom: 0" class="table thumbnail">
-                                        <tr>
-                                            <td>
-                                                <div class="input-group">
-                                    <span class="input-group-addon" id="basic-addon1">
-                                       <i class="glyphicon glyphicon-apple"></i>
-                                     </span>
-                                                    <input type="text" id="form-name" class="form-control"
-                                                           placeholder="Назва" value="" aria-describedby="basic-addon1"/>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="input-group">
-                                    <span class="input-group-addon" id="basic-addon2">
-                                       <i class="fa fa-tag"></i>
-                                     </span>
-
-                                                    <input type="number" id="form-price" class="form-control"
-                                                           placeholder="Ціна" value="" aria-describedby="basic-addon1"/>
-
-                                                    <span style="padding:2px 5px" class="input-group-addon"><i>.грн</i></span>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="input-group">
-                                    <textarea class="form-control" id="place_description" style="resize: none" rows="5"
-                                              placeholder="Короткий опис послуги"></textarea>
-                                                </div>
-                                                <div style="text-align: center">
-                                                    <small id="description-info">Залишилося 160 символів</small>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input id="upload" type="file" name="upload"/>
-                                                <input type="hidden" id="w"/>
-                                                <input type="hidden" id="h"/>
-                                                <input type="hidden" id="x"/>
-                                                <input type="hidden" id="y"/>
-
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <button id="new-service" class="btn btn-primary" type="submit">Зареєструвати
-                                                </button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="alert alert-success" id="user-detail-info">
-                                                    <i class="fa fa-info"></i> Поля цієї групи є обов'язковими для заповнення
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </form>
-                            </div>
-                            <div style="float:left" class="thumbnail">
-                                <img id="image"/>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
 
 
         <div style="margin-top: 10px; height: 500px;" id="place-info-panel" class="col col-xs-12 col-md-5 thumbnail">
@@ -510,142 +348,6 @@
                     </div>
                 </div>
             </div>
-            <div>
-                <div class="thumbnail">
-                    <img src="http://placehold.it/250x200"/>
-
-                    <div class="caption">
-                        <table>
-                            <tr id="first-row">
-                                <td>
-                                    <h3 class="service-name">Menu name</h3>
-
-                                </td>
-                                <td>
-                                    <span class="badge">25грн. <i class="fa fa-tags"></i></span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">
-                                    <div class="tabs">
-                                        <ul class="nav nav-tabs">
-                                            <li style="width: 33%" class="active">
-                                                <a href="#description-tab" data-toggle="tab">
-                                                    <i class="fa fa-info">
-                                                        <span style="margin-right: 4px"></span> Опис
-                                                    </i>
-                                                </a>
-                                            </li>
-                                            <li style="width: 67%">
-                                                <a href="#options-tab" data-toggle="tab">
-                                                    <i class="fa fa-gift">
-                                                        <span style="margin-right: 4px"></span> Додаткові послуги
-                                                    </i>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                        <div class="tab-content">
-
-                                            <div style="border-top:0"
-                                                 class="tab-pane description-wrapper caption active fade in"
-                                                 id="description-tab">
-                                                <table>
-                                                    <tr>
-                                                        <td>
-                                                            <p>
-                                                                С каждым днем растет число работников занятых в сфере
-                                                                услуг и
-                                                                распространении информации. Если символами прошлых
-                                                                столетий были
-                                                                ферма и фабрика, то символ нынешнего XXI века – это
-                                                                офис.
-                                                            </p>
-                                                        </td>
-                                                    </tr>
-                                                    <tr style="vertical-align: middle">
-                                                        <td width="80%">
-                                               <span class="rating">
-                        <i class="fa fa-star fa-2x rating-star"></i>
-                        <i class="fa fa-star fa-2x rating-star"></i>
-                        <i class="fa fa-star fa-2x rating-star"></i>
-                        <i class="fa fa-star fa-2x rating-star"></i>
-                        <i class="fa fa-star fa-2x rating-star"></i>
-                    </span>
-                                                        </td>
-
-                                                    </tr>
-
-                                                </table>
-                                            </div>
-
-                                            <div style="border-top: 0; margin-bottom: 2px; padding: 5px"
-                                                 class="tab-pane thumbnail fade comment-wrapper" id="options-tab">
-                                                <table class="table">
-                                                    <tr style="vertical-align: middle">
-                                                        <td width="80%"><input type="checkbox" style="margin-top: 15px">
-                                                            <i style="margin-left: 2px">Optional short description.
-                                                                Optional short
-                                                                description</i>
-                                                        </td>
-                                                        <td width="20%" style="text-align: right"><span class="badge">25грн. <i
-                                                                class="fa fa-tag"></i></span></td>
-                                                    </tr>
-                                                    <tr style="vertical-align: middle">
-                                                        <td width="80%"><input type="checkbox" style="margin-top: 15px">
-                                                            <i style="margin-left: 2px">Optional short description.
-                                                                Optional short
-                                                                description</i>
-                                                        </td>
-                                                        <td width="20%" style="text-align: right"><span class="badge">25грн. <i
-                                                                class="fa fa-tag"></i></span></td>
-                                                    </tr>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">
-                                    <div style="float: right; margin: 5px 0 1px 0;" class="btn-group">
-                                        <a href="#" class="btn btn-primary">
-                                            <i class="fa fa-hand-scissors-o fa-rotate-90 fa-fw"></i>
-                                            Замовити</a>
-                                        <a class="dropdown-toggle btn btn-info" data-toggle="dropdown">
-                                            <i class="fa fa-pencil-square-o fa-fw"></i>
-                                            <span class="carret"></span>
-                                        </a>
-                                        <ul class="dropdown-menu">
-                                            <li>
-                                                <a href="#" data-toggle="modal" data-id="12"
-                                                   data-target="#new-menu-service">
-                                                    <i class="fa fa-gift fa-fw"></i>
-                                                    Новий бонус
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#">
-                                                    <i class="fa fa-pencil-square-o fa-fw"></i>
-                                                    Змінити послугу
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#">
-                                                    <i class="fa fa-trash-o fa-fw"></i>
-                                                    Видалити
-                                                </a>
-                                            </li>
-                                        </ul>
-
-
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </div>
@@ -655,7 +357,8 @@
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <button style="margin-top: -9px;" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button style="margin-top: -9px;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
             </div>
 
 
@@ -723,34 +426,93 @@
                         </tr>
                     </table>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-                <script type="text/javascript">
-                    function updateDescriptionSpan(description, info) {
-                        info.text(function () {
-                            var i = 60 - description.val().length;
-                            if (i >= 0) {
-                                return "Залишилося " + i + " символів";
-                            }
-                            if (i < 0) {
-                                return "Ви перевищили дозволену кількість символів символів";
-                            }
-                        });
-                    }
-                    $('#new-menu-service').on('show.bs.modal', function (event) {
-                        var button = $(event.relatedTarget)
-                        var id = button.data('id')
-                        var modal = $(this);
-                        modal.find('.modal-body .id-input').val(id)
+<div id="new-menu" class="modal fade">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button style="margin-top: -9px;" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
 
-                        var description = modal.find(".service-description");
-                        var info = modal.find(".service-description-info");
+                <div class="row">
+                    <div class="col-xs-5">
+                        <form action="place/{id}/new/service/">
+                            <table style="margin-bottom: 0" class="table thumbnail">
+                                <tr>
+                                    <td>
+                                        <div class="input-group">
+                                    <textarea class="form-control" id="place_description" style="resize: none" rows="5"
+                                              placeholder="Короткий опис послуги"></textarea>
+                                        </div>
+                                        <div style="text-align: center">
+                                            <small id="description-info">Залишилося 300 символів</small>
+                                        </div>
+                                    </td>
+                                </tr>
 
-                        description.bind("keypress", function () {
-                            updateDescriptionSpan(description, info);
-                        });
-                    })
+                                <tr>
+                                    <td>
+                                        <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon2">
+                                       <i class="fa fa-tag"></i>
+                                     </span>
 
-                </script>
+                                            <input type="number" id="form-price" class="form-control"
+                                                   placeholder="Ціна" value="" aria-describedby="basic-addon1"/>
+
+                                            <span style="padding:2px 5px" class="input-group-addon"><i>.грн</i></span>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style="text-align: center">
+                                        <div>
+                                            <input min="0" max="24" type="number" class="form-control new-menu-form" value="" placeholder="hh"/>
+                                            :
+                                            <input min="0" max="60" type="number" id="form-name" class="form-control new-menu-form"
+                                                   placeholder="mm" value="" aria-describedby="basic-addon1"/>
+                                        </div>
+                                        <small>Введіть тривалісь надання послуги</small>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <input id="upload" type="file" name="upload"/>
+                                        <input type="hidden" id="w"/>
+                                        <input type="hidden" id="h"/>
+                                        <input type="hidden" id="x"/>
+                                        <input type="hidden" id="y"/>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button id="new-service" class="btn btn-primary" type="submit">Зареєструвати
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="alert alert-success" id="user-detail-info">
+                                            <i class="fa fa-info"></i> Поля цієї групи є обов'язковими для заповнення
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+                    <div style="float:left" class="thumbnail">
+                        <img id="image"/>
+
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -784,9 +546,9 @@
 
     }
 
-    function updateDescriptionSpan(description, info) {
+    function updateDescriptionSpan(description, info, num) {
         info.text(function () {
-            var i = 160 - description.val().length;
+            var i = num - description.val().length;
             if (i >= 0) {
                 return "Залишилося " + i + " символів";
             }
@@ -832,7 +594,21 @@
     }
 
     $(document).ready(function () {
-        $("#new-menu").on("shown.bs.modal", function (){
+        $('#new-menu-service').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var id = button.data('id');
+            var modal = $(this);
+            modal.find('.modal-body .id-input').val(id);
+
+            var description = modal.find(".service-description");
+            var info = modal.find(".service-description-info");
+
+            description.bind("keypress", function () {
+                updateDescriptionSpan(description, info, 60);
+            });
+        });
+
+        $("#new-menu").on("shown.bs.modal", function () {
             var target = document.getElementById("image");
             var src = document.getElementById("upload");
 
@@ -841,7 +617,7 @@
 
             showImage(src, target);
             description.bind("keypress", function () {
-                updateDescriptionSpan(description, info);
+                updateDescriptionSpan(description, info, 300);
             });
         });
         initialize();

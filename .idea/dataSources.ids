@@ -535,7 +535,7 @@
     <table name="place" schema="" catalog="myplacetogo" type="TABLE">
       <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
       <column name="placeName" sqlType="VARCHAR" precision="40" scale="0" nullable="false" jdbcType="12"/>
-      <column name="placeDescription" sqlType="TEXT" precision="65535" scale="0" nullable="false" jdbcType="-1"/>
+      <column name="placeDescription" sqlType="LONGTEXT" precision="2147483647" scale="0" nullable="false" jdbcType="-1"/>
       <column name="placeFinalRating" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <column name="placeRatingsNum" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
       <column name="placeOwner" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
@@ -631,7 +631,6 @@
       <exported-key name="FK_p0249j1s1djlcf8ldsak2sfo0" table="place_menu_services" schema="" catalog="myplacetogo" columns="menu"/>
       <exported-key name="FK_1gwy79xmsr34uwebs04xri2c0" table="placemenurating" schema="" catalog="myplacetogo" columns="menu"/>
       <exported-key name="placemenurating_ibfk_2" table="placemenurating" schema="" catalog="myplacetogo" columns="menu"/>
-      <exported-key name="user_orders_ibfk_1" table="user_orders" schema="" catalog="myplacetogo" columns="menuId"/>
     </table>
     <table name="placemenurating" schema="" catalog="myplacetogo" type="TABLE">
       <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
@@ -676,7 +675,6 @@
       <exported-key name="placeuserphoto_ibfk_1" table="placeuserphoto" schema="" catalog="myplacetogo" columns="user"/>
       <exported-key name="user_address_ibfk_1" table="user_address" schema="" catalog="myplacetogo" columns="user_id"/>
       <exported-key name="user_authorities_ibfk_1" table="user_authorities" schema="" catalog="myplacetogo" columns="user_id"/>
-      <exported-key name="user_orders_ibfk_2" table="user_orders" schema="" catalog="myplacetogo" columns="clientId"/>
       <exported-key name="verification_tokens_ibfk_1" table="verification_tokens" schema="" catalog="myplacetogo" columns="user_id"/>
     </table>
     <table name="placeuserphoto" schema="" catalog="myplacetogo" type="TABLE">
@@ -707,15 +705,6 @@
       <column name="authority" sqlType="VARCHAR" precision="15" scale="0" nullable="false" jdbcType="12"/>
       <primary-key name="PRIMARY" columns="id"/>
       <foreign-key name="user_authorities_ibfk_1" columns="user_id" ref-table="placeuser" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
-    </table>
-    <table name="user_orders" schema="" catalog="myplacetogo" type="TABLE">
-      <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
-      <column name="clientId" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
-      <column name="menuId" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
-      <primary-key name="PRIMARY" columns="id"/>
-      <foreign-key name="user_orders_ibfk_1" columns="menuId" ref-table="placemenu" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
-      <foreign-key name="user_orders_ibfk_2" columns="clientId" ref-table="placeuser" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
-      <index name="clientId" unique="false" columns="menuId"/>
     </table>
     <table name="verification_tokens" schema="" catalog="myplacetogo" type="TABLE">
       <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>

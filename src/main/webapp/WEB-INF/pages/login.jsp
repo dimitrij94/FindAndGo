@@ -128,7 +128,8 @@
 
     #form-btn-group {
         left: 50%;
-        margin: 7px 0 1px -126px;
+        width:224px;
+        margin: 7px 0 1px -112px;
     }
 
     #form-btn-group li {
@@ -180,8 +181,9 @@
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li>
-                                    <input type="checkbox" name="j_remember" class="btn btn-defoult">Запам'ятати</input>
+                                <li style="vertical-align: middle">
+                                    <input style="margin:0 0 3px 0" type="checkbox" name="j_remember" id="remember" class="btn btn-defoult"/>
+                                    <label style="margin-bottom: 0" for="remember">Запам'ятати</label>
                                 </li>
                             </ul>
                         </div>

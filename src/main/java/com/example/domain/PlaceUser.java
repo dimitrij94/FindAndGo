@@ -58,13 +58,6 @@ public class PlaceUser {
     private List<Order>orders;
 
 
-
-    @ManyToMany
-    @JoinTable(joinColumns = @JoinColumn(name = "clientId", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "menuId", referencedColumnName = "id"),
-            name = "user_orders")
-    private List<PlaceMenu> userOrders;
-
     @ManyToMany
     @JoinTable(
             joinColumns = @JoinColumn(name = "clientId", referencedColumnName = "id"),
@@ -172,14 +165,6 @@ public class PlaceUser {
 
     public void setUser(List<PlaceMenuRating> user) {
         this.user = user;
-    }
-
-    public List<PlaceMenu> getUserOrders() {
-        return userOrders;
-    }
-
-    public void setUserOrders(List<PlaceMenu> userOrders) {
-        this.userOrders = userOrders;
     }
 
     public List<Place> getUserPlaces() {

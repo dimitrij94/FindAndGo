@@ -18,12 +18,10 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Bootstrap 101 Template</title>
 
-    <!-- Bootstrap -->
-
-    <link href="/static/css/pages/user-place-list.css" rel="stylesheet"/>
     <link href="/static/css/bootstrap.css" rel="stylesheet"/>
+    <link href="/static/css/pages/user-place-list.css" rel="stylesheet"/>
     <link href="/static/css/font-awesome.css" rel="stylesheet"/>
-    <link href="/static/css/pages/registration.css" rel="stylesheet"/>
+    <!-- Bootstrap -->
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -32,6 +30,36 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 
     <![endif]-->
+
+    <style>
+        .panel-heading {
+            padding: 4px;
+        }
+
+        table tr:first-child td {
+            border-top: 0;
+        }
+
+        table tr:last-child td {
+            border-bottom: 1px;
+        }
+
+        .place-link:hover {
+            color: white;
+        }
+
+        .place-link {
+            color: #dddddd;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .btn-toggle {
+            float: right;
+        }
+    </style>
 </head>
 <body>
 
@@ -69,7 +97,7 @@
                     </li>
 
                     <li>
-                        <a href="/registration/">Приєднатись</a>
+                        <a href="/newplace">Приєднатись</a>
                     </li>
                 </security:authorize>
 
@@ -126,7 +154,7 @@
     </div>
 </div>
 
-
+<jsp:useBean id="orders" scope="request" type="com.example.domain.Order"/>
 <div class="container">
     <div class="row">
         <div class="col col-md-2 hidden-sm hidden-xs">
@@ -160,18 +188,20 @@
         <div class="col col-xs-12 col-md-12 col-lg-10">
             <div class="container">
                 <div class="row masonry" data-columns>
-                    <c:forEach items="${user.orders}" var="order" varStatus="i">
+                    <c:forEach items="${orders-map}" var="entry" varStatus="i">
+                        <c:set var="place" value="${entry.key}" scope="request"/>
+                        <c:set var="orders" value="${entry.value}" scope="request"/>
+
                         <div>
                             <div class="panel panel-default" id="places-list">
                                 <div class="panel-groupe">
                                     <div class="panel panel-default place-panel">
                                         <div class="panel-heading">
                                             <table class="table">
-                                                <jsp:useBean id="place" scope="request" type="com.example.domain.Place"/>
-                                                <c:set var="place" value="${place}"/>
                                                 <tr>
                                                     <td rowspan="3">
-                                                        <img class="place-img" src="http://placehold.it/160x90"/>
+                                                        <img class="place-img" src="/photo/place/${place.id}/small"
+                                                           width="160" height="90"  onerror="http://placehold.it/160x90"/>
                                                     </td>
 
                                                     <td style="padding-bottom: 1px;vertical-align: bottom;">
@@ -202,43 +232,44 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <div class="collapse panel-collapse" id="place-1">
+                                    <div class="collapse panel-collapse" id="place-${i.getCount()}">
                                         <div class="panel-body">
-                                            <table class="table">
-                                                <tr>
-                                                    <td rowspan="2">
-                                                        <img class="event-image" src="<c:url value="/photo/menu/${order.menu.}
-                                                        ""
-                                                             onerror="http://placehold.it/100x100"/>
-                                                    </td>
-                                                    <td style="padding-bottom: 0; vertical-align: bottom;">
-                                                        <h3 class="event-name">Menu name</h3>
-                                                    </td>
-                                                    <td style="padding-bottom: 0; vertical-align: bottom;">
-                                                        <!--<p style="margin-bottom: 0; text-align: center">
-                                                        <span class="menu_timer" style="color: #ddd; font-size: 150%; font-weight: bold;">01:10:00</span>
-                                                            </p>-->
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="3">
+                                            <c:forEach items="${orders}" var="order" varStatus="o">
+                                                <table class="table">
+                                                    <tr>
+                                                        <td rowspan="2">
+                                                            <img class="event-image" src="<c:url value="/photo/menu/${order.menu.id}"/>"
+                                                                 onerror="http://placehold.it/100x100"/>
+                                                        </td>
+                                                        <td style="padding-bottom: 0; vertical-align: bottom;">
+                                                            <h3 class="event-name">${order.menu.menuName}</h3>
+                                                        </td>
+                                                        <td style="padding-bottom: 0; vertical-align: bottom;">
+                                                            <!--<p style="margin-bottom: 0; text-align: center">
+                                                            <span class="menu_timer" style="color: #ddd; font-size: 150%; font-weight: bold;">01:10:00</span>
+                                                                </p>-->
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="3">
                                                         <span class="badge" style="float: left;"><i
-                                                                class="fa fa-tags"></i> 127 грн.</span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="3">
-                                                        <div class="btn-group btn-group-justified">
-                                                            <a class="btn btn-default"><i class="fa fa-cog"></i>Змінити</a>
-                                                            <a class="btn btn-default"><i
-                                                                    class="fa fa-close"></i>Видалити</a>
-                                                            <a class="btn btn-default"><i
-                                                                    class="fa fa-hand-peace-o"></i>Ok</a>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </table>
-
+                                                                class="fa fa-tags"></i> ${order.menu.menuPrice}</span>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="3">
+                                                            <div class="btn-group btn-group-justified">
+                                                                <a class="btn btn-default"><i
+                                                                        class="fa fa-cog"></i>Змінити</a>
+                                                                <a class="btn btn-default"><i
+                                                                        class="fa fa-close"></i>Видалити</a>
+                                                                <a href="<c:url value="/menu/${order.menu.id}/ok"/> " class="btn btn-default"><i
+                                                                        class="fa fa-hand-peace-o"></i>Ok</a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </c:forEach>
                                         </div>
                                     </div>
 
@@ -259,6 +290,6 @@
 <script src="/static/js/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="/static/js/bootstrap.js"></script>
-
+<script src="/static/js/salvattore.min.js"></script>
 </body>
 </html>
