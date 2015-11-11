@@ -25,7 +25,6 @@ public class ServiceValidator implements Validator
 
         PlaceMenuOptionalService service = (PlaceMenuOptionalService)target;
         Pattern pattern=Pattern.compile("[a-zA-Z0-9,.!?-]{4,20}");
-        if(!pattern.matcher(service.getName()).matches()) errors.rejectValue("name","field.invalid");
         if(!pattern.matcher(service.getDescription()).matches()) errors.rejectValue("description","field.invalid");
         
     }

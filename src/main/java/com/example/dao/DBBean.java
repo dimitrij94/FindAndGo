@@ -5,7 +5,6 @@
 
 package com.example.dao;
 
-import com.example.dao.IDBBean;
 import com.example.domain.Order;
 import com.example.domain.Place;
 import com.example.domain.PlaceEvent;
@@ -20,18 +19,17 @@ import com.example.domain.ratings.PlaceMenuRating;
 import com.example.domain.ratings.PlaceRating;
 import com.example.domain.registration.Authorities;
 import com.example.domain.registration.VerificationToken;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class DBBean implements IDBBean {
@@ -47,15 +45,15 @@ public class DBBean implements IDBBean {
     }
 
     public Place getPlaceById(long id) {
-        return (Place) this.em.find(Place.class, Long.valueOf(id));
+        return (Place) this.em.find(Place.class, id);
     }
 
     public Place getOwnerPlaceById(long id, PlaceUser user) {
-        return (Place) this.em.createQuery("SELECT e FROM PlaceUser.ownerPlaces e WHERE e.id=:id").setParameter("id", Long.valueOf(id)).getSingleResult();
+        return (Place) this.em.createQuery("SELECT e FROM PlaceUser.ownerPlaces e WHERE e.id=:id").setParameter("id", id).getSingleResult();
     }
 
     public PlaceMenu getMenuById(long id) {
-        return (PlaceMenu) this.em.find(PlaceMenu.class, Long.valueOf(id));
+        return (PlaceMenu) this.em.find(PlaceMenu.class, id);
     }
 
     public PlaceUser authorization(String email, String pass) {
@@ -83,14 +81,12 @@ public class DBBean implements IDBBean {
 
     @Cacheable({"maincahe"})
     public ArrayList<PlaceEvent> getMainEvents() {
-        ArrayList<PlaceEvent> mainEvents = (ArrayList<PlaceEvent>) this.em.createQuery("SELECT e FROM PlaceEvent  e order by e.users.size").getResultList();
+        ArrayList<PlaceEvent> mainEvents = (ArrayList<PlaceEvent>) em.createQuery("SELECT e FROM PlaceEvent  e order by e.users.size").getResultList();
         if (mainEvents.size() > 5) {
             mainEvents.subList(0, 4);
         }
 
-        Comparator<PlaceEvent> comparator = (e1, e2) -> {
-            return Integer.valueOf(e1.getUsers().size()).compareTo(e2.getUsers().size());
-        };
+        Comparator<PlaceEvent> comparator = (e1, e2) -> Integer.valueOf(e1.getUsers().size()).compareTo(e2.getUsers().size());
         mainEvents.sort(comparator);
         return mainEvents;
     }
@@ -125,20 +121,20 @@ public class DBBean implements IDBBean {
             }
 
             int menuRatingsCount = this.em.createQuery("SELECT COUNT (r.id) FROM PlaceMenuRating r WHERE r.menu.id=:menuId").setParameter("menuId", Long.valueOf(placeMenuId)).getMaxResults();
-            long menuRatingSumm = ((Long) this.em.createQuery("SELECT SUM (r.rating) FROM PlaceMenuRating r WHERE r.menu.id=:menuId").setParameter("menuId", Long.valueOf(placeMenuId)).getSingleResult()).longValue();
+            long menuRatingSumm = (Long) this.em.createQuery("SELECT SUM (r.rating) FROM PlaceMenuRating r WHERE r.menu.id=:menuId").setParameter("menuId", Long.valueOf(placeMenuId)).getSingleResult();
             if (menuRatingsCount != 0) {
                 int finalRating1 = Math.round((float) (menuRatingSumm / (long) menuRatingsCount));
                 this.em.getTransaction().begin();
                 this.em.createQuery("UPDATE PlaceMenu m SET m.menuFinalRating=:menuRating WHERE m.id=:menuId").setParameter("menuId", Long.valueOf(placeMenuId)).setParameter("menuRating", Integer.valueOf(finalRating1)).executeUpdate();
                 this.em.getTransaction().commit();
-                return Integer.valueOf(finalRating1);
+                return finalRating1;
             } else {
                 throw new ArithmeticException("divade on zero when calc final rating");
             }
         } catch (Exception var11) {
             this.em.getTransaction().rollback();
             var11.printStackTrace();
-            return Integer.valueOf(finalRating);
+            return (int) finalRating;
         }
     }
 
@@ -156,7 +152,7 @@ public class DBBean implements IDBBean {
         } else {
             try {
                 this.em.getTransaction().begin();
-                this.em.persist((new PlaceRating()).place((Place) this.em.find(Place.class, Long.valueOf(placeId))).user((PlaceUser) this.em.find(PlaceUser.class, Long.valueOf(userId))).rating(rating));
+                this.em.persist((new PlaceRating()).place((Place) this.em.find(Place.class, placeId)).user((PlaceUser) this.em.find(PlaceUser.class, Long.valueOf(userId))).rating(rating));
                 this.em.getTransaction().commit();
             } catch (Exception var14) {
                 this.em.getTransaction().rollback();
@@ -165,7 +161,7 @@ public class DBBean implements IDBBean {
         }
 
         long allRatings = (long) this.em.createQuery("SELECT COUNT(r) FROM PlaceRating r WHERE r.place.id=:placeId").setParameter("placeId", Long.valueOf(placeId)).getMaxResults();
-        long allRatingsSumm = ((Long) ((Long) this.em.createQuery("SELECT SUM(r.rating) FROM PlaceRating r WHERE r.place.id=:placeId").getSingleResult())).longValue();
+        long allRatingsSumm = (Long) this.em.createQuery("SELECT SUM(r.rating) FROM PlaceRating r WHERE r.place.id=:placeId").getSingleResult();
         int finalRating = Math.round((float) (allRatingsSumm / allRatings));
 
         try {
@@ -177,11 +173,11 @@ public class DBBean implements IDBBean {
             var13.printStackTrace();
         }
 
-        return Integer.valueOf(finalRating);
+        return finalRating;
     }
 
     public long checkCredentials(String email, String userName) {
-        return ((Long) this.em.createQuery("SELECT COUNT (e.id) FROM PlaceUser e WHERE e.userEmail=:email OR e.userName=:userName").setParameter("email", email).setParameter("userName", userName).getSingleResult()).longValue();
+        return (Long) this.em.createQuery("SELECT COUNT (e.id) FROM PlaceUser e WHERE e.userEmail=:email OR e.userName=:userName").setParameter("email", email).setParameter("userName", userName).getSingleResult();
     }
 
     @Transactional
@@ -210,15 +206,15 @@ public class DBBean implements IDBBean {
     }
 
     public void deleteToken(long tokenId) {
-        this.em.createQuery("DELETE FROM VerificationToken e WHERE e.id=:id").setParameter("id", Long.valueOf(tokenId)).executeUpdate();
+        this.em.createQuery("DELETE FROM VerificationToken e WHERE e.id=:id").setParameter("id", tokenId).executeUpdate();
     }
 
     public byte[] getPlaceMainImage(long id) {
-        return ((PlacePhoto) this.em.createQuery("SELECT e FROM PlacePhoto e WHERE e.name=:name AND e.place.id=:id").setParameter("name", "main").setParameter("id", Long.valueOf(id)).getSingleResult()).getBody();
+        return ((PlacePhoto) this.em.createQuery("SELECT e FROM PlacePhoto e WHERE e.name=:name AND e.place.id=:id").setParameter("name", "main").setParameter("id", id).getSingleResult()).getBody();
     }
 
     public byte[] getPlaceSmallImage(long id) {
-        return ((PlacePhoto) this.em.createQuery("SELECT e FROM PlacePhoto e WHERE e.name=:name AND e.place.id=:id").setParameter("name", "small").setParameter("id", Long.valueOf(id)).getSingleResult()).getBody();
+        return ((PlacePhoto) this.em.createQuery("SELECT e FROM PlacePhoto e WHERE e.name=:name AND e.place.id=:id").setParameter("name", "small").setParameter("id", id).getSingleResult()).getBody();
     }
 
     @Transactional
@@ -235,7 +231,7 @@ public class DBBean implements IDBBean {
         photo.setMenu(menu);
         this.em.persist(photo);
         this.em.flush();
-        List menuPhotos = menu.getPhoto();
+        List<PlaceMenuPhoto> menuPhotos = menu.getPhoto();
         if (menuPhotos != null) {
             menuPhotos.add(photo);
             menu.setPhoto(menuPhotos);
@@ -255,7 +251,7 @@ public class DBBean implements IDBBean {
     }
 
     public byte[] getMenuSmallImage(long id) {
-        return ((PlaceMenuPhoto) this.em.createQuery("SELECT e FROM PlaceMenuPhoto e WHERE e.menu.id=:id AND e.name=:name").setParameter("id", Long.valueOf(id)).setParameter("name", "small").getSingleResult()).getBody();
+        return ((PlaceMenuPhoto) this.em.createQuery("SELECT e FROM PlaceMenuPhoto e WHERE e.menu.id=:id AND e.name=:name").setParameter("id", id).setParameter("name", "small").getSingleResult()).getBody();
     }
 
     @Transactional
@@ -305,19 +301,27 @@ public class DBBean implements IDBBean {
 
     @Override
     @Transactional
-    public void newOrder(PlaceUser user, Place placeById, PlaceMenu menuById, ArrayList<PlaceMenuOptionalService> servicesList) {
+    public void newOrder(PlaceUser user, Place place, PlaceMenu menu, ArrayList<PlaceMenuOptionalService> servicesList) {
+
         Order order = new Order();
         order.setUser(user);
-        order.setPlace(placeById);
-        order.setMenu(menuById);
-        order.setServices(servicesList);
-        em.flush();
-        menuById.setOrders(setIfNotNull(menuById, menuById.getOrders(), Order.class));
-        placeById.setOrders(setIfNotNull(placeById, placeById.getOrders(), Order.class));
-        user.setOrders(setIfNotNull(user, user.getOrders(), Order.class));
-        for (PlaceMenuOptionalService s : servicesList) {
-            s.setOrders(setIfNotNull(s, s.getOrders(), Order.class));
-            em.merge(s);
+        order.setPlace(place);
+        order.setMenu(menu);
+        if(servicesList!=null)order.setServices(servicesList);
+        em.persist(order);
+
+        user.setOrders(getOrdersList(order,user.getOrders()));
+        em.merge(user);
+        place.setOrders(getOrdersList(order,place.getOrders()));
+        em.merge(place);
+        menu.setOrders(getOrdersList(order,menu.getOrders()));
+        em.merge(menu);
+
+        if(servicesList!=null) {
+            for (PlaceMenuOptionalService s : servicesList) {
+                s.setOrders(getOrdersList(order, s.getOrders()));
+                em.merge(s);
+            }
         }
         em.flush();
     }
@@ -332,7 +336,8 @@ public class DBBean implements IDBBean {
 
     @Override
     public List<Place> getPlacesWithUserOrder(PlaceUser user) {
-        return em.createQuery("SELECT e FROM Place e inner join Order o WHERE o.user.id=:userId AND o.place.id=e.id")
+        return em.createQuery("SELECT e FROM PlaceUser e inner join e.orders o " +
+                "WHERE e.id=:userId AND o.place.id=o.id")
                 .setParameter("userId",user.getId())
                 .getResultList();
     }
@@ -347,10 +352,18 @@ public class DBBean implements IDBBean {
 
     }
 
-    private <T> List<T> setIfNotNull(Object object, List<T> list, Class<T> type) {
-        if (list == null) return Collections.singletonList(type.cast(object));
+    @Override
+    public Place getOwnerPlace(long placeId, PlaceUser user) {
+        return (Place)em.createQuery("SELECT e FROM Place e WHERE e.id=:id AND e.placeOwner.id=:uId")
+                .setParameter("id",placeId)
+                .setParameter("uId",user.getId())
+                .getSingleResult();
+    }
+
+    private List<Order> getOrdersList(Order order, List<Order> list) {
+        if (list == null) return Collections.singletonList(order);
         else {
-            list.add(type.cast(object));
+            list.add(order);
             return list;
         }
     }

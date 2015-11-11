@@ -19,11 +19,11 @@ import java.util.List;
 public interface PlaceService {
     Place registerNewPlace(PlaceDTO placeDTO, PlaceUser owner) throws IOException;
 
-    Place getOwnerPlace(long placeId, PlaceUser user);
-
     PlaceMenu registerNewPlaceMenu(Place place, MenuDTO menuDTO);
 
     void registerNewPlaceMenuService(PlaceMenu menu, ServiceDTO service);
 
     void sendNewOrder(PlaceUser user, long placeId, long menuId, List<Long> services);
+
+    boolean isMenuFromPlace(PlaceMenu menu, Place place);
 }

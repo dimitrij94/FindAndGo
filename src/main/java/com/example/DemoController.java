@@ -197,13 +197,14 @@ public class DemoController {
                                               BindingResult result) {
         if(!result.hasErrors()) {
             PlaceUser user = userService.placeUser();
-            Place place = placeService.getOwnerPlace(placeId, user);
+            Place place =  dao.getOwnerPlace(placeId,user);
+
             if (place != null) {
                 PlaceMenu menu = dao.getMenuById(serviceDTO.getMenuId());
-                if (dao.isMenuFromPlace(menu, place)) {
+                if (placeService.isMenuFromPlace(menu, place)) {
                     placeService.registerNewPlaceMenuService(menu, serviceDTO);
                 }
-                return "redirect:/";
+                return "redirect:/place/"+placeId;
             }
         }
         throw new IllegalArgumentException();
@@ -212,7 +213,7 @@ public class DemoController {
     @RequestMapping(value = "/place/{placeId}/menu/{menuId}", method = RequestMethod.POST)
     public String createOrder(@PathVariable("placeId") long placeId,
                               @PathVariable("menuId") long menuId,
-                              @RequestParam("services") List<Long> services) {
+                              @RequestParam(value="services", required = false) List<Long> services) {
         PlaceUser user = userService.placeUser();
         placeService.sendNewOrder(user, placeId, menuId, services);
         return "redirect:/place/" + placeId;

@@ -94,4 +94,6 @@ public interface IDBBean {
     List<Place> getPlacesWithUserOrder(PlaceUser user);
 
     boolean isMenuFromPlace(PlaceMenu menu, Place place);
+
+    Place getOwnerPlace(long placeId, PlaceUser user);
 }

@@ -16,8 +16,6 @@ public class PlaceMenuOptionalService {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
-
-    String name;
     String description;
     int price;
 
@@ -25,23 +23,18 @@ public class PlaceMenuOptionalService {
     @JoinColumn(name = "menu")
     PlaceMenu menu;
 
-    @ManyToMany
-    @JoinTable(joinColumns =@JoinColumn(name = "service_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"),
-            name = "service_orders")
+    @ManyToMany(mappedBy = "services")
     List<Order> orders;
 
     public PlaceMenuOptionalService() {
     }
 
     public PlaceMenuOptionalService(DefaultMultipartHttpServletRequest dmhsRequest) {
-        this.name = dmhsRequest.getParameter("serviceName");
         this.description = dmhsRequest.getParameter("serviceDescription");
         this.price = Integer.valueOf(dmhsRequest.getParameter("servicePrice"));
     }
 
     public PlaceMenuOptionalService(ServiceDTO serviceDTO) {
-        name = serviceDTO.getServiceName();
         description = serviceDTO.getServiceDescription();
         price = serviceDTO.getServicePrice();
     }
@@ -52,14 +45,6 @@ public class PlaceMenuOptionalService {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getDescription() {

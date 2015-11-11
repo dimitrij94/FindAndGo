@@ -4,20 +4,11 @@ package com.example.pojo.dto;
  * Created by Dmitrij on 04.11.2015.
  */
 public class ServiceDTO {
-    String serviceName;
     String serviceDescription;
     int servicePrice;
     long menuId;
     int serviceHours;
     int serviceMinutes;
-
-    public String getServiceName() {
-        return serviceName;
-    }
-
-    public void setServiceName(String serviceName) {
-        this.serviceName = serviceName;
-    }
 
     public String getServiceDescription() {
         return serviceDescription;

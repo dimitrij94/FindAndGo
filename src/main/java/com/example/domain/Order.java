@@ -27,7 +27,12 @@ public class Order {
     @JoinColumn(name = "menu")
     PlaceMenu menu;
 
-    @ManyToMany(mappedBy = "orders")
+
+    @ManyToMany
+    @JoinTable(
+            joinColumns =@JoinColumn(name = "order_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "service_id", referencedColumnName = "id"),
+            name = "service_orders")
     List<PlaceMenuOptionalService> services;
 
     public Long getId() {

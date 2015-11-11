@@ -34,45 +34,48 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public Place registerNewPlace(PlaceDTO placeDTO, PlaceUser owner) throws IOException {
         Place place = new Place(placeDTO);
-        PlaceAddress placeAddress=new PlaceAddress(placeDTO.getAddress());
-        dao.addNewPlace(place,placeAddress,owner);
-        imageService.uploadPlaceMainPhoto(placeDTO.getPhoto(),place);
+        PlaceAddress placeAddress = new PlaceAddress(placeDTO.getAddress());
+        dao.addNewPlace(place, placeAddress, owner);
+        imageService.uploadPlaceMainPhoto(placeDTO.getPhoto(), place);
         return place;
-    }
-
-    @Override
-    public Place getOwnerPlace(long placeId, PlaceUser user) {
-        for(Place p:user.getOwnerPlaces()){
-                if(p.getId()==placeId){
-                    return p;
-                }
-        }
-        return null;
     }
 
     @Override
     public PlaceMenu registerNewPlaceMenu(Place place, MenuDTO menuDTO) {
         PlaceMenu menu = new PlaceMenu(menuDTO);
         dao.newMenu(menu, place);
-        imageService.uploadMenuPhoto(menuDTO.getPhoto(),menu);
+        imageService.uploadMenuPhoto(menuDTO.getPhoto(), menu);
         return menu;
     }
 
     @Override
     public void registerNewPlaceMenuService(PlaceMenu menu, ServiceDTO serviceDTO) {
-        PlaceMenuOptionalService service=new PlaceMenuOptionalService(serviceDTO);
+        PlaceMenuOptionalService service = new PlaceMenuOptionalService(serviceDTO);
         dao.newPlaceMenuOptionalService(service, menu);
     }
 
     @Override
     public void sendNewOrder(PlaceUser user, long placeId, long menuId, List<Long> services) {
-        ArrayList<PlaceMenuOptionalService> servicesList = new ArrayList<>(services.size());
-        for(Long l:services)servicesList.add(dao.getMenuServicesById(l));
-        dao.newOrder(user,dao.getPlaceById(placeId),dao.getMenuById(menuId),servicesList);
 
+        ArrayList<PlaceMenuOptionalService> servicesList = null;
+        if (services != null) {
+            servicesList = new ArrayList<>(services.size());
+            for (Long l : services) servicesList.add(dao.getMenuServicesById(l));
+        }
+
+        dao.newOrder(user, dao.getPlaceById(placeId), dao.getMenuById(menuId), servicesList);
     }
 
-    private int calculateServiceDuration(){
+    @Override
+    public boolean isMenuFromPlace(PlaceMenu menu, Place place) {
+        long id = menu.getId();
+        for (PlaceMenu m : place.getPlaceMenu()) {
+            if (m.getId() == id) return true;
+        }
+        return false;
+    }
+
+    private int calculateServiceDuration() {
         return 0;
     }
 

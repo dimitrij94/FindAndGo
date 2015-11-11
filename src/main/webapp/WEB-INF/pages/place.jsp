@@ -78,12 +78,24 @@
             left: 50%;
             margin-left: -125px;
         }
-        #new-menu-service .input-group{
+
+        #new-menu-service .input-group {
             width: 230px;
             left: 50%;
             margin-left: -115px;
         }
-        .alert{text-align: center}
+
+        .alert {
+            text-align: center
+        }
+
+        .service-description {
+            word-break: break-all;
+            word-wrap: break-word;
+            display: inline;
+            vertical-align:middle;
+            text-align: right
+        }
     </style>
 
 </head>
@@ -387,7 +399,7 @@
                                                                                style="margin-top: 15px">
                                                                         <label for="service-${s.index}">${service.description}</label>
                                                                     </td>
-                                                                    <td width="20%" style="text-align: right">
+                                                                    <td width="20%" class="service-description">
                                                                     <span class="badge">${service.price} грн.<i
                                                                             class="fa fa-tag"></i></span></td>
                                                                 </tr>
@@ -405,32 +417,33 @@
                                                     <i class="fa fa-hand-scissors-o fa-rotate-90 fa-fw"></i>
                                                     Замовити
                                                 </button>
-                                                <a class="dropdown-toggle btn btn-info" data-toggle="dropdown">
-                                                    <i class="fa fa-pencil-square-o fa-fw"></i>
-                                                    <span class="caret"></span>
-                                                </a>
-                                                <ul class="dropdown-menu">
-                                                    <li>
-                                                        <a href="#" data-toggle="modal" data-id="12"
-                                                           data-target="#new-menu-service">
-                                                            <i class="fa fa-gift fa-fw"></i>
-                                                            Новий бонус
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="#">
-                                                            <i class="fa fa-pencil-square-o fa-fw"></i>
-                                                            Змінити послугу
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="#">
-                                                            <i class="fa fa-trash-o fa-fw"></i>
-                                                            Видалити
-                                                        </a>
-                                                    </li>
-                                                </ul>
-
+                                                <c:if test="${isOwner}">
+                                                    <a class="dropdown-toggle btn btn-info" data-toggle="dropdown">
+                                                        <i class="fa fa-pencil-square-o fa-fw"></i>
+                                                        <span class="caret"></span>
+                                                    </a>
+                                                    <ul class="dropdown-menu">
+                                                        <li>
+                                                            <a href="#" data-toggle="modal" data-id="${menu.id}"
+                                                               data-target="#new-menu-service">
+                                                                <i class="fa fa-gift fa-fw"></i>
+                                                                Новий бонус
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">
+                                                                <i class="fa fa-pencil-square-o fa-fw"></i>
+                                                                Змінити послугу
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">
+                                                                <i class="fa fa-trash-o fa-fw"></i>
+                                                                Видалити
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </c:if>
 
                                             </div>
                                         </td>
@@ -507,7 +520,7 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <sf:input path="menuId" type="hidden" class="id-input"/>
+                                    <sf:hidden path="menuId" class="id-input"/>
                                     <button
                                             style="left: 50%; position: relative; margin-left: -61px;"
                                             id="register-menu-service" class="btn btn-primary" type="submit">
