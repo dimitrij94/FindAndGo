@@ -301,28 +301,31 @@ public class DBBean implements IDBBean {
 
     @Override
     @Transactional
-    public void newOrder(PlaceUser user, Place place, PlaceMenu menu, ArrayList<PlaceMenuOptionalService> servicesList) {
+    public void newOrder(PlaceUser user, Place place, PlaceMenu menu, List<Long> servicesList) {
 
         Order order = new Order();
         order.setUser(user);
         order.setPlace(place);
         order.setMenu(menu);
-        if(servicesList!=null)order.setServices(servicesList);
         em.persist(order);
+
+        if(servicesList!=null){
+            for(long sId:servicesList){
+                PlaceMenuOptionalService services = getMenuServicesById(sId);
+                order.setServices(getServiceAsList(services,order.getServices()));
+                em.merge(order);
+                services.setOrders(getOrdersList(order,services.getOrders()));
+                em.merge(services);
+            }
+        }
 
         user.setOrders(getOrdersList(order,user.getOrders()));
         em.merge(user);
-        place.setOrders(getOrdersList(order,place.getOrders()));
+        place.setOrders(getOrdersList(order, place.getOrders()));
         em.merge(place);
         menu.setOrders(getOrdersList(order,menu.getOrders()));
         em.merge(menu);
 
-        if(servicesList!=null) {
-            for (PlaceMenuOptionalService s : servicesList) {
-                s.setOrders(getOrdersList(order, s.getOrders()));
-                em.merge(s);
-            }
-        }
         em.flush();
     }
 
@@ -358,6 +361,15 @@ public class DBBean implements IDBBean {
                 .setParameter("id",placeId)
                 .setParameter("uId",user.getId())
                 .getSingleResult();
+    }
+
+    private List<PlaceMenuOptionalService> getServiceAsList(PlaceMenuOptionalService s,
+                                                            List<PlaceMenuOptionalService>list){
+        if(list==null)return Collections.singletonList(s);
+        else {
+            list.add(s);
+            return list;
+        }
     }
 
     private List<Order> getOrdersList(Order order, List<Order> list) {

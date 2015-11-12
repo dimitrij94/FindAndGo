@@ -215,7 +215,7 @@ public class DemoController {
                               @PathVariable("menuId") long menuId,
                               @RequestParam(value="services", required = false) List<Long> services) {
         PlaceUser user = userService.placeUser();
-        placeService.sendNewOrder(user, placeId, menuId, services);
+        dao.newOrder(user, dao.getPlaceById(placeId),dao.getMenuById(menuId), services);
         return "redirect:/place/" + placeId;
     }
 

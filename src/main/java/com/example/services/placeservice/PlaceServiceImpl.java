@@ -57,13 +57,7 @@ public class PlaceServiceImpl implements PlaceService {
     @Override
     public void sendNewOrder(PlaceUser user, long placeId, long menuId, List<Long> services) {
 
-        ArrayList<PlaceMenuOptionalService> servicesList = null;
-        if (services != null) {
-            servicesList = new ArrayList<>(services.size());
-            for (Long l : services) servicesList.add(dao.getMenuServicesById(l));
-        }
-
-        dao.newOrder(user, dao.getPlaceById(placeId), dao.getMenuById(menuId), servicesList);
+        dao.newOrder(user, dao.getPlaceById(placeId), dao.getMenuById(menuId), services);
     }
 
     @Override

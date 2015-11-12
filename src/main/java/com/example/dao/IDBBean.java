@@ -19,6 +19,7 @@ import com.example.domain.registration.Authorities;
 import com.example.domain.registration.VerificationToken;
 import com.example.domain.photos.PlacePhoto;
 import com.example.domain.PlaceUser;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +88,8 @@ public interface IDBBean {
 
     PlaceMenuOptionalService getMenuServicesById(Long l);
 
-    void newOrder(PlaceUser user, Place placeById, PlaceMenu menuById, ArrayList<PlaceMenuOptionalService> servicesList);
+    @Transactional
+    void newOrder(PlaceUser user, Place place, PlaceMenu menu, List<Long> servicesList);
 
     List<Order> getUserPlaceOrders(long userId, long placeId);
 
