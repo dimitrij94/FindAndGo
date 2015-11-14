@@ -66,7 +66,7 @@ public interface IDBBean {
 
     void grandUserAuthorities(PlaceUser user, Authorities authorities);
 
-    void deleteToken(long tokenId);
+    void deleteToken(VerificationToken token);
 
     byte[] getPlaceMainImage(long id);
 

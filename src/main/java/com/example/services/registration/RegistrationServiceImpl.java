@@ -29,7 +29,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public PlaceUser resendRegistrationToken(String email) {
         PlaceUser user = dao.getUserByName(email.toLowerCase());
-        dao.deleteToken(user.getToken().getId());
+        dao.deleteToken(user.getToken());
         saveRegistrationToken(user);
         return user;
     }
@@ -49,9 +49,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (tokens != null) {
             if (tokens.getDate().getTime() > Calendar.getInstance().getTime().getTime()) {
                 PlaceUser user = tokens.getUser();
-                dao.deleteToken(user.getToken().getId());
                 user.setEnabled(true);
                 dao.grandUserAuthorities(user, new Authorities(Authorities.Roles.ROLE_USER.name()));
+                dao.deleteToken(user.getToken());
                 return true;
             }
             return false;

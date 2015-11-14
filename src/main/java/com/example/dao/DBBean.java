@@ -210,8 +210,9 @@ public class DBBean implements IDBBean {
         user.getAuthorities().add(authorities);
     }
 
-    public void deleteToken(long tokenId) {
-        this.em.createQuery("DELETE FROM VerificationToken e WHERE e.id=:id").setParameter("id", tokenId).executeUpdate();
+    @Transactional
+    public void deleteToken(VerificationToken token) {
+        em.remove(token);
     }
 
     public byte[] getPlaceMainImage(long id) {
@@ -276,12 +277,13 @@ public class DBBean implements IDBBean {
     }
 
     @Transactional
+    @Override
     public PlaceUser registration(PlaceUser user, UserAddress address) {
+        em.persist(user);
         address.setUser(user);
         this.em.persist(address);
         this.em.flush();
         user.setAddress(address);
-        em.persist(user);
         return user;
     }
 
@@ -377,7 +379,7 @@ public class DBBean implements IDBBean {
     @Override
     public int countLiked(Long userId, Long placeId) {
         return ((int) em.createQuery("SELECT COUNT (e) FROM PlaceRating e " +
-                "WHERE e.place=:pId AND e.user=:uId")
+                "WHERE e.place.id=:pId AND e.user.id=:uId")
                 .setParameter("pId", placeId)
                 .setParameter("uId", userId)
                 .getSingleResult());
@@ -398,10 +400,10 @@ public class DBBean implements IDBBean {
 
     @Override
     public byte[] getUserPhoto(long id, String name) {
-        return ((PlaceUserPhoto)em.createQuery("SELECT e FROM PlaceUserPhoto e " +
+        return ((PlaceUserPhoto) em.createQuery("SELECT e FROM PlaceUserPhoto e " +
                 "WHERE e.user.id=:userId AND e.name=:name")
-                .setParameter("userId",id)
-                .setParameter("name",name)).getBody();
+                .setParameter("userId", id)
+                .setParameter("name", name)).getBody();
     }
 
     private List<Place> getUserPlacesAsList(Place p, List<Place> list) {

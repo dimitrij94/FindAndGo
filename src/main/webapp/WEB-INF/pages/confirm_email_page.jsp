@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <html>
 <head>
     <title>Thank you for registration</title>
@@ -27,10 +28,100 @@
     <![endif]-->
 </head>
 <body>
+<div class="navbar navbar-inverse navbar-static-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a href="#" class="navbar-brand">MyPlaceToGo</a>
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#responcive-menu">
+                <span class="sr-only">Відкрити меню</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse" id="responcive-menu">
+            <ul class="nav navbar-nav">
+                <li><a href="#">На головну</a></li>
+
+                <security:authorize access="isAuthenticated()">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Мій профіль<b class="caret"></b></a>
+                        <ul id="user-menu-dropdown" class="list-group dropdown-menu">
+                            <li id="menu-item-my-page" class="list-group-item"><a href="#"><i
+                                    class="fa fa-user fa-fm"></i>Моя
+                                сторінка</a></li>
+                            <li class="list-group-item"><a href="#"><i class="fa fa-bullhorn fa-fm"></i>Мої
+                                замовлення</a>
+                            </li>
+                            <li class="list-group-item"><a href="#"><i class="fa fa-calendar-check-o fa-fm"></i>Мої
+                                події</a></li>
+                            <li class="list-group-item"><a href="#"><i class="fa fa-cutlery fa-fm"></i>Мої заклади</a>
+                            </li>
+                            <li class="list-group-item"><a href="#"><i class="fa fa-power-off fa-fm"></i>Вийти</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="MyPlaceToGo/registrater/owner">Приєднатись</a>
+                    </li>
+                </security:authorize>
+
+                <security:authorize access="isAnonymous()">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Увійти<b class="caret"></b></a>
+                        <ul id="enter-form" class="dropdown-menu navbar-form">
+                            <li>
+                                <span id="authorization-span"></span>
+
+                                <form action="/login" id="authorization-form" method="POST">
+
+                                    <div class="input-group" id="authorization-email">
+                                        <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i></span>
+                                        <input class="form-control" type="text" name="j_username" placeholder="E-mail">
+                                    </div>
+                                    <br>
+
+                                    <div class="input-group" id="authorization-password">
+                                        <span class="input-group-addon"><i class="fa fa-key fa-fw"></i></span>
+                                        <input class="form-control" type="password" name="j_password"
+                                               placeholder="Password">
+                                    </div>
+
+                                    <div id="authorization-divider" class="divider"></div>
+
+                                    <div id="authorization-group" class="btn-group">
+
+                                        <button type="submit" class="btn btn-default authentication-button">
+                                            <i class="fa fa-circle-thin"><span style="padding-right: 4px"></span>Увійти</i>
+                                        </button>
+
+                                        <a href="#" class="btn btn-default authentication-button">
+                                            <i class="fa fa-user-plus"><span
+                                                    style="padding-right: 4px"></span>Реестрація</i>
+                                        </a>
+                                    </div>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                </security:authorize>
+            </ul>
+
+            <form action="" id="search-form" class="navbar-form navbar-right">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="fa fa-search fa-fw"></i></span>
+                    <input class="form-control" type="text" placeholder="search stuff">
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+</div>
 
 <div class="container">
     <div class="row">
-        <div class="col col-xs-10">
+        <div class="col col-xs-10 col-xs-offset-1">
             <div class="jumbotron">
                 <h1>Дякуємо за реєстрацію!</h1>
                 <p>
@@ -38,6 +129,9 @@
                     відправили за аддресою <c:out value="${email}"/>
                     для підтвердження вашого почтового ящика
                 </p>
+                <small>Якщо ви не отримали листа на вашу електрону пошту будь ласка перейдіть по
+                    <a href="/resend/${email}">поссиланню.</a>
+                </small>
             </div>
         </div>
     </div>

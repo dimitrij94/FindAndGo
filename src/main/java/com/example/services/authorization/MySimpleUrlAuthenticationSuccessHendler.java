@@ -24,7 +24,7 @@ public class MySimpleUrlAuthenticationSuccessHendler implements AuthenticationSu
                                         HttpServletResponse httpServletResponse,
                                         Authentication authentication) throws IOException {
         if(httpServletRequest.getContextPath().equals("/login")){
-            sendRedirect(httpServletRequest, httpServletResponse, "/");
+            sendRedirect(httpServletRequest, httpServletResponse, "/user/profile");
         }
         else{
             sendRedirect(httpServletRequest, httpServletResponse,httpServletRequest.getContextPath());

@@ -196,7 +196,7 @@
     <div class="row">
 
         <security:authorize access="isAuthenticated()">
-            <c:if test="${isOwner}">
+            <c:if test="${isOwner eq true}">
                 <div class="col col-md-2 hidden-sm hidden-xs">
                     <ul class="list-group" id="user-controls">
                         <li style="text-align: center" class="list-group-item">
@@ -242,7 +242,7 @@
                     </ul>
                 </div>
             </c:if>
-            <c:if test="${!isOwner}">
+            <c:if test="${isOwner eq false}">
                 <div class="col col-md-2 hidden-sm hidden-xs">
                     <ul class="list-group" id="user-controls">
 
@@ -420,13 +420,13 @@
                                         <td colspan="2">
                                             <security:authorize access="isAuthenticated()">
                                                 <div style="float: right; margin: 5px 0 1px 0;" class="btn-group">
-                                                    <security:authorize access="hasRole('PLACE_USER')">
+                                                    <security:authorize access="hasRole('ROLE_USER')">
                                                         <button type="submit" class="btn btn-primary">
                                                             <i class="fa fa-hand-scissors-o fa-rotate-90 fa-fw"></i>
                                                             Замовити
                                                         </button>
                                                     </security:authorize>
-                                                    <c:if test="${isOwner}">
+                                                    <c:if test="${isOwner eq true}">
                                                         <a class="dropdown-toggle btn btn-default" data-toggle="dropdown">
                                                             <i class="fa fa-pencil-square-o fa-fw"></i>
                                                             Змінити
@@ -759,9 +759,10 @@
     }
 
     $(document).ready(function () {
-        liked=${liked};
+
+        liked='${liked}';
         $("liked").click(function(){
-            liked(${place.id});
+            liked("${place.id}");
         });
 
         $('#new-menu-service').on('show.bs.modal', function (event) {

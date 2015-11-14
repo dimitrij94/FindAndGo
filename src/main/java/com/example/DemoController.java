@@ -55,18 +55,15 @@ public class DemoController {
     @Autowired
     MenuService menuService;
 
+    /*
+        @Autowired
+        UserValidator userValidator;
 
-    @Autowired
-    UserValidator userValidator;
-
-    @Autowired
-    AddressValidator addressValidator;
-
-    @InitBinder
-    protected void initBinder(WebDataBinder binder){
-        binder.addValidators(userValidator,addressValidator);
-    }
-
+        @InitBinder
+        protected void initBinder(WebDataBinder binder){
+            binder.addValidators(userValidator);
+        }
+    */
     @RequestMapping("/page/login")
     public String login() {
         return "login";
@@ -96,7 +93,7 @@ public class DemoController {
         if (!result.hasErrors()) {
             PlaceUser user = registrationService.register(userForm, request);
             if (user.getId() != null) {
-                model.addAttribute(user);
+                model.addAttribute("user",user);
                 return "redirect:/confirm";
             }
         }
@@ -157,7 +154,7 @@ public class DemoController {
         Place p = dao.getPlaceById(placeId);
         if (user != null) {
             model.addAttribute("user", user);
-            if (user.getOwnerPlaces().contains(p)) {
+            if (p.getPlaceOwner().getId().equals(user.getId())) {
                 model.addAttribute("isOwner", true);
                 model.addAttribute("menu", new MenuDTO());
                 if (p.getPlaceMenu() != null)

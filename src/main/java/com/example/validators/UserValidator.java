@@ -21,10 +21,10 @@ public class UserValidator implements Validator {
     private final AddressValidator addressValidator;
 
 
-
     @Autowired
     RegistrationService service;
 
+    @Autowired
     public UserValidator(AddressValidator addressValidator) {
         if (addressValidator == null) {
             throw new IllegalArgumentException("The supplied [Validator] is " +
@@ -45,11 +45,11 @@ public class UserValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
 
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors,"userName","name.required","Поле не може бути пустим");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors,"userEmail","email.required","Поле не може бути пустим");
-        UserCreateForm user = (UserCreateForm)target;
-        if(!service.checkCredetials(user.getUserEmail(),user.getUserName()))
-        errors.reject("credentials.not.unique","Такий логін вже зайнятий");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userName", "name.required", "Поле не може бути пустим");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userEmail", "email.required", "Поле не може бути пустим");
+        UserCreateForm user = (UserCreateForm) target;
+        if (!service.checkCredetials(user.getUserEmail(), user.getUserName()))
+            errors.reject("credentials.not.unique", "Такий логін вже зайнятий");
 
         try {
             errors.pushNestedPath("address");

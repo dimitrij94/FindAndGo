@@ -22,10 +22,10 @@ public class AddressValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors,"latitude","field.required");
         AddressDTO address = (AddressDTO)target;
 
-        float latitude =Float.valueOf(address.getLatitude());
+        float latitude = address.getLatitude();
         if (latitude>90||latitude<0) errors.rejectValue("latitude","field.invalid");
 
-        float longitude = Float.valueOf(address.getLongitude());
+        float longitude = address.getLongitude();
         if(longitude>180||longitude<0) errors.rejectValue("longitude","field.invalid");
 
     }

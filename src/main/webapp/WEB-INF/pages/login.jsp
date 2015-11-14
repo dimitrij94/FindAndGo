@@ -22,6 +22,32 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 
     <![endif]-->
+    <style>
+        html, body, .container, .row {
+            height: 100%;
+        }
+
+        #enter-main-form {
+            top: 50%;
+            margin-top: -75px;
+        }
+
+        #form-btn-group {
+            left: 50%;
+            width:224px;
+            margin: 7px 0 1px -112px;
+        }
+
+        #form-btn-group li {
+            padding: 0 5px;
+        }
+
+        .line {
+            margin: 10px 0 2px 0px;
+            width: 100%;
+            border-bottom: 1px solid #d4d4d4;
+        }
+    </style>
 </head>
 <body>
 
@@ -116,32 +142,7 @@
     </div>
 </div>
 
-<style>
-    html, body, .container, .row {
-        height: 100%;
-    }
 
-    #enter-main-form {
-        top: 50%;
-        margin-top: -75px;
-    }
-
-    #form-btn-group {
-        left: 50%;
-        width:224px;
-        margin: 7px 0 1px -112px;
-    }
-
-    #form-btn-group li {
-        padding: 0 5px;
-    }
-
-    .line {
-        margin: 10px 0 2px 0px;
-        width: 100%;
-        border-bottom: 1px solid #d4d4d4;
-    }
-</style>
 
 <div class="container">
     <div class="row">
