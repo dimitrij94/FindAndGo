@@ -1,32 +1,15 @@
 package com.example.pojo.dto;
 
-import com.example.domain.validation.annotations.UserPasswordsEqual;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
-
-import javax.validation.constraints.Pattern;
-
 /**
  * Created by Dmitrij on 14.10.2015.
  */
 
-@UserPasswordsEqual
 public class UserCreateForm {
 
-    @Email(message = "email is not valid")
-    @NotBlank(message = "email must not be blank")
     String userEmail;
-
-    @NotBlank
-    @Pattern(message = "Name is not valid", regexp = "[a-zA-Z0-9]{3,20}")
     String userName;
-
-    @Pattern(message = "Password is not valid", regexp = "[a-zA-Z0-9]{3,20}")
-    @NotBlank
     String userPass;
-
     AddressDTO address;
-
     String userPassConf;
 
     private String sex;

@@ -1,6 +1,6 @@
 package com.example.domain.menu;
 
-import com.example.domain.Order;
+import com.example.domain.UserOrders;
 import com.example.pojo.dto.ServiceDTO;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
@@ -24,7 +24,7 @@ public class PlaceMenuOptionalService {
     PlaceMenu menu;
 
     @ManyToMany(mappedBy = "services")
-    List<Order> orders;
+    List<UserOrders> userOrderses;
 
     public PlaceMenuOptionalService() {
     }
@@ -71,11 +71,11 @@ public class PlaceMenuOptionalService {
         this.menu = menu;
     }
 
-    public List<Order> getOrders() {
-        return orders;
+    public List<UserOrders> getUserOrderses() {
+        return userOrderses;
     }
 
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
+    public void setUserOrderses(List<UserOrders> userOrderses) {
+        this.userOrderses = userOrderses;
     }
 }

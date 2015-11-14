@@ -1,7 +1,6 @@
 package com.example.domain;
 
 
-import com.example.domain.menu.PlaceMenu;
 import com.example.domain.ratings.PlaceMenuRating;
 import com.example.domain.ratings.PlaceRating;
 import com.example.domain.addresses.UserAddress;
@@ -9,7 +8,6 @@ import com.example.domain.comment.PlaceComment;
 import com.example.domain.photos.PlaceUserPhoto;
 import com.example.domain.registration.Authorities;
 import com.example.domain.registration.VerificationToken;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.util.List;
@@ -17,7 +15,6 @@ import java.util.List;
 
 @Entity
 @Table
-@Component
 public class PlaceUser {
 
     @Id
@@ -55,7 +52,7 @@ public class PlaceUser {
     private List<PlaceEvent> userEvents;
 
     @OneToMany(mappedBy = "user")
-    private List<Order>orders;
+    private List<UserOrders> userOrderses;
 
 
     @ManyToMany
@@ -243,12 +240,12 @@ public class PlaceUser {
         return tokens;
     }
 
-    public List<Order> getOrders() {
-        return orders;
+    public List<UserOrders> getUserOrderses() {
+        return userOrderses;
     }
 
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
+    public void setUserOrderses(List<UserOrders> userOrderses) {
+        this.userOrderses = userOrderses;
     }
 }
 

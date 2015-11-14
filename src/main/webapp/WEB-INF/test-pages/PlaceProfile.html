@@ -111,16 +111,19 @@
 
         .new-menu-form {
             text-align: center;
-            width:65px;
+            width: 65px;
             display: inline;
         }
-        .new-menu-form ::-webkit-input-placeholder{
+
+        .new-menu-form ::-webkit-input-placeholder {
             text-align: center;
         }
-        .new-menu-form ::-moz-placeholder{
+
+        .new-menu-form ::-moz-placeholder {
             text-align: center;
         }
-        .new-menu-form :-ms-input-placeholder{
+
+        .new-menu-form :-ms-input-placeholder {
             text-align: center;
         }
 
@@ -156,7 +159,9 @@
                 <li class="list-group-item">
                     <a href="#"><i class="glyphicon glyphicon-cog fa-fw"></i>Налаштування</a>
                 </li>
-
+                <li class="list-group-item">
+                    <a id="like"><i id="heart" class="fa fa-heart-o fa-fw"></i> Подобається</a>
+                </li>
                 <li class="list-group-item">
                     <a href="#">
                         <i class="fa fa-close fa-fw"></i> Видалити заклад
@@ -474,9 +479,11 @@
                                 <tr>
                                     <td style="text-align: center">
                                         <div>
-                                            <input min="0" max="24" type="number" class="form-control new-menu-form" value="" placeholder="hh"/>
+                                            <input min="0" max="24" type="number" class="form-control new-menu-form"
+                                                   value="" placeholder="hh"/>
                                             :
-                                            <input min="0" max="60" type="number" id="form-name" class="form-control new-menu-form"
+                                            <input min="0" max="60" type="number" id="form-name"
+                                                   class="form-control new-menu-form"
                                                    placeholder="mm" value="" aria-describedby="basic-addon1"/>
                                         </div>
                                         <small>Введіть тривалісь надання послуги</small>
@@ -593,6 +600,31 @@
         });
     }
 
+    function switchHearts(){
+        if(like=1){
+            $("#heart").removeClass("fa-heart-o");
+            $("#heart").addClass("fa-heart");
+        }
+        if(like=0){
+            $("#heart").addClass("fa-heart-o");
+            $("#heart").removeClass("fa-heart");
+        }
+    }
+    function likes(placeId){
+        var liked='${liked}';
+        $("#like").click(function () {
+            liked+=1;
+            $.ajax({
+                url: "/place/"+placeId+"/like",
+                data:{"i":liked},
+                method:"POST"
+            }).success(function(){
+               switchHearts(liked);
+            });
+            switchHearts(like%2);
+
+        });
+    }
     $(document).ready(function () {
         $('#new-menu-service').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);

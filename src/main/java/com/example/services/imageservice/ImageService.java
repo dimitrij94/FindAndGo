@@ -16,4 +16,5 @@ public interface ImageService {
     void uploadPlaceMainPhoto(PhotoDTO image, Place place);
 
     void uploadMenuPhoto(PhotoDTO image, PlaceMenu menu);
+
 }

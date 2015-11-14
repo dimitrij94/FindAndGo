@@ -6,9 +6,8 @@
 package com.example.domain.menu;
 
 
-import com.example.domain.Order;
+import com.example.domain.UserOrders;
 import com.example.domain.Place;
-import com.example.domain.PlaceUser;
 import com.example.domain.ratings.PlaceMenuRating;
 import com.example.domain.photos.PlaceMenuPhoto;
 import com.example.pojo.dto.MenuDTO;
@@ -47,7 +46,7 @@ public class PlaceMenu implements Serializable {
     private  List<PlaceMenuOptionalService>services;
 
     @OneToMany(mappedBy = "menu")
-    private List<Order>orders;
+    private List<UserOrders> userOrderses;
 
     private int durationH;
     private int durationM;
@@ -145,12 +144,12 @@ public class PlaceMenu implements Serializable {
         this.services = services;
     }
 
-    public List<Order> getOrders() {
-        return orders;
+    public List<UserOrders> getUserOrderses() {
+        return userOrderses;
     }
 
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
+    public void setUserOrderses(List<UserOrders> userOrderses) {
+        this.userOrderses = userOrderses;
     }
 
     public int getDurationH() {

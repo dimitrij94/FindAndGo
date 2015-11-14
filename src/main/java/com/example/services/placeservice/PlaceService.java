@@ -26,4 +26,6 @@ public interface PlaceService {
     void sendNewOrder(PlaceUser user, long placeId, long menuId, List<Long> services);
 
     boolean isMenuFromPlace(PlaceMenu menu, Place place);
+
+    void newLike(PlaceUser user, long id);
 }

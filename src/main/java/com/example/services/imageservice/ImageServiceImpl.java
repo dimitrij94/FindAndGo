@@ -17,10 +17,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImagingOpException;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 /**
  * Created by Dmitrij on 25.10.2015.
@@ -79,6 +76,7 @@ public class ImageServiceImpl implements ImageService {
             e.printStackTrace();
         }
     }
+
 
     private BufferedImage getReadableImage(MultipartFile image) throws IOException {
         byte[] imageData = image.getBytes();

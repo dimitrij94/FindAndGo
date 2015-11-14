@@ -139,7 +139,7 @@
                 <li class="list-group-item">
                     <a href="#"><i class="fa fa-user fa-fm"></i><c:out value="${user.userName}"/></a>
                 </li>
-                <li class="list-group-item"><a href="/user/${user.id}/orders">
+                <li class="list-group-item"><a href="/user/${user.id}/userOrderses">
                     <i class="fa fa-bullhorn fa-fm"></i>Мої замовлення</a>
                 </li>
                 <li class="list-group-item"><a href="/user/${user.id}/events">

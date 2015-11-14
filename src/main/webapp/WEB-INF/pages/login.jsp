@@ -176,7 +176,7 @@
                                 <i class="fa fa-circle-thin"><span style="padding-right: 4px"></span>Увійти</i>
                             </button>
 
-                            <button type="submit" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
                                 <span class="caret"></span>
                             </button>

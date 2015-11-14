@@ -59,11 +59,42 @@
         .btn-toggle {
             float: right;
         }
+
+        .menu-name-v {
+            padding-bottom: 0;
+            vertical-align: top;
+            padding-top: 0;
+            height: 1px;
+        }
+
+        .menu-name {
+            float: right;
+            margin-bottom: 0;
+        }
+
+        .place-img-w {
+            width: 240px;
+            padding: 4px 8px 8px 4px;
+        }
+
+        .menu-conf-toggle {
+            border-left: 0;
+            border-radius: 0 4px 4px 0px;
+        }
+        .panel-body table{
+            border-bottom: 1px solid #ddd;
+        }
+        .panel-body table:last-child{
+            border-bottom: 0;
+        }
+        .panel-default > .panel-heading{
+            background-color: white;
+        }
     </style>
 </head>
 <body>
 
-<div class="navbar navbar-inverse navbar-fixed-top">
+<div class="navbar navbar-inverse navbar-static-top">
     <div class="container">
         <div class="navbar-header">
             <a href="#" class="navbar-brand">MyPlaceToGo</a>
@@ -154,20 +185,22 @@
     </div>
 </div>
 
-<jsp:useBean id="orders" scope="request" type="com.example.domain.Order"/>
+
 <div class="container">
     <div class="row">
         <div class="col col-md-2 hidden-sm hidden-xs">
             <ul class="list-group" id="user-controls">
 
                 <li class="list-group-item">
-                    <img id="user-photo" class="img-responsive" src="user/${user.id}/photo/main"
-                         onerror="http://placehold.it/100x100"/>
+                    <img id="user-photo" class="img-responsive"
+                         <c:if test="${user.photos eq null}">src="http://placehold.it/100x100"</c:if>
+                            <c:if test="${user.photos ne null}"> src="user/${user.id}/photo/main"</c:if>
+                            />
                 </li>
                 <li class="list-group-item">
                     <a href="#"><i class="fa fa-user fa-fm"></i><c:out value="${user.userName}"/></a>
                 </li>
-                <li class="list-group-item"><a href="/user/${user.id}/orders">
+                <li class="list-group-item"><a href="/user/${user.id}/userOrderses">
                     <i class="fa fa-bullhorn fa-fm"></i>Мої замовлення</a>
                 </li>
                 <li class="list-group-item"><a href="/user/${user.id}/events">
@@ -188,10 +221,8 @@
         <div class="col col-xs-12 col-md-12 col-lg-10">
             <div class="container">
                 <div class="row masonry" data-columns>
-                    <c:forEach items="${orders-map}" var="entry" varStatus="i">
-                        <c:set var="place" value="${entry.key}" scope="request"/>
-                        <c:set var="orders" value="${entry.value}" scope="request"/>
-
+                    <c:forEach items="${ordersMap}" var="places" varStatus="i">
+                        <c:set var="place" value="${places.place}"/>
                         <div>
                             <div class="panel panel-default" id="places-list">
                                 <div class="panel-groupe">
@@ -199,9 +230,9 @@
                                         <div class="panel-heading">
                                             <table class="table">
                                                 <tr>
-                                                    <td rowspan="3">
+                                                    <td class="place-img-w" rowspan="3">
                                                         <img class="place-img" src="/photo/place/${place.id}/small"
-                                                           width="160" height="90"  onerror="http://placehold.it/160x90"/>
+                                                             width="240" onerror="http://placehold.it/160x90"/>
                                                     </td>
 
                                                     <td style="padding-bottom: 1px;vertical-align: bottom;">
@@ -224,7 +255,7 @@
                                                             <a class="btn btn-primary" data-toggle="collapse"
                                                                href="#place-${i.getCount()}">Переглянути замовлення</a>
                                                             <a class="btn btn-primary">
-                                                                <span class="badge">2</span>
+                                                                <span class="badge">${places.userUserOrderses.size()}</span>
                                                             </a>
                                                         </div>
                                                     </td>
@@ -234,37 +265,53 @@
                                     </div>
                                     <div class="collapse panel-collapse" id="place-${i.getCount()}">
                                         <div class="panel-body">
-                                            <c:forEach items="${orders}" var="order" varStatus="o">
+                                            <c:forEach items="${places.userUserOrderses}" var="userOrders"
+                                                       varStatus="o">
                                                 <table class="table">
                                                     <tr>
-                                                        <td rowspan="2">
-                                                            <img class="event-image" src="<c:url value="/photo/menu/${order.menu.id}"/>"
-                                                                 onerror="http://placehold.it/100x100"/>
+                                                        <td width="200px" rowspan="3">
+                                                            <img class="event-image"
+                                                                 src="<c:url value="/photo/menu/${userOrders.menu.id}/small"/>"
+                                                                 width="200px" onerror="http://placehold.it/100x100"/>
                                                         </td>
-                                                        <td style="padding-bottom: 0; vertical-align: bottom;">
-                                                            <h3 class="event-name">${order.menu.menuName}</h3>
+                                                        <td style="padding-bottom: 0;vertical-align: top;padding-top: 0;height: 1px;">
+                                                            <h3 class="menu-name">${userOrders.menu.menuName}</h3>
                                                         </td>
+                                                        <!--
                                                         <td style="padding-bottom: 0; vertical-align: bottom;">
-                                                            <!--<p style="margin-bottom: 0; text-align: center">
+                                                            <p style="margin-bottom: 0; text-align: center">
                                                             <span class="menu_timer" style="color: #ddd; font-size: 150%; font-weight: bold;">01:10:00</span>
-                                                                </p>-->
+                                                                </p>
+                                                        </td>-->
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="border-top:0" colspan="3">
+                                                        <span class="badge" style="float: right;"><i
+                                                                class="fa fa-tags"></i> ${userOrders.menu.menuPrice}</span>
                                                         </td>
                                                     </tr>
                                                     <tr>
                                                         <td colspan="3">
-                                                        <span class="badge" style="float: left;"><i
-                                                                class="fa fa-tags"></i> ${order.menu.menuPrice}</span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td colspan="3">
-                                                            <div class="btn-group btn-group-justified">
-                                                                <a class="btn btn-default"><i
-                                                                        class="fa fa-cog"></i>Змінити</a>
-                                                                <a class="btn btn-default"><i
-                                                                        class="fa fa-close"></i>Видалити</a>
-                                                                <a href="<c:url value="/menu/${order.menu.id}/ok"/> " class="btn btn-default"><i
-                                                                        class="fa fa-hand-peace-o"></i>Ok</a>
+                                                            <div class="btn-group dropup" style="float: right;">
+                                                                <a href="<c:url value="/menu/${userOrders.menu.id}/ok"/> "
+                                                                   class="btn btn-default">
+                                                                    <i class="fa fa-hand-peace-o"></i>Підтвердити
+                                                                </a>
+                                                                <a class="btn btn-default menu-conf-toggle"
+                                                                   data-toggle="dropdown">
+                                                                    <span class="caret"></span> </a>
+                                                                <ul class="dropdown-menu">
+                                                                    <li>
+                                                                        <a>
+                                                                            <i class="fa fa-cog"></i>Змінити
+                                                                        </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a>
+                                                                            <i class="fa fa-close"></i>Відмінити
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
                                                             </div>
                                                         </td>
                                                     </tr>

@@ -15,7 +15,6 @@ import com.example.pojo.dto.PlaceDTO;
 
 import javax.persistence.*;
 import javax.servlet.http.HttpServletRequest;
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -64,7 +63,7 @@ public class Place {
     PlaceAddress address;
 
     @OneToMany(mappedBy = "place")
-    List<Order>orders;
+    List<UserOrders> userOrderses;
 
     public Place() {
     }
@@ -201,12 +200,12 @@ public class Place {
         this.address = address;
     }
 
-    public List<Order> getOrders() {
-        return orders;
+    public List<UserOrders> getUserOrderses() {
+        return userOrderses;
     }
 
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
+    public void setUserOrderses(List<UserOrders> userOrderses) {
+        this.userOrderses = userOrderses;
     }
 
 

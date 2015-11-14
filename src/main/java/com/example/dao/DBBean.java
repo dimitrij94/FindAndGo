@@ -5,7 +5,7 @@
 
 package com.example.dao;
 
-import com.example.domain.Order;
+import com.example.domain.UserOrders;
 import com.example.domain.Place;
 import com.example.domain.PlaceEvent;
 import com.example.domain.PlaceUser;
@@ -15,6 +15,7 @@ import com.example.domain.menu.PlaceMenu;
 import com.example.domain.menu.PlaceMenuOptionalService;
 import com.example.domain.photos.PlaceMenuPhoto;
 import com.example.domain.photos.PlacePhoto;
+import com.example.domain.photos.PlaceUserPhoto;
 import com.example.domain.ratings.PlaceMenuRating;
 import com.example.domain.ratings.PlaceRating;
 import com.example.domain.registration.Authorities;
@@ -72,7 +73,11 @@ public class DBBean implements IDBBean {
         place.setAddress(placeAddress);
         this.em.flush();
         owner.getOwnerPlaces().add(place);
-        Authorities authorities = new Authorities(Long.toString(place.getId().longValue()));
+        for (Authorities a : owner.getAuthorities()) {
+            if (a.getAuthority().equals("PLACE_OWNER")) return;
+        }
+
+        Authorities authorities = new Authorities("PLACE_OWNER");
         authorities.setUser(owner);
         this.em.persist(authorities);
         this.em.flush();
@@ -242,6 +247,7 @@ public class DBBean implements IDBBean {
         this.em.flush();
     }
 
+    @Transactional
     public void newPlaceMenuService(PlaceMenu menu, PlaceMenuOptionalService service) {
         service.setMenu(menu);
         this.em.persist(service);
@@ -270,12 +276,13 @@ public class DBBean implements IDBBean {
     }
 
     @Transactional
-    public void registration(PlaceUser user, UserAddress address) {
+    public PlaceUser registration(PlaceUser user, UserAddress address) {
         address.setUser(user);
         this.em.persist(address);
         this.em.flush();
         user.setAddress(address);
-        this.em.flush();
+        em.persist(user);
+        return user;
     }
 
     @Transactional
@@ -303,79 +310,122 @@ public class DBBean implements IDBBean {
     @Transactional
     public void newOrder(PlaceUser user, Place place, PlaceMenu menu, List<Long> servicesList) {
 
-        Order order = new Order();
-        order.setUser(user);
-        order.setPlace(place);
-        order.setMenu(menu);
-        em.persist(order);
-
-        if(servicesList!=null){
-            for(long sId:servicesList){
+        UserOrders userOrders = new UserOrders();
+        userOrders.setUser(user);
+        userOrders.setPlace(place);
+        userOrders.setMenu(menu);
+        em.persist(userOrders);
+        em.flush();
+        if (servicesList != null) {
+            for (long sId : servicesList) {
                 PlaceMenuOptionalService services = getMenuServicesById(sId);
-                order.setServices(getServiceAsList(services,order.getServices()));
-                em.merge(order);
-                services.setOrders(getOrdersList(order,services.getOrders()));
-                em.merge(services);
+                userOrders.setServices(getServiceAsList(services, userOrders.getServices()));
+                em.flush();
+                services.setUserOrderses(getOrdersList(userOrders, services.getUserOrderses()));
             }
         }
 
-        user.setOrders(getOrdersList(order,user.getOrders()));
+        user.setUserOrderses(getOrdersList(userOrders, user.getUserOrderses()));
         em.merge(user);
-        place.setOrders(getOrdersList(order, place.getOrders()));
+        place.setUserOrderses(getOrdersList(userOrders, place.getUserOrderses()));
         em.merge(place);
-        menu.setOrders(getOrdersList(order,menu.getOrders()));
+        menu.setUserOrderses(getOrdersList(userOrders, menu.getUserOrderses()));
         em.merge(menu);
 
         em.flush();
     }
 
     @Override
-    public List<Order> getUserPlaceOrders(long userId, long placeId){
-        return em.createQuery("SELECT e FROM Order e WHERE e.place.id=:placeId AND e.user.id=:userId")
-                .setParameter("placeId",placeId)
-                .setParameter("userId",userId)
+    public List<UserOrders> getUserPlaceOrders(long userId, long placeId) {
+        return em.createQuery("SELECT e FROM UserOrders e WHERE e.place.id=:placeId AND e.user.id=:userId")
+                .setParameter("placeId", placeId)
+                .setParameter("userId", userId)
                 .getResultList();
     }
 
     @Override
     public List<Place> getPlacesWithUserOrder(PlaceUser user) {
-        return em.createQuery("SELECT e FROM PlaceUser e inner join e.orders o " +
-                "WHERE e.id=:userId AND o.place.id=o.id")
-                .setParameter("userId",user.getId())
+        return em.createQuery("SELECT DISTINCT p FROM Place p,PlaceUser u INNER JOIN u.userOrderses o " +
+                "WHERE o.user.id=:userId AND o.place.id=p.id")
+                .setParameter("userId", user.getId())
                 .getResultList();
     }
 
     @Override
     public boolean isMenuFromPlace(PlaceMenu menu, Place place) {
-        return ((int)em.createQuery("SELECT COUNT(e.id) FROM Place e INNER JOIN e.placeMenu m " +
+        return ((int) em.createQuery("SELECT COUNT(e.id) FROM Place e INNER JOIN e.placeMenu m " +
                 "WHERE e.id=:pId AND m.id=:mId")
-                .setParameter("pId",place.getId())
-                .setParameter("mId",menu.getId())
-                .getSingleResult())==0;
+                .setParameter("pId", place.getId())
+                .setParameter("mId", menu.getId())
+                .getSingleResult()) == 0;
 
     }
 
     @Override
     public Place getOwnerPlace(long placeId, PlaceUser user) {
-        return (Place)em.createQuery("SELECT e FROM Place e WHERE e.id=:id AND e.placeOwner.id=:uId")
-                .setParameter("id",placeId)
-                .setParameter("uId",user.getId())
+        return (Place) em.createQuery("SELECT e FROM Place e WHERE e.id=:id AND e.placeOwner.id=:uId")
+                .setParameter("id", placeId)
+                .setParameter("uId", user.getId())
                 .getSingleResult();
     }
 
+    @Override
+    public PlaceUser getUserById(long i) {
+        return em.find(PlaceUser.class, i);
+    }
+
+    @Override
+    public int countLiked(Long userId, Long placeId) {
+        return ((int) em.createQuery("SELECT COUNT (e) FROM PlaceRating e " +
+                "WHERE e.place=:pId AND e.user=:uId")
+                .setParameter("pId", placeId)
+                .setParameter("uId", userId)
+                .getSingleResult());
+    }
+
+    @Override
+    public void newPlaceLike(PlaceUser user, long id) {
+        user.setUserPlaces(getUserPlacesAsList(getPlaceById(id), user.getUserPlaces()));
+    }
+
+    @Override
+    public void removeLike(PlaceUser user, long placeId) {
+        em.createQuery("DELETE FROM PlaceRating r " +
+                "WHERE r.place.id=:placeId AND r.user.id=:userId")
+                .setParameter("placeId", placeId)
+                .setParameter("userId", getUserById(user.getId()));
+    }
+
+    @Override
+    public byte[] getUserPhoto(long id, String name) {
+        return ((PlaceUserPhoto)em.createQuery("SELECT e FROM PlaceUserPhoto e " +
+                "WHERE e.user.id=:userId AND e.name=:name")
+                .setParameter("userId",id)
+                .setParameter("name",name)).getBody();
+    }
+
+    private List<Place> getUserPlacesAsList(Place p, List<Place> list) {
+        if (list == null) return Collections.singletonList(p);
+        else {
+            list.add(p);
+            return list;
+        }
+
+    }
+
     private List<PlaceMenuOptionalService> getServiceAsList(PlaceMenuOptionalService s,
-                                                            List<PlaceMenuOptionalService>list){
-        if(list==null)return Collections.singletonList(s);
+                                                            List<PlaceMenuOptionalService> list) {
+        if (list == null) return Collections.singletonList(s);
         else {
             list.add(s);
             return list;
         }
     }
 
-    private List<Order> getOrdersList(Order order, List<Order> list) {
-        if (list == null) return Collections.singletonList(order);
+    private List<UserOrders> getOrdersList(UserOrders userOrders, List<UserOrders> list) {
+        if (list == null) return Collections.singletonList(userOrders);
         else {
-            list.add(order);
+            list.add(userOrders);
             return list;
         }
     }

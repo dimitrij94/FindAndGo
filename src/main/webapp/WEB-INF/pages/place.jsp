@@ -93,7 +93,7 @@
             word-break: break-all;
             word-wrap: break-word;
             display: inline;
-            vertical-align:middle;
+            vertical-align: middle;
             text-align: right
         }
     </style>
@@ -247,13 +247,18 @@
                     <ul class="list-group" id="user-controls">
 
                         <li class="list-group-item">
-                            <img id="user-photo" class="img-responsive" src="user/${user.id}/photo/main"
+                            <img id="user-photo" class="img-responsive" src="photo/user/${user.id}/small"
                                  onerror="http://placehold.it/100x100"/>
                         </li>
+
+                        <li class="list-group-item">
+                            <a id="like"><i id="heart" class="fa fa-heart-o fa-fw"></i> Подобається</a>
+                        </li>
+
                         <li class="list-group-item">
                             <a href="#"><i class="fa fa-user fa-fm"></i><c:out value="${user.userName}"/></a>
                         </li>
-                        <li class="list-group-item"><a href="/user/${user.id}/orders">
+                        <li class="list-group-item"><a href="/user/${user.id}/userOrderses">
                             <i class="fa fa-bullhorn fa-fm"></i>Мої замовлення</a>
                         </li>
                         <li class="list-group-item"><a href="/user/${user.id}/events">
@@ -269,6 +274,7 @@
                         <li class="list-group-item">
                             <a href="/j_spring_security_logout"><i class="fa fa-power-off fa-fm"></i>Вийти</a>
                         </li>
+
                     </ul>
                 </div>
             </c:if>
@@ -412,40 +418,45 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2">
-                                            <div style="float: right; margin: 5px 0 1px 0;" class="btn-group">
-                                                <button type="submit" class="btn btn-primary">
-                                                    <i class="fa fa-hand-scissors-o fa-rotate-90 fa-fw"></i>
-                                                    Замовити
-                                                </button>
-                                                <c:if test="${isOwner}">
-                                                    <a class="dropdown-toggle btn btn-info" data-toggle="dropdown">
-                                                        <i class="fa fa-pencil-square-o fa-fw"></i>
-                                                        <span class="caret"></span>
-                                                    </a>
-                                                    <ul class="dropdown-menu">
-                                                        <li>
-                                                            <a href="#" data-toggle="modal" data-id="${menu.id}"
-                                                               data-target="#new-menu-service">
-                                                                <i class="fa fa-gift fa-fw"></i>
-                                                                Новий бонус
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="#">
-                                                                <i class="fa fa-pencil-square-o fa-fw"></i>
-                                                                Змінити послугу
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="#">
-                                                                <i class="fa fa-trash-o fa-fw"></i>
-                                                                Видалити
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </c:if>
+                                            <security:authorize access="isAuthenticated()">
+                                                <div style="float: right; margin: 5px 0 1px 0;" class="btn-group">
+                                                    <security:authorize access="hasRole('PLACE_USER')">
+                                                        <button type="submit" class="btn btn-primary">
+                                                            <i class="fa fa-hand-scissors-o fa-rotate-90 fa-fw"></i>
+                                                            Замовити
+                                                        </button>
+                                                    </security:authorize>
+                                                    <c:if test="${isOwner}">
+                                                        <a class="dropdown-toggle btn btn-default" data-toggle="dropdown">
+                                                            <i class="fa fa-pencil-square-o fa-fw"></i>
+                                                            Змінити
+                                                            <span class="caret"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li>
+                                                                <a href="#" data-toggle="modal" data-id="${menu.id}"
+                                                                   data-target="#new-menu-service">
+                                                                    <i class="fa fa-gift fa-fw"></i>
+                                                                    Новий бонус
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#">
+                                                                    <i class="fa fa-pencil-square-o fa-fw"></i>
+                                                                    Змінити послугу
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#">
+                                                                    <i class="fa fa-trash-o fa-fw"></i>
+                                                                    Видалити
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </c:if>
 
-                                            </div>
+                                                </div>
+                                            </security:authorize>
                                         </td>
                                     </tr>
                                 </table>
@@ -652,7 +663,34 @@
     var map;
     var marker;
     var latlng = new google.maps.LatLng(${place.address.latitude}, ${place.address.longitude});
+    var liked;
 
+    function switchHearts(){
+        if(like=1){
+            $("#heart").removeClass("fa-heart-o");
+            $("#heart").addClass("fa-heart");
+        }
+        if(like=0){
+            $("#heart").addClass("fa-heart-o");
+            $("#heart").removeClass("fa-heart");
+        }
+    }
+
+    function like(placeId){
+        $("#like").click(function () {
+            liked+=1;
+            liked%=2;
+            $.ajax({
+                url: "/place/"+placeId+"/like",
+                data:{"i":liked},
+                method:"POST"
+            }).success(function(){
+                switchHearts(liked);
+            });
+            switchHearts(like%2);
+
+        });
+    }
     function initialize() {
 //Определение карты
         var options = {
@@ -721,6 +759,11 @@
     }
 
     $(document).ready(function () {
+        liked=${liked};
+        $("liked").click(function(){
+            liked(${place.id});
+        });
+
         $('#new-menu-service').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);
             var id = button.data('id');

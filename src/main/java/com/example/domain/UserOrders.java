@@ -10,7 +10,8 @@ import java.util.List;
  * Created by Dmitrij on 08.11.2015.
  */
 @Entity
-public class Order {
+@Table(name="user_order")
+public class UserOrders {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
@@ -80,9 +81,9 @@ public class Order {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Order order = (Order) o;
+        UserOrders userOrders = (UserOrders) o;
 
-        return id.equals(order.id);
+        return id.equals(userOrders.id);
 
     }
 

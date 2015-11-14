@@ -524,15 +524,6 @@
       <foreign-key name="event_users_ibfk_2" columns="user_id" ref-table="placeuser" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
       <index name="event_id" unique="false" columns="user_id"/>
     </table>
-    <table name="order" schema="" catalog="myplacetogo" type="TABLE">
-      <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
-      <column name="place" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
-      <column name="user" sqlType="BIGINT" precision="19" scale="0" nullable="true" jdbcType="-5"/>
-      <column name="menu" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
-      <primary-key name="PRIMARY" columns="id"/>
-      <exported-key name="service_orders_ibfk_1" table="service_orders" schema="" catalog="myplacetogo" columns="order_id"/>
-      <index name="unique_id" unique="true" columns="id"/>
-    </table>
     <table name="place" schema="" catalog="myplacetogo" type="TABLE">
       <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
       <column name="placeName" sqlType="VARCHAR" precision="40" scale="0" nullable="false" jdbcType="12"/>
@@ -551,6 +542,7 @@
       <exported-key name="place_photo_ibfk_1" table="place_photo" schema="" catalog="myplacetogo" columns="place"/>
       <exported-key name="placemenu_ibfk_1" table="placemenu" schema="" catalog="myplacetogo" columns="menuPlace"/>
       <exported-key name="placerating_ibfk_1" table="placerating" schema="" catalog="myplacetogo" columns="place"/>
+      <exported-key name="user_order_ibfk_1" table="user_order" schema="" catalog="myplacetogo" columns="place"/>
     </table>
     <table name="place_address" schema="" catalog="myplacetogo" type="TABLE">
       <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
@@ -634,6 +626,7 @@
       <exported-key name="FK_p0249j1s1djlcf8ldsak2sfo0" table="place_menu_services" schema="" catalog="myplacetogo" columns="menu"/>
       <exported-key name="FK_1gwy79xmsr34uwebs04xri2c0" table="placemenurating" schema="" catalog="myplacetogo" columns="menu"/>
       <exported-key name="placemenurating_ibfk_2" table="placemenurating" schema="" catalog="myplacetogo" columns="menu"/>
+      <exported-key name="user_order_ibfk_3" table="user_order" schema="" catalog="myplacetogo" columns="menu"/>
     </table>
     <table name="placemenurating" schema="" catalog="myplacetogo" type="TABLE">
       <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
@@ -678,12 +671,14 @@
       <exported-key name="placeuserphoto_ibfk_1" table="placeuserphoto" schema="" catalog="myplacetogo" columns="user"/>
       <exported-key name="user_address_ibfk_1" table="user_address" schema="" catalog="myplacetogo" columns="user_id"/>
       <exported-key name="user_authorities_ibfk_1" table="user_authorities" schema="" catalog="myplacetogo" columns="user_id"/>
+      <exported-key name="user_order_ibfk_2" table="user_order" schema="" catalog="myplacetogo" columns="user"/>
       <exported-key name="verification_tokens_ibfk_1" table="verification_tokens" schema="" catalog="myplacetogo" columns="user_id"/>
     </table>
     <table name="placeuserphoto" schema="" catalog="myplacetogo" type="TABLE">
       <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
       <column name="body" sqlType="BLOB" precision="65535" scale="0" nullable="false" jdbcType="-4"/>
       <column name="user" sqlType="BIGINT" precision="19" scale="0" nullable="true" jdbcType="-5"/>
+      <column name="name" sqlType="VARCHAR" precision="15" scale="0" nullable="false" jdbcType="12"/>
       <primary-key name="PRIMARY" columns="id"/>
       <foreign-key name="placeuserphoto_ibfk_1" columns="user" ref-table="placeuser" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
     </table>
@@ -713,6 +708,18 @@
       <column name="authority" sqlType="VARCHAR" precision="15" scale="0" nullable="false" jdbcType="12"/>
       <primary-key name="PRIMARY" columns="id"/>
       <foreign-key name="user_authorities_ibfk_1" columns="user_id" ref-table="placeuser" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
+    </table>
+    <table name="user_order" schema="" catalog="myplacetogo" type="TABLE">
+      <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
+      <column name="place" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
+      <column name="user" sqlType="BIGINT" precision="19" scale="0" nullable="true" jdbcType="-5"/>
+      <column name="menu" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="user_order_ibfk_1" columns="place" ref-table="place" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
+      <foreign-key name="user_order_ibfk_2" columns="user" ref-table="placeuser" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
+      <foreign-key name="user_order_ibfk_3" columns="menu" ref-table="placemenu" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
+      <index name="unique_id" unique="true" columns="id"/>
+      <index name="place" unique="false" columns="user,menu"/>
     </table>
     <table name="verification_tokens" schema="" catalog="myplacetogo" type="TABLE">
       <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>

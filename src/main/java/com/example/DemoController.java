@@ -13,16 +13,21 @@ import com.example.services.placeservice.PlaceService;
 import com.example.services.placeservice.menu.MenuService;
 import com.example.services.registration.RegistrationService;
 import com.example.services.userservice.UserService;
+import com.example.validators.AddressValidator;
+import com.example.validators.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
@@ -51,6 +56,17 @@ public class DemoController {
     MenuService menuService;
 
 
+    @Autowired
+    UserValidator userValidator;
+
+    @Autowired
+    AddressValidator addressValidator;
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder){
+        binder.addValidators(userValidator,addressValidator);
+    }
+
     @RequestMapping("/page/login")
     public String login() {
         return "login";
@@ -59,7 +75,7 @@ public class DemoController {
 
     @RequestMapping({"/", "/home"})
     public String getIndexPage(Model model) {
-        model.addAttribute(userService.placeUser());
+        if (userService.isAuthenticated()) model.addAttribute(userService.placeUser());
         model.addAttribute("events", dao.getMainEvents());
         model.addAttribute("places", dao.getMainPlaces());
         return "index";
@@ -73,13 +89,12 @@ public class DemoController {
 
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public String newOwner(@Valid @ModelAttribute UserCreateForm userForm,
+    public String newOwner(@Valid UserCreateForm userForm,
                            HttpServletRequest request,
                            Model model,
                            BindingResult result) {
         if (!result.hasErrors()) {
             PlaceUser user = registrationService.register(userForm, request);
-
             if (user.getId() != null) {
                 model.addAttribute(user);
                 return "redirect:/confirm";
@@ -147,11 +162,37 @@ public class DemoController {
                 model.addAttribute("menu", new MenuDTO());
                 if (p.getPlaceMenu() != null)
                     model.addAttribute("service", new ServiceDTO());
-            } else
+            } else {
+                model.addAttribute("liked", dao.countLiked(user.getId(), p.getId()));
                 model.addAttribute("isOwner", false);
+            }
         }
         model.addAttribute(p);
         return "place";
+    }
+
+    @RequestMapping(value = "place/{id}/liked/")
+    public void placeLiked(@PathVariable("id") long id,
+                           @RequestParam("i") int i,
+                           HttpServletResponse response) {
+
+        PlaceUser user = userService.placeUser();
+        if (i == 1) dao.newPlaceLike(user, id);
+        if (i == 0) dao.removeLike(user, id);
+        response.setStatus(HttpStatus.OK.value());
+    }
+
+    @RequestMapping(value = "photo/user/{id}/small",
+            produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE})
+    public byte[] getUserPhoto(@PathVariable("id") long id,
+                               HttpServletResponse respose) throws IOException {
+        byte[] photo = dao.getUserPhoto(id, "small");
+        if (photo == null)
+        respose.sendRedirect("/static/images/user.png");
+        else{
+            return photo;
+        }
+        throw new IOException();
     }
 
     @ResponseBody
@@ -195,16 +236,16 @@ public class DemoController {
     public String registerNewPlaceMenuService(@Valid ServiceDTO serviceDTO,
                                               @PathVariable("placeId") long placeId,
                                               BindingResult result) {
-        if(!result.hasErrors()) {
+        if (!result.hasErrors()) {
             PlaceUser user = userService.placeUser();
-            Place place =  dao.getOwnerPlace(placeId,user);
+            Place place = dao.getOwnerPlace(placeId, user);
 
             if (place != null) {
                 PlaceMenu menu = dao.getMenuById(serviceDTO.getMenuId());
                 if (placeService.isMenuFromPlace(menu, place)) {
                     placeService.registerNewPlaceMenuService(menu, serviceDTO);
                 }
-                return "redirect:/place/"+placeId;
+                return "redirect:/place/" + placeId;
             }
         }
         throw new IllegalArgumentException();
@@ -213,18 +254,20 @@ public class DemoController {
     @RequestMapping(value = "/place/{placeId}/menu/{menuId}", method = RequestMethod.POST)
     public String createOrder(@PathVariable("placeId") long placeId,
                               @PathVariable("menuId") long menuId,
-                              @RequestParam(value="services", required = false) List<Long> services) {
+                              @RequestParam(value = "services", required = false) List<Long> services) {
         PlaceUser user = userService.placeUser();
-        dao.newOrder(user, dao.getPlaceById(placeId),dao.getMenuById(menuId), services);
+        dao.newOrder(user, dao.getPlaceById(placeId), dao.getMenuById(menuId), services);
         return "redirect:/place/" + placeId;
     }
 
     @RequestMapping(value = "/user/profile", method = RequestMethod.GET)
     public String toUserProfile(Model model) {
         PlaceUser user = userService.placeUser();
-        model.addAttribute("orders-map", userService.getOrderedServices(user));
+        model.addAttribute("ordersMap", userService.getOrderedServices(user));
+        model.addAttribute("user", user);
         return "user_profile";
     }
+
 }
 
 

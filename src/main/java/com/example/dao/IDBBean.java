@@ -7,7 +7,7 @@
 package com.example.dao;
 
 
-import com.example.domain.Order;
+import com.example.domain.UserOrders;
 import com.example.domain.Place;
 import com.example.domain.PlaceEvent;
 import com.example.domain.menu.PlaceMenu;
@@ -82,7 +82,7 @@ public interface IDBBean {
 
     void addPlacePhoto(PlacePhoto photo, Place place);
 
-    void registration(PlaceUser user, UserAddress address);
+    PlaceUser registration(PlaceUser user, UserAddress address);
 
     void newPlaceMenuOptionalService(PlaceMenuOptionalService service, PlaceMenu menu);
 
@@ -91,11 +91,21 @@ public interface IDBBean {
     @Transactional
     void newOrder(PlaceUser user, Place place, PlaceMenu menu, List<Long> servicesList);
 
-    List<Order> getUserPlaceOrders(long userId, long placeId);
+    List<UserOrders> getUserPlaceOrders(long userId, long placeId);
 
     List<Place> getPlacesWithUserOrder(PlaceUser user);
 
     boolean isMenuFromPlace(PlaceMenu menu, Place place);
 
     Place getOwnerPlace(long placeId, PlaceUser user);
+
+    PlaceUser getUserById(long i);
+
+    int countLiked(Long userId, Long placeId);
+
+    void newPlaceLike(PlaceUser user, long id);
+
+    void removeLike(PlaceUser user, long placeId);
+
+    public byte[] getUserPhoto(long id, String name);
 }

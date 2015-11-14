@@ -1,21 +1,17 @@
 package com.example.services.userservice;
 
 import com.example.dao.IDBBean;
-import com.example.domain.Order;
 import com.example.domain.Place;
 import com.example.domain.PlaceUser;
-import com.example.services.authorization.CustomUserDetails;
+import com.example.pojo.dto.UserPlaceOrdersDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Dmitrij on 21.10.2015.
@@ -44,12 +40,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<Place, List<Order>> getOrderedServices(PlaceUser user) {
-        Map<Place, List<Order>> orders = new HashMap<>();
+    public List<UserPlaceOrdersDTO> getOrderedServices(PlaceUser user) {
         long id = user.getId();
+        List<UserPlaceOrdersDTO> placeOrders = new ArrayList<>();
         for (Place p : dao.getPlacesWithUserOrder(user)) {
-            orders.put(p, dao.getUserPlaceOrders(id, p.getId()));
+            UserPlaceOrdersDTO order = new UserPlaceOrdersDTO();
+            order.setPlace(p);
+            order.setUserUserOrderses(dao.getUserPlaceOrders(id, p.getId()));
+            placeOrders.add(order);
         }
-        return orders;
+        return placeOrders;
+    }
+
+    @Override
+    public boolean isAuthenticated() {
+        return SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
     }
 }

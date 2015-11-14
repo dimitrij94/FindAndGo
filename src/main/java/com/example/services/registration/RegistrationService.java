@@ -18,6 +18,8 @@ public interface RegistrationService {
 
     boolean confirmToken(String token);
 
+    boolean checkCredetials(String email, String userName);
+
     PlaceUser register(UserCreateForm blank, HttpServletRequest request);
 
 }

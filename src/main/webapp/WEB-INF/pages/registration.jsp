@@ -114,12 +114,14 @@
             padding-left: 0;
         }
 
-        #map_canvas{
+        #map_canvas {
             border-radius: 50px;
         }
-        #address-wrapper{
+
+        #address-wrapper {
             padding: 1px;
         }
+
         #address {
             position: absolute;
             z-index: 9;
@@ -131,7 +133,7 @@
 </head>
 <body>
 <div class="navbar navbar-inverse navbar-static-top">
-    <div class="container" >
+    <div class="container">
         <div class="navbar-header">
             <a href="#" class="navbar-brand">MyPlaceToGo</a>
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#responcive-menu">
@@ -181,6 +183,7 @@
                                         <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i></span>
                                         <input class="form-control" type="text" name="j_username" placeholder="E-mail">
                                     </div>
+
                                     <br>
 
                                     <div class="input-group" id="authorization-password">
@@ -233,17 +236,29 @@
                     <table class="table" border="0">
                         <tr>
                             <td>
+                                <c:set var="emailError"><sf:errors path="userEmail"/></c:set>
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-envelope-o"></i></span>
-                                    <sf:input path="userEmail" id="userEmail" placeholder="Email"/>
+                                    <sf:input path="userEmail" id="userEmail"
+                                              title='${emailError}' placeholder="Email"/>
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <td>
+                                <c:set var="nameError"><sf:errors path="userName"/></c:set>
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-user"></i> </span>
-                                    <sf:input path="userName" id="userName" placeholder="Username" name="name"/>
+                                    <sf:input path="userName" id="userName" title="${nameError}" placeholder="Username" name="name"/>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="input-group">
+                                    <c:set var="passError"><sf:errors path="userPass"/></c:set>
+                                    <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                                    <sf:password path="userPass" title="${passError}" placeholder="Password" id="userPass" name="pass"/>
                                 </div>
                             </td>
                         </tr>
@@ -251,14 +266,7 @@
                             <td>
                                 <div class="input-group">
                                     <span class="input-group-addon"><i class="fa fa-key"></i></span>
-                                    <sf:password path="userPass" placeholder="Password" id="userPass" name="pass"/>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                                    <c:set var="nameError"><sf:errors path="userName"/></c:set>
                                     <sf:password path="userPassConf" placeholder="Confirm"/>
                                 </div>
                             </td>
@@ -276,8 +284,9 @@
             <div class="col-xs-12 col-md-6 col-lg-4">
                 <div class="thumbnail" id="address-wrapper">
                     <input placeholder="Address" type="text" id="address"/>
+
                     <div id="map_canvas" style="width:100%; height:100%"></div>
-                    <sf:hidden  path="address.latitude" id="latitude"/>
+                    <sf:hidden path="address.latitude" id="latitude"/>
                     <sf:hidden path="address.longitude" id="longitude"/>
                 </div>
             </div>
@@ -362,10 +371,9 @@
     var userEmail = $("#userEmail");
     var userPass = $("#userPass");
     var userPassConf = $("#userPassConf");
-
-    function initialize(){
+    function initialize() {
 //Определение карты
-        var latlng = new google.maps.LatLng(50.4501,30.523400000000038);
+        var latlng = new google.maps.LatLng(50.4501, 30.523400000000038);
         var options = {
             zoom: 15,
             center: latlng,
@@ -387,25 +395,25 @@
         var element = parameters.element;
         var message = parameters.message;
         element.css("border", "1px solid red");
-        if(message!=null) {
+        if (message != null) {
             element.prop("placeholder", message);
         }
         element.focus();
         return false;
     }
 
-    $(document).ready(function() {
+    $(document).ready(function () {
 
         initialize();
 
-        $(function() {
+        $(function () {
             $("#address").autocomplete({
                 //Определяем значение для адреса при геокодировании
-                source: function(request, response) {
-                    geocoder.geocode( {'address': request.term}, function(results, status) {
-                        response($.map(results, function(item) {
+                source: function (request, response) {
+                    geocoder.geocode({'address': request.term}, function (results, status) {
+                        response($.map(results, function (item) {
                             return {
-                                label:  item.formatted_address,
+                                label: item.formatted_address,
                                 value: item.formatted_address,
                                 latitude: item.geometry.location.lat(),
                                 longitude: item.geometry.location.lng()
@@ -414,7 +422,7 @@
                     })
                 },
                 //Выполняется при выборе конкретного адреса
-                select: function(event, ui) {
+                select: function (event, ui) {
                     $("#latitude").val(ui.item.latitude);
                     $("#longitude").val(ui.item.longitude);
                     var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
@@ -450,12 +458,12 @@
                 }
             });
             userPass.keypress(function check() {
-                if (userPass.val() != "" && userPass.val()==userPassConf) {
+                if (userPass.val() != "" && userPass.val() == userPassConf) {
                     userPass.css("border", "border: 2px inset");
                 }
             });
             userPassConf.keypress(function check() {
-                if (userPassConf.val() != "" && userPass.val()==userPassConf) {
+                if (userPassConf.val() != "" && userPass.val() == userPassConf) {
                     userName.css("border", "border: 2px inset");
                 }
             });
@@ -463,8 +471,8 @@
         });
 
         //Добавляем слушателя события обратного геокодирования для маркера при его перемещении
-        google.maps.event.addListener(marker, 'drag', function() {
-            geocoder.geocode({'latLng': marker.getPosition()}, function(results, status) {
+        google.maps.event.addListener(marker, 'drag', function () {
+            geocoder.geocode({'latLng': marker.getPosition()}, function (results, status) {
                 if (status == google.maps.GeocoderStatus.OK) {
                     if (results[0]) {
                         $('#address').val(results[0].formatted_address);

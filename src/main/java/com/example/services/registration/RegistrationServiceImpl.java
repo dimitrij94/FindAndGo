@@ -27,7 +27,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     MailService mailService;
 
     @Override
-    public PlaceUser resendRegistrationToken(String email){
+    public PlaceUser resendRegistrationToken(String email) {
         PlaceUser user = dao.getUserByName(email.toLowerCase());
         dao.deleteToken(user.getToken().getId());
         saveRegistrationToken(user);
@@ -59,14 +59,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         return false;
     }
 
-
-    private boolean checkCredetials(String email, String userName) {
-        return dao.checkCredentials(email, userName)==0;
+    @Override
+    public boolean checkCredetials(String email, String userName) {
+        return dao.checkCredentials(email, userName) == 0;
     }
 
     @Override
     public PlaceUser register(UserCreateForm blank, HttpServletRequest request) {
-        if (checkCredetials(blank.getUserEmail(), blank.getUserName())) {
             PlaceUser user = new PlaceUser();
 
             user.setUserEmail(blank.getUserEmail());
@@ -79,12 +78,10 @@ public class RegistrationServiceImpl implements RegistrationService {
             user.setAge(blank.getAge());
             user.setEnabled(false);
 
-            dao.registration(user, new UserAddress(blank.getAddress()));
+            user = dao.registration(user, new UserAddress(blank.getAddress()));
             saveRegistrationToken(user);
             mailService.confirmEmailMessage(user, request);
             return user;
-        }
-        return null;
     }
 
     private List<String> lookForMatches(List<String> data, String query) {

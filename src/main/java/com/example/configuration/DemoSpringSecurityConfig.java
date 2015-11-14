@@ -23,21 +23,28 @@ public class DemoSpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.
-                authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/page/login", "/registration", "/")
-                .permitAll()
+        http.authorizeRequests()
 
-                .antMatchers(HttpMethod.GET, "/resend", "/newplace")
+
+                .antMatchers(HttpMethod.GET, "/user/profile")
+                .hasRole("USER")
+
+                .antMatchers(HttpMethod.POST, "/place/{placeId}/menu/{menuId}")
+                .hasRole("USER")
+
+                .antMatchers(HttpMethod.POST, "/place/{placeId}/menu/service", "/place/{id}/menu")
+                .hasRole("OWNER")
+
+                .antMatchers(HttpMethod.GET, "/newplace")
                 .authenticated()
-
-                .regexMatchers(HttpMethod.POST,"/place/*")
-                .hasRole("PLACE_OWNER")
 
                 .antMatchers(HttpMethod.POST, "/newplace")
                 .authenticated()
 
                 .antMatchers(HttpMethod.POST, "/registration")
+                .permitAll()
+
+                .antMatchers(HttpMethod.GET, "/resend", "/page/login", "/registration", "/place/")
                 .permitAll();
 
         http

@@ -1,6 +1,5 @@
 package com.example.services.placeservice;
 
-import com.example.domain.Order;
 import com.example.domain.Place;
 import com.example.domain.PlaceUser;
 import com.example.domain.addresses.PlaceAddress;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -68,6 +66,14 @@ public class PlaceServiceImpl implements PlaceService {
         }
         return false;
     }
+
+    @Override
+    public void newLike(PlaceUser user, long id) {
+        if(dao.countLiked(user.getId(),id)==0){
+            dao.newPlaceLike(user,id);
+        }
+    }
+
 
     private int calculateServiceDuration() {
         return 0;

@@ -15,56 +15,89 @@
     <title></title>
 </head>
 <body>
-<div id="head"></div>
-<security:authorize access="hasRole('ROLE_OWNER')">
-    <div id="toolbar">
-    <a href="/browzer/newplace"><p>Add new place</p></a>
-    <a href="/browzer/edit_profile"/${owner.id}>Edit profile</a>
-    </div>
-</security:authorize>
-<table id="list">
-    <thead>
-    <tr>
-        <th></th>
-        <th>Name</th>
-        <th>City</th>
-        <th>Street</th>
-        <th>Address</th>
-        <th>Rating</th>
-        <th>Followers</th>
-        <th></th>
-        <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    <c:forEach items="${owner.places}" var="place">
-        <tr>
-            <td>
+<c:if test="${places ne null}">
+    <div class="container">
+        <div class="row masonry" data-columns>
+            <c:forEach items="${places}" var="place" varStatus="i">
+                <div class="cell">
+                    <div class="thumbnail">
+                        <img class="img-responsive" onerror="http://placehold.it/600x340"
+                             src="/place/${place.id}/image/main" alt="">
 
-                <img src="/browzer/getImage/${place.placePhotos[0].id}"
-                     alt="${place.placeName} photo"
-                     width="40px"
-                     height="40px"/>
-            </td>
-            <td>
-                <a href="browzer/place_profile/${place.id}">
-                    <c:out value="${place.placeName}"/>
-                </a>
-            </td>
-            <td><c:out value="${place.placeCity}"/></td>
-            <td><c:out value="${place.placeStreet}"/></td>
-            <td><c:out value="${place.placeAddress}"/></td>
-            <td>
-                <c:forEach begin="0" end="${place.placeFinalRating}">
-                    <img src="images/zvezda.png" alt="zvezda" height="15"/>
-                </c:forEach>
-            </td>
-            <td><c:out value="${place.placeFollowersNum}"/></td>
-            <td><a href="browzer/delete_place/${place.id}">Delete</a></td>
-            <td><a href="browzer/edit_place/${place.id}">Edit</a></td>
-        </tr>
-    </c:forEach>
-    </tbody>
-</table>
+                        <table class="table ">
+                            <tr>
+                                <td>
+                                    <h3>${place.placeName}</h3><span class="badge">${place.placeOwner.userName}</span>
+                                </td>
+                                <td>
+                                    <div><span style="float: right; margin-top: 12px" class="rating">
+                        <span class="rating-star"></span>
+                        <span class="rating-star"></span>
+                        <span class="rating-star"></span>
+                        <span class="rating-star"></span>
+                        <span class="rating-star"></span>
+                    </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div class="tabs">
+                            <ul class="nav nav-tabs">
+                                <li class="active">
+                                    <a href="#description-tab-${i}" data-toggle="tab">
+                                        <i class="fa fa-info">
+                                            <span style="margin-right: 4px"></span> Опис
+                                        </i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#comments-tab-${i}" data-toggle="tab">
+                                        <i class="fa fa-comments-o">
+                                            <span style="margin-right: 4px"></span> Коментарі
+                                        </i>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+
+                                <div class="tab-pane description-wrapper caption active fade in"
+                                     id="description-tab-${i}">
+                                    <c:out value="${place.placeDescription}"/>
+                                </div>
+
+                                <div class="tab-pane fade comment-wrapper" id="comments-tab-${i}">
+                                    <c:forEach items="${place.placeComments}" var="comment">
+                                        <div class="comment">
+                                            <i class="fa fa-user" style="margin-right: 4px">
+                                                <span style="margin-right: 4px"></span>
+                                                <a href="#"><b>${comment.commentor.userName}</b></a>
+                                            </i>
+                                            <i>${comment.commentBody}</i>
+                                            <a href="#">
+                                                <i class="fa fa-thumbs-o-up like-ikon">
+                                                    <span style="margin-right: 2px"></span>
+                                                    Yes!
+                                                </i>
+                                            </a>
+
+                                        </div>
+                                    </c:forEach>
+                                </div>
+
+                                <a href="/place/${place.id}" class="btn btn-success">
+                                    <i class="fa fa-arrow-right"></i> It`s my place
+                                </a>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </c:forEach>
+        </div>
+    </div>
+</c:if>
+
 </body>
 </html>
