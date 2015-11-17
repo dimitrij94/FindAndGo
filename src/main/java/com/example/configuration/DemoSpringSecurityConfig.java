@@ -26,10 +26,12 @@ public class DemoSpringSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
 
 
-                .antMatchers(HttpMethod.GET, "/user/profile")
+                .antMatchers(HttpMethod.GET,"rating/place/{pId}","/place/{id}/liked/", "/user/orders",
+                        "/user/places", "/rating/place/{pId}")
                 .hasRole("USER")
 
-                .antMatchers(HttpMethod.POST, "/place/{placeId}/menu/{menuId}")
+                .antMatchers(HttpMethod.POST,"/menu/{id}/comment",
+                        "/place/{placeId}/menu/{menuId}")
                 .hasRole("USER")
 
                 .antMatchers(HttpMethod.POST, "/place/{placeId}/menu/service", "/place/{id}/menu")
@@ -58,12 +60,12 @@ public class DemoSpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .formLogin()
-                .successHandler(authenticationSuccessHandler)
                 .loginPage("/page/login")
                 .failureUrl("/page/login")
                 .loginProcessingUrl("/login")
                 .usernameParameter("j_username")
-                .passwordParameter("j_password");
+                .passwordParameter("j_password")
+                .defaultSuccessUrl("/");
 
         http.
                 userDetailsService(userDetailsService);

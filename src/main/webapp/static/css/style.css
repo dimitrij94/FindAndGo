@@ -100,34 +100,6 @@
     }
 }
 
-.rating {
-    unicode-bidi: bidi-override;
-    direction: rtl;
-    font-size: 30px;
-}
-
-.rating span.rating-star {
-    font-family: FontAwesome;
-    font-weight: normal;
-    font-style: normal;
-    display: inline-block;
-}
-
-.rating span.rating-star:hover {
-    cursor: pointer;
-}
-
-.rating span.rating-star:before {
-    content: "\f006";
-    padding-right: 5px;
-    color: #777777;
-}
-
-.rating span.rating-star:hover:before,
-.rating span.rating-star:hover ~ span.rating-star:before {
-    content: "\f005";
-    color: #e3cf7a;
-}
 
 #navbar-menu {
     margin-top: 0;

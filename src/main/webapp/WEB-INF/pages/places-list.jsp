@@ -20,11 +20,15 @@
 
     <!-- Bootstrap -->
 
-    <link href="/static/css/pages/user-place-list.css" rel="stylesheet"/>
-    <link href="/static/themes/bootstrap.css" rel="stylesheet"/>
-    <link href="/static/themes/font-awesome.css" rel="stylesheet"/>
-    <link href="/static/css/pages/registration.css" rel="stylesheet"/>
+    <link href="<c:url value="/static/css/pages/user-place-list.css"/>" rel="stylesheet"/>
+    <link href="<c:url value="/static/css/bootstrap.css"/>" rel="stylesheet"/>
+    <link href="<c:url value="/static/css/font-awesome.css"/>" rel="stylesheet"/>
+    <link href="<c:url value="/static/css/pages/registration.css"/>" rel="stylesheet"/>
 
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="/static/js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/static/js/bootstrap.js"></script>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -32,6 +36,17 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 
     <![endif]-->
+    <style>
+        .place-btn {
+            background-color: transparent;
+            color: white;
+        }
+
+        .place-btn:hover {
+            background-color: rgba(191, 234, 191, 0.2);
+            color: #ddd;
+        }
+    </style>
 </head>
 <body>
 
@@ -68,9 +83,11 @@
                         </ul>
                     </li>
 
-                    <li>
-                        <a href="/newplace">Приєднатись</a>
-                    </li>
+                    <security:authorize access="hasRole('ROLE_USER')">
+                        <li>
+                            <a href="/newplace">Приєднатись</a>
+                        </li>
+                    </security:authorize>
                 </security:authorize>
 
                 <security:authorize access="isAnonymous()">
@@ -129,110 +146,51 @@
 
 <div style="margin-top:60px" class="container">
     <div class="row">
+        <div class="col col-md-2 hidden-sm hidden-xs">
+            <c:if test="${user eq null}">
+                <ul class="list-group" id="user-controls">
 
-        <div class="col col-xs-12 col-lg-10 col-lg-offset-1">
-            <div class="container">
-                <div class="row masonry" data-columns="">
-                    <c:forEach items="${places}" varStatus="i" var="place">
-                        <div>
-                            <div class="panel panel-default" id="places-list">
-                                <div class="panel-groupe">
-                                    <div style="margin: 0" class="panel panel-default place-panel">
-                                        <div class="panel-heading" style="padding: 0">
-                                            <table class="table">
-                                                <tr>
-                                                    <td>
-                                                        <img class="place-img" src="/photo/place/${place.id}/small"
-                                                             width="100%" onerror="http://placehold.it/100x100"/>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <div>
-                                                            <h2 style="margin: 0" class="place-name-exp">
-                                                                <a style="margin: 0" href="/place/${place.id}}"><c:out
-                                                                        value="${place.placeName}"/></a>
-                                                                <i class="fa fa-cultery"></i>
-                                                            </h2>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <p>
-                                                            <c:out value="${place.placeDescription}"/>
-                                                        </p>
-                                                    </td>
-                                                </tr>
-                                                <c:if test="${place.placeEvents.size()!=0}">
-                                                    <tr>
-                                                        <td>
-                                                            <div class="btn-group btn-place-dropdown btn-right">
-                                                                <a class="btn btn-primary" data-toggle="collapse"
-                                                                   href="#place-${i}">
-                                                                    Показати події
-                                                                </a>
-                                                                <a class="btn btn-primary">
-                                                                    <span class="badge">${place.placeEvents.size()}</span>
-                                                                </a>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </c:if>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <c:if test="${place.placeEvents!=null}">
-                                        <div class="collapse" id="place-${i}">
-                                            <div class="panel-body">
+                    <li class="list-group-item">
+                        <img id="user-photo" class="img-responsive"
+                             <c:if test="${user.photos.size()==0}">src="http://placehold.it/100x100"</c:if>
+                                <c:if test="${user.photos ne null}"> src="user/${user.id}/photo/main"</c:if>
+                                />
+                    </li>
+                    <li class="list-group-item">
+                        <a href="#"><i class="fa fa-user fa-fm"></i><c:out value="${user.userName}"/></a>
+                    </li>
+                    <li class="list-group-item"><a href="/user/orders">
+                        <i class="fa fa-bullhorn fa-fm"></i>Мої замовлення</a>
+                    </li>
+                    <li class="list-group-item"><a href="/user/${user.id}/events">
+                        <i class="fa fa-calendar-check-o fa-fm"></i>Мої події</a></li>
+                    <li class="list-group-item"><a href="/user/${user.id}/places">
+                        <i class="fa fa-cutlery fa-fm"></i>Мої заклади</a>
+                    </li>
 
-                                                <c:forEach items="${place.placeEvents}" var="event" varStatus="i">
-                                                    <table class="table table-striped">
-                                                        <tr>
-                                                            <td rowspan="2">
-                                                                <img class="event-image"
-                                                                     src="/event/${event.id}/photo/small"
-                                                                     onerror="http://placehold.it/100x100"/>
-                                                            </td>
-                                                            <td>
-                                                                <h3 class="event-name">${event.eventName}</h3>
-                                                            </td>
-                                                            <td>
-                                                                <p class="event-followers"><span
-                                                                        class="badge">${event.followrsNum}</span>
-                                                                </p>
-                                                            </td>
-                                                        </tr>
+                    <li class="list-group-item">
+                        <a href="#"><i class="glyphicon glyphicon-cog fa-fm"></i>Налаштування</a>
+                    </li>
 
-                                                        <tr>
-                                                            <td>
-                                                                <a href="/event/${event.id}/edit"><i
-                                                                        class="fa fa-cog"></i>Змінити</a>
-                                                            </td>
-                                                            <td>
-                                                                <i class="fa fa-cog"></i>Видалити
-                                                            </td>
-                                                        </tr>
-                                                    </table>
-                                                </c:forEach>
-                                            </div>
-                                        </div>
-                                    </c:if>
-                                </div>
-                            </div>
-                        </div>
-                    </c:forEach>
+                    <li class="list-group-item">
+                        <a href="/j_spring_security_logout"><i class="fa fa-power-off fa-fm"></i>Вийти</a>
+                    </li>
+                </ul>
+            </c:if>
+        </div>
+        <div class="masonry" data-columns="">
+            <c:forEach items="${places}" varStatus="i" var="place">
+                <div style="text-align: center;box-shadow: 2px 3px 8px;">
+                    <img class="place-img" src="/photo/place/${place.id}/small"
+                         width="100%" height="100%" onerror="http://placehold.it/160x90"/>
+                    <a class="btn btn-default place-btn" href="/place/${place.id}"
+                       style="margin-top:-100px">${place.placeName}</a>
                 </div>
-            </div>
+            </c:forEach>
         </div>
     </div>
 </div>
 
-
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="/static/js/jquery.min.js"></script>
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="/static/js/bootstrap.js"></script>
 
 <script src="/static/js/salvattore.min.js"></script>
 </body>

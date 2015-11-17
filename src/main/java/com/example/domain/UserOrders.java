@@ -28,6 +28,7 @@ public class UserOrders {
     @JoinColumn(name = "menu")
     PlaceMenu menu;
 
+    boolean isDone;
 
     @ManyToMany
     @JoinTable(
@@ -74,6 +75,14 @@ public class UserOrders {
 
     public void setServices(List<PlaceMenuOptionalService> services) {
         this.services = services;
+    }
+
+    public boolean isDone() {
+        return isDone;
+    }
+
+    public void setIsDone(boolean isDone) {
+        this.isDone = isDone;
     }
 
     @Override

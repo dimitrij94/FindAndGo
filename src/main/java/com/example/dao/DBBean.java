@@ -330,7 +330,8 @@ public class DBBean implements IDBBean {
 
     @Override
     public List<UserOrders> getUserPlaceOrders(long userId, long placeId) {
-        return em.createQuery("SELECT e FROM UserOrders e WHERE e.place.id=:placeId AND e.user.id=:userId")
+        return em.createQuery("SELECT e FROM UserOrders e " +
+                "WHERE e.place.id=:placeId AND e.user.id=:userId AND e.isDone=false")
                 .setParameter("placeId", placeId)
                 .setParameter("userId", userId)
                 .getResultList();
@@ -339,7 +340,7 @@ public class DBBean implements IDBBean {
     @Override
     public List<Place> getPlacesWithUserOrder(PlaceUser user) {
         return em.createQuery("SELECT DISTINCT p FROM Place p,PlaceUser u INNER JOIN u.userOrderses o " +
-                "WHERE o.user.id=:userId AND o.place.id=p.id")
+                "WHERE o.user.id=:userId AND o.place.id=p.id AND o.isDone=false")
                 .setParameter("userId", user.getId())
                 .getResultList();
     }
@@ -432,7 +433,8 @@ public class DBBean implements IDBBean {
         em.createQuery("DELETE FROM PlaceMenuRating e " +
                 "WHERE e.menu.id=:menuId AND e.user.id=:userId")
                 .setParameter("menuId", placeMenu.getId())
-                .setParameter("userId", user.getId());
+                .setParameter("userId", user.getId())
+                .executeUpdate();
     }
 
     @Override
@@ -445,10 +447,10 @@ public class DBBean implements IDBBean {
     @Override
     public boolean isUserUsedPlace(Place p, PlaceUser user) {
         return ((long) em.createQuery("SELECT COUNT (e.id) FROM UserOrders e " +
-                "WHERE e.user.id=:uId AND e.place=:pId")
+                "WHERE e.user.id=:uId AND e.place.id=:pId")
                 .setParameter("uId", user.getId())
                 .setParameter("pId", p.getId())
-                .getSingleResult()) == (long) 0;
+                .getSingleResult()) > 0;
     }
 
     @Override
@@ -474,11 +476,63 @@ public class DBBean implements IDBBean {
     }
 
     @Override
+    @Transactional
     public void deleteUserPlaceRating(Long id, long pId) {
         em.createQuery("DELETE FROM PlaceRating e WHERE e.user.id=:id AND e.place.id=:pId")
                 .setParameter("id", id)
                 .setParameter("pId", pId)
                 .executeUpdate();
+    }
+
+    @Override
+    public long isPlaceUser(Long id, Long id1) {
+        return (long) em.createQuery("SELECT COUNT (e.id) FROM Place e inner join e.placeUsers u WHERE u.id=:uId AND e.id=:pId")
+                .setParameter("uId", id1)
+                .setParameter("pId", id)
+                .getSingleResult();
+    }
+
+    @Override
+    public int getPlaceFinalRating(Place place) {
+        return (int) Math.round((double) ((em.createQuery("SELECT AVG (r.rating) FROM Place e inner join e.placeRatings r " +
+                "WHERE e.id=:pId")
+                .setParameter("pId", place.getId())
+                .getSingleResult())));
+
+    }
+
+    @Override
+    public UserOrders getOrder(long id) {
+        return em.find(UserOrders.class, id);
+    }
+
+    @Override
+    public int getMenuFinalRating(PlaceMenu placeMenu) {
+        return (int) Math.round((double) em.createQuery("SELECT AVG (e.rating) FROM PlaceMenu m inner join " +
+                "m.menuRatings e WHERE m.id=:mId")
+                .setParameter("mId", placeMenu.getId())
+                .getSingleResult());
+    }
+
+    @Override
+    @Transactional
+    public void updatePlaceRating(Place place, int finalRating) {
+        place.setPlaceFinalRating(finalRating);
+        em.merge(place);
+    }
+
+    @Override
+    @Transactional
+    public void updateMenuFinalRating(PlaceMenu placeMenu, int menuFinalRating) {
+        placeMenu.setMenuFinalRating(menuFinalRating);
+        em.merge(placeMenu);
+    }
+
+    @Override
+    @Transactional
+    public void setOrderComplete(UserOrders order, boolean b) {
+        order.setIsDone(b);
+        em.merge(order);
     }
 
     private <T> List<T> setAsList(List<T> list, T object) {

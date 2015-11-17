@@ -19,14 +19,16 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>${user.userName} places</title>
 
-    <link href="/static/themes/bootstrap.css" rel="stylesheet"/>
-    <link href="/static/css/pages/user-place-list.css" rel="stylesheet"/>
-    <link href="/static/themes/font-awesome.css" rel="stylesheet"/>
+    <link href="<c:url value="/static/css/bootstrap.css"/>" rel="stylesheet"/>
+    <link href="<c:url value="/static/css/pages/user-place-list.css"/>" rel="stylesheet"/>
+    <link href="<c:url value="/static/css/font-awesome.css"/>" rel="stylesheet"/>
     <!-- Bootstrap -->
+    <link rel="stylesheet" href="<c:url value="/static/dist/themes/fontawesome-stars.css"/>">
 
-    <script src="/static/js/jquery.min.js"></script>
+    <script src="<c:url value="/static/js/jquery.min.js"/>"></script>
+    <script src="<c:url value="/static/dist/jquery.barrating.min.js"/>"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="/static/js/bootstrap.js"></script>
+    <script src="<c:url value="/static/js/bootstrap.js"/>"></script>
     <script src="<c:url value="/static/js/salvattore.min.js"/>"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -100,27 +102,14 @@
             background-color: white;
         }
 
-        .rating span.star {
-            font-family: FontAwesome;
-            font-weight: normal;
-            font-style: normal;
-            display: inline-block;
+        .place-btn {
+            background-color: transparent;
+            color: white;
         }
 
-        .rating span.star:hover {
-            cursor: pointer;
-        }
-
-        .rating span.star:before {
-            content: "\f006";
-            padding-right: 5px;
-            color: #777777;
-        }
-
-        .rating span.star:hover:before,
-        .rating span.star:hover ~ span.star:before {
-            content: "\f005";
-            color: #e3cf7a;
+        .place-btn:hover {
+            background-color: rgba(227, 229, 234, 0.2);
+            color: #ddd;
         }
     </style>
 </head>
@@ -158,10 +147,11 @@
                             <li class="list-group-item"><a href="#"><i class="fa fa-power-off fa-fm"></i>Вийти</a></li>
                         </ul>
                     </li>
-
-                    <li>
-                        <a href="/newplace">Приєднатись</a>
-                    </li>
+                    <security:authorize access="hasRole('ROLE_USER')">
+                        <li>
+                            <a href="/newplace">Приєднатись</a>
+                        </li>
+                    </security:authorize>
                 </security:authorize>
 
                 <security:authorize access="isAnonymous()">
@@ -237,7 +227,7 @@
                 </li>
                 <li class="list-group-item"><a href="/user/${user.id}/events">
                     <i class="fa fa-calendar-check-o fa-fm"></i>Мої події</a></li>
-                <li class="list-group-item"><a href="/user/${user.id}/places">
+                <li class="list-group-item"><a href="/user/places">
                     <i class="fa fa-cutlery fa-fm"></i>Мої заклади</a>
                 </li>
 
@@ -250,17 +240,7 @@
                 </li>
             </ul>
         </div>
-        <div class="col col-xs-12 col-md-12 col-lg-10">
-            <div class="container">
-                <div class="row masonry" data-columns>
-                    <c:forEach items="${ordersMap}" var="places" varStatus="i">
-                        <c:set var="place" value="${places.place}"/>
-                        <div>
-                            <div class="panel panel-default" id="places-list">
-                                <div class="panel-groupe">
-                                    <div class="panel panel-default place-panel">
-                                        <div class="panel-heading">
-                                            <table class="table">
+        <!--   <table class="table">
                                                 <tr>
                                                     <td class="place-img-w" rowspan="3">
                                                         <img class="place-img" src="/photo/place/${place.id}/small"
@@ -292,19 +272,43 @@
                                                         </div>
                                                     </td>
                                                 </tr>
-                                            </table>
+                                            </table>-->
+
+        <div class="col col-xs-12 col-md-12 col-lg-10">
+            <div class="container">
+                <div class="row masonry" data-columns>
+                    <jsp:useBean id="ordersMap" scope="request"
+                                 type="java.util.List<com.example.pojo.dto.UserPlaceOrdersDTO>"/>
+                    <c:forEach items="${ordersMap}" var="places" varStatus="i">
+                        <c:set var="place" value="${places.place}"/>
+                        <div>
+                            <div class="panel panel-default" style="border: 0;box-shadow: 2px 3px 8px;"
+                                 id="places-list">
+                                <div class="panel-groupe">
+                                    <div class="panel panel-default place-panel">
+                                        <div style="text-align: center; padding:0" class="panel-heading">
+
+                                            <img class="place-img" src="/photo/place/${place.id}/small"
+                                                 width="100%" height="100%" onerror="http://placehold.it/160x90"/>
+                                            <a class="btn btn-default place-btn" href="/place/${place.id}"
+                                               style="margin-top:-100px">${place.placeName}</a>
+                                            <br/>
+                                            <a class="btn" data-toggle="collapse" style="margin-top:-25px"
+                                               href="#place-${i.getCount()}">Переглянути замовлення</a>
+
+
                                         </div>
                                     </div>
                                     <div class="collapse panel-collapse" id="place-${i.getCount()}">
                                         <div class="panel-body">
                                             <c:forEach items="${places.userUserOrderses}" var="userOrders"
                                                        varStatus="o">
-                                                <table class="table">
+                                                <table class="table" id="user-order-${userOrders.id}">
                                                     <tr>
-                                                        <td width="200px" rowspan="3">
+                                                        <td width="150px" rowspan="3">
                                                             <img class="event-image"
                                                                  src="<c:url value="/photo/menu/${userOrders.menu.id}/small"/>"
-                                                                 width="200px" onerror="http://placehold.it/100x100"/>
+                                                                 width="150px" onerror="http://placehold.it/100x100"/>
                                                         </td>
                                                         <td style="padding-bottom: 0;vertical-align: top;padding-top: 0;height: 1px;">
                                                             <h3 class="menu-name">${userOrders.menu.menuName}</h3>
@@ -327,7 +331,7 @@
                                                             <div class="btn-group dropup" style="float: right;">
                                                                 <a style="cursor:pointer;" data-toggle="modal"
                                                                    data-target="#new-comment"
-                                                                   data-id="${userOrders.menu.id}"
+                                                                   data-id="${userOrders.id}"
                                                                    class="btn btn-default">
                                                                     <i class="fa fa-hand-peace-o"></i>Підтвердити
                                                                 </a>
@@ -379,34 +383,45 @@
                               style="position:relative; resize:vertical;width: 200px; margin-left: -100px; left:50%"
                               id="comment" rows="5"></textarea>
                 </div>
-
-                    <span class="rating">
-                    <span class="star" onclick="submit(1)"></span>
-                    <span class="star" onclick="submit(2)"></span>
-                    <span class="star" onclick="submit(3)"></span>
-                    <span class="star" onclick="submit(4)"></span>
-                    <span class="star" onclick="submit(5)"></span>
-                </span>
+                <select id="example">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
             </div>
         </div>
     </div>
 </div>
 <script>
     var id;
-    function submit(rating) {
-        $.ajax({
-            url: "/menu/" + id + "/comment",
-            data: {
-                comment: $("#comment").val(),
-                rating: rating
-            },
-            method: "POST"
-        }).success(function () {
-            $('#new-comment').modal('hide');
+
+    $(document).ready(function () {
+        var ratingB = $('#example');
+        ratingB.barrating({
+            theme: 'fontawesome-stars',
+            onSelect: function (value, text, event) {
+                if (typeof(event) !== 'undefined') {
+                    $.ajax({
+                        url: "/menu/" + id + "/comment",
+                        data: {
+                            comment: $("#comment").val(),
+                            rating: value
+                        },
+                        method: "POST"
+                    }).success(function () {
+                        $('#new-comment').modal('hide');
+                        var order = $("#user-order-" + id);
+                        order.hide("slow", function () {
+                            order.remove()
+                        })
+                    })
+                }
+            }
         });
 
-    }
-    $(document).ready(function () {
+
         $('#new-comment').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);
             id = button.data('id');

@@ -16,9 +16,9 @@ and open the template in the editor.
     <title>Bootstrap 101 Template</title>
 
     <!-- Bootstrap -->
-    <link href="/static/themes/bootstrap.css" rel="stylesheet"/>
-    <link href="/static/themes/font-awesome.css" rel="stylesheet"/>
-    <link href="/static/themes/jquery.Jcrop.css" rel="stylesheet"/>
+    <link href="/static/css/bootstrap.css" rel="stylesheet"/>
+    <link href="/static/css/font-awesome.css" rel="stylesheet"/>
+    <link href="/static/css/jquery.Jcrop.css" rel="stylesheet"/>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>

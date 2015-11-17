@@ -121,4 +121,17 @@ public interface IDBBean {
 
     void deleteUserPlaceRating(Long id, long pId);
 
+    long isPlaceUser(Long id, Long id1);
+
+    int getPlaceFinalRating(Place place);
+
+    UserOrders getOrder(long id);
+
+    int getMenuFinalRating(PlaceMenu placeMenu);
+
+    void updatePlaceRating(Place place, int finalRating);
+
+    void updateMenuFinalRating(PlaceMenu placeMenu, int menuFinalRating);
+
+    void setOrderComplete(UserOrders order, boolean b);
 }

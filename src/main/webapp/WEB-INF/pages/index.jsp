@@ -12,9 +12,9 @@
     <title>My Place TO Go</title>
 
     <!-- Bootstrap -->
-    <link href="<c:url value="/static/themes/bootstrap.css"/>" rel="stylesheet"/>
+    <link href="<c:url value="/static/css/bootstrap.css"/>" rel="stylesheet"/>
     <link href="<c:url value="/static/css/style.css"/>" rel="stylesheet" type="text/css"/>
-    <link href="<c:url value="/static/themes/font-awesome.css"/>" rel="stylesheet"/>
+    <link href="<c:url value="/static/css/font-awesome.css"/>" rel="stylesheet"/>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="<c:url value="/static/js/jquery.min.js"/>"></script>
@@ -65,9 +65,9 @@
                             <li class="list-group-item"><a href="#"><i class="fa fa-power-off fa-fm"></i>Вийти</a></li>
                         </ul>
                     </li>
-                    <security:authorize access="hasRole('PLACE_OWNER')">
+                    <security:authorize access="hasRole('ROLE_USER')">
                         <li>
-                            <a href="<c:url value="/newplace"/>">Приєднатись</a>
+                            <a href="/newplace">Приєднатись</a>
                         </li>
                     </security:authorize>
                 </security:authorize>
@@ -261,10 +261,10 @@
                                         <span style="float: right; margin-top: 12px; font-size: 20px;" class="rating">
                                             <c:forEach varStatus="rp" begin="0" end="5" step="1">
                                                 <c:if test="${place.placeFinalRating>rp.index}">
-                                                    <i class="fa fa-star rating-star"></i>
+                                                    <i class="fa fa-star-o rating-star"></i>
                                                 </c:if>
                                                 <c:if test="${place.placeFinalRating<rp.index}">
-                                                    <i class="fa fa-star-o rating-star"></i>
+                                                    <i class="fa fa-star rating-star"></i>
                                                 </c:if>
                                             </c:forEach>
                                         </span>

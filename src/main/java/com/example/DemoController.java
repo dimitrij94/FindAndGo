@@ -143,10 +143,9 @@ public class DemoController {
     }
 
     @RequestMapping(value = "/place/{id}", method = RequestMethod.GET)
-    public String getPlacePage(@PathVariable("id") String id,
+    public String getPlacePage(@PathVariable("id") long placeId,
                                Model model) {
         PlaceUser user = userService.placeUser();
-        long placeId = Long.valueOf(id);
         Place p = dao.getPlaceById(placeId);
         if (user != null) {
             model.addAttribute("user", user);
@@ -166,7 +165,7 @@ public class DemoController {
         return "place";
     }
 
-    @RequestMapping(value = "rating/place/${pId}")
+    @RequestMapping(value = "rating/place/{pId}")
     public @ResponseBody int ratePlace(@PathVariable("pId") long pId,
                          @RequestParam("rating")int rating){
         PlaceUser user = userService.placeUser();
@@ -177,6 +176,7 @@ public class DemoController {
     public String getUserPlaces(Model model) {
         PlaceUser user = userService.placeUser();
         model.addAttribute("places", user.getUserPlaces());
+        model.addAttribute("user",user);
         return "places-list";
     }
 
@@ -193,9 +193,8 @@ public class DemoController {
     @RequestMapping(value = "/place/{id}/liked/")
     public
     @ResponseBody
-    int placeLiked(@PathVariable("id") long id,
-                   HttpServletResponse response) {
-        return userService.newUserLikes(id, response);
+    int placeLiked(@PathVariable("id") long id) {
+        return userService.newUserLikes(id);
     }
 
     @RequestMapping(value = "photo/user/{id}/small",

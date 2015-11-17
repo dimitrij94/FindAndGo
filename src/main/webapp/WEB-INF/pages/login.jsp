@@ -11,9 +11,9 @@
     <title>Login page</title>
 
     <!-- Bootstrap -->
-    <link href="<c:url value="/static/themes/bootstrap.css"/>" rel="stylesheet">
+    <link href="<c:url value="/static/css/bootstrap.css"/>" rel="stylesheet">
     <link href="<c:url value="/static/css/style.css"/>" rel="stylesheet" type="text/css">
-    <link href="<c:url value="/static/themes/font-awesome.css"/>" rel="stylesheet">
+    <link href="<c:url value="/static/css/font-awesome.css"/>" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -51,7 +51,7 @@
 </head>
 <body>
 
-<div class="navbar navbar-inverse navbar-fixed-top">
+<div class="navbar navbar-inverse navbar-static-top">
     <div class="container">
         <div class="navbar-header">
             <a href="#" class="navbar-brand">MyPlaceToGo</a>
@@ -69,24 +69,25 @@
                 <security:authorize access="isAuthenticated()">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Мій профіль<b class="caret"></b></a>
-                        <ul id="user-menu-dropdown" class="list-group dropdown-menu">
+                        <ul style="padding:0" id="user-menu-dropdown" class="list-group dropdown-menu">
                             <li id="menu-item-my-page" class="list-group-item"><a href="#"><i
                                     class="fa fa-user fa-fm"></i>Моя
                                 сторінка</a></li>
-                            <li class="list-group-item"><a href="#"><i class="fa fa-bullhorn fa-fm"></i>Мої
+                            <li class="list-group-item"><a href="/user/orders"><i class="fa fa-bullhorn fa-fm"></i>Мої
                                 замовлення</a>
                             </li>
                             <li class="list-group-item"><a href="#"><i class="fa fa-calendar-check-o fa-fm"></i>Мої
                                 події</a></li>
-                            <li class="list-group-item"><a href="#"><i class="fa fa-cutlery fa-fm"></i>Мої заклади</a>
+                            <li class="list-group-item"><a href="/user/places"><i class="fa fa-cutlery fa-fm"></i>Мої заклади</a>
                             </li>
                             <li class="list-group-item"><a href="#"><i class="fa fa-power-off fa-fm"></i>Вийти</a></li>
                         </ul>
                     </li>
-
-                    <li>
-                        <a href="MyPlaceToGo/registrater/owner">Приєднатись</a>
-                    </li>
+                    <security:authorize access="hasRole('ROLE_USER')">
+                        <li>
+                            <a href="/newplace">Приєднатись</a>
+                        </li>
+                    </security:authorize>
                 </security:authorize>
 
                 <security:authorize access="isAnonymous()">
@@ -96,7 +97,7 @@
                             <li>
                                 <span id="authorization-span"></span>
 
-                                <form action="/login" id="authorization-form" method="POST">
+                                <form action="<c:url value="/login"/>" id="authorization-form" method="POST">
 
                                     <div class="input-group" id="authorization-email">
                                         <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i></span>
@@ -131,7 +132,7 @@
             </ul>
 
             <form action="" id="search-form" class="navbar-form navbar-right">
-                <div class="input-group">
+                <div style="margin:0" class="input-group">
                     <span class="input-group-addon"><i class="fa fa-search fa-fw"></i></span>
                     <input class="form-control" type="text" placeholder="search stuff">
                 </div>

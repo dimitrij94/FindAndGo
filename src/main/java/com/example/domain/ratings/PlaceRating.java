@@ -14,8 +14,6 @@ public class PlaceRating {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
-
-    @Pattern(regexp = "[1-5]")
     private int rating;
 
     @ManyToOne
@@ -71,4 +69,6 @@ public class PlaceRating {
     public void setUser(PlaceUser user) {
         this.user = user;
     }
+
+
 }

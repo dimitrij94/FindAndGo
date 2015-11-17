@@ -10,12 +10,12 @@
 }
 @media screen and (min-width: 992px) and (max-width: 1199px) {
     .masonry[data-columns]::before{
-        content: '2 .col-xs-6';
+        content: '2 .col-xs-4';
     }
 }
 @media screen and (min-width: 1200px) {
     .masonry[data-columns]::before{
-        content: '2 .col-xs-5';
+        content: '2 .col-xs-4';
     }
 }
 

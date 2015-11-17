@@ -21,13 +21,13 @@
 
     <link href="<c:url value="/static/css/place-profile.css"/>" rel="stylesheet"/>
     <!-- Bootstrap -->
-    <link href="<c:url value="/static/themes/bootstrap.css"/>" rel="stylesheet"/>
-    <link href="<c:url value="/static/themes/font-awesome.css"/>" rel="stylesheet"/>
-    <link href="<c:url value="/static/themes/jquery.Jcrop.css"/>" rel="stylesheet"/>
-    <link rel="stylesheet" href="<c:url value="/static/themes/fontawesome-stars.css"/>">
+    <link href="<c:url value="/static/css/bootstrap.css"/>" rel="stylesheet"/>
+    <link href="<c:url value="/static/css/font-awesome.css"/>" rel="stylesheet"/>
+    <link href="<c:url value="/static/css/jquery.Jcrop.css"/>" rel="stylesheet"/>
+    <link rel="stylesheet" href="<c:url value="/static/dist/themes/fontawesome-stars.css"/>">
     <script type="text/javascript" src="<c:url value="/static/js/jquery.min.js"/>"></script>
+    <script src="<c:url value="/static/dist/jquery.barrating.min.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/static/js/jquery-ui-1.8.1.custom.min.js"/>"></script>
-    <script src="jquery.barrating.min.js"></script>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -101,6 +101,7 @@
 
 </head>
 <body>
+
 <div class="navbar navbar-inverse navbar-static-top">
     <div class="container">
         <div class="navbar-header">
@@ -119,23 +120,23 @@
                 <security:authorize access="isAuthenticated()">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Мій профіль<b class="caret"></b></a>
-                        <ul id="user-menu-dropdown" class="list-group dropdown-menu">
+                        <ul style="padding:0" id="user-menu-dropdown" class="list-group dropdown-menu">
                             <li id="menu-item-my-page" class="list-group-item"><a href="#"><i
                                     class="fa fa-user fa-fm"></i>Моя
                                 сторінка</a></li>
-                            <li class="list-group-item"><a href="#"><i class="fa fa-bullhorn fa-fm"></i>Мої
+                            <li class="list-group-item"><a href="/user/orders"><i class="fa fa-bullhorn fa-fm"></i>Мої
                                 замовлення</a>
                             </li>
                             <li class="list-group-item"><a href="#"><i class="fa fa-calendar-check-o fa-fm"></i>Мої
                                 події</a></li>
-                            <li class="list-group-item"><a href="#"><i class="fa fa-cutlery fa-fm"></i>Мої заклади</a>
+                            <li class="list-group-item"><a href="/user/places"><i class="fa fa-cutlery fa-fm"></i>Мої заклади</a>
                             </li>
                             <li class="list-group-item"><a href="#"><i class="fa fa-power-off fa-fm"></i>Вийти</a></li>
                         </ul>
                     </li>
-                    <security:authorize access="hasRole('PLACE_OWNER')">
+                    <security:authorize access="hasRole('ROLE_USER')">
                         <li>
-                            <a href="<c:url value="/newplace"/>">Приєднатись</a>
+                            <a href="/newplace">Приєднатись</a>
                         </li>
                     </security:authorize>
                 </security:authorize>
@@ -246,6 +247,22 @@
             <c:if test="${isOwner eq false}">
                 <div class="col col-md-2 hidden-sm hidden-xs">
                     <ul class="list-group" id="user-controls">
+                        <li style="text-align: center" class="list-group-item">
+                   <span class="fa-stack" style="font-size: 60px">
+                     <i class="fa fa-circle fa-stack-2x"></i>
+                        <c:choose>
+                            <c:when test="${place.placeSpeciality.speciality=='Sport'}">
+                                <i class="fa fa-footbol fa-stack-1x fa-inverse"></i>
+                            </c:when>
+                            <c:when test="${place.placeSpeciality.speciality=='NightClub'}">
+                                <i class="fa fa-glass fa-stack-1x fa-inverse"></i>
+                            </c:when>
+                            <c:when test="${place.placeSpeciality.speciality=='Cafe'}">
+                                <i class="fa fa-coffee fa-stack-1x fa-inverse"></i>
+                            </c:when>
+                        </c:choose>
+                   </span>
+                        </li>
                         <li class="list-group-item">
                             <a href="/user/profile"><i class="fa fa-user fa-fm"></i><c:out value="Мій профайл"/></a>
                         </li>
@@ -293,7 +310,7 @@
                             </c:if>
                         </td>
                         <td>
-                            <div>
+                            <div style="float:right">
                                 <select id="example">
                                     <option value="1">1</option>
                                     <option value="2">2</option>
@@ -667,18 +684,20 @@
     var liked;
 
     $(document).ready(function () {
-        var ratingB=$('#example');
+        var ratingB = $('#example');
         ratingB.barrating({
             theme: 'fontawesome-stars',
             initialRating:${place.placeFinalRating},
-            readOnly:${used},
+            readOnly:${used eq true},
             onSelect: function (value, text, event) {
-                $.ajax({
-                    url: "place/rating/",
-                    data: {rating:value}
-                }).success(function (data) {
-                    ratingB.barrating("set",data)
-                });
+                if (typeof(event) !== 'undefined') {
+                    $.ajax({
+                        url: "/rating/place/" +${place.id},
+                        data: {rating: value}
+                    }).success(function (data) {
+                        ratingB.barrating("set", data)
+                    });
+                }
             }
         });
 
@@ -737,11 +756,11 @@
 
 
     function switchHearts() {
-        if (liked == 1) {
+        if (liked == 0) {
             $("#heart").removeClass("fa-heart-o");
             $("#heart").addClass("fa-heart");
         }
-        if (liked == 0) {
+        if (liked == 1) {
             $("#heart").addClass("fa-heart-o");
             $("#heart").removeClass("fa-heart");
         }

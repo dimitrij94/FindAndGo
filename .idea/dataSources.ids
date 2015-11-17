@@ -533,6 +533,7 @@
       <column name="PlaceFollowersNum" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
       <column name="placeSpeciality" sqlType="BIGINT" precision="19" scale="0" nullable="true" jdbcType="-5" def="MQ=="/>
       <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="place_ibfk_2" columns="placeSpeciality" ref-table="place_speciality" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="2" deferrability="2"/>
       <foreign-key name="place_ibfk_1" columns="placeOwner" ref-table="placeuser" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
       <exported-key name="event_ibfk_1" table="event" schema="" catalog="myplacetogo" columns="place_id"/>
       <exported-key name="place_address_ibfk_1" table="place_address" schema="" catalog="myplacetogo" columns="place_id"/>
@@ -542,7 +543,6 @@
       <exported-key name="placemenu_ibfk_1" table="placemenu" schema="" catalog="myplacetogo" columns="menuPlace"/>
       <exported-key name="placerating_ibfk_1" table="placerating" schema="" catalog="myplacetogo" columns="place"/>
       <exported-key name="user_order_ibfk_1" table="user_order" schema="" catalog="myplacetogo" columns="place"/>
-      <index name="placeSpeciality" unique="false" columns="placeSpeciality"/>
     </table>
     <table name="place_address" schema="" catalog="myplacetogo" type="TABLE">
       <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
@@ -617,6 +617,7 @@
       <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
       <column name="speciality" sqlType="VARCHAR" precision="20" scale="0" nullable="true" jdbcType="12"/>
       <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="place_ibfk_2" table="place" schema="" catalog="myplacetogo" columns="placeSpeciality"/>
       <index name="unique_id" unique="true" columns="id"/>
     </table>
     <table name="placemenu" schema="" catalog="myplacetogo" type="TABLE">
@@ -721,6 +722,7 @@
       <column name="place" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
       <column name="user" sqlType="BIGINT" precision="19" scale="0" nullable="true" jdbcType="-5"/>
       <column name="menu" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
+      <column name="isDone" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6" def="MA=="/>
       <primary-key name="PRIMARY" columns="id"/>
       <foreign-key name="user_order_ibfk_1" columns="place" ref-table="place" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
       <foreign-key name="user_order_ibfk_2" columns="user" ref-table="placeuser" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>

@@ -21,7 +21,7 @@ public interface UserService {
     boolean isAuthenticated();
 
 
-    int newUserLikes(long id, HttpServletResponse response);
+    int newUserLikes(long id);
 
     void newUserComment(String comment, int rating, long id);
 }
