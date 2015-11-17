@@ -16,9 +16,9 @@ and open the template in the editor.
     <title>Bootstrap 101 Template</title>
 
     <!-- Bootstrap -->
-    <link href="/static/css/bootstrap.css" rel="stylesheet"/>
-    <link href="/static/css/font-awesome.css" rel="stylesheet"/>
-    <link href="/static/css/jquery.Jcrop.css" rel="stylesheet"/>
+    <link href="/static/themes/bootstrap.css" rel="stylesheet"/>
+    <link href="/static/themes/font-awesome.css" rel="stylesheet"/>
+    <link href="/static/themes/jquery.Jcrop.css" rel="stylesheet"/>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -154,11 +154,11 @@ and open the template in the editor.
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Мій профіль<b class="caret"></b></a>
                         <ul id="user-menu-dropdown" class="list-group dropdown-menu">
-                            <li id="menu-item-my-page" class="list-group-item"><a href="#"><i
+                            <li id="menu-item-my-page" class="list-group-item"><a href="/user/profile"><i
                                     class="fa fa-user fa-fm"></i>Моя
                                 сторінка</a></li>
-                            <li class="list-group-item"><a href="#"><i class="fa fa-bullhorn fa-fm"></i>Мої
-                                замовлення</a>
+                            <li class="list-group-item">
+                                <a href="/user/orders"><i class="fa fa-bullhorn fa-fm"></i>Мої замовлення</a>
                             </li>
                             <li class="list-group-item"><a href="#"><i class="fa fa-calendar-check-o fa-fm"></i>Мої
                                 події</a></li>
@@ -169,7 +169,7 @@ and open the template in the editor.
                     </li>
 
                     <li>
-                        <a href="/registrater/owner">Приєднатись</a>
+                        <a href="/newplace">Приєднатись</a>
                     </li>
                 </security:authorize>
 

@@ -10,6 +10,7 @@ import com.example.pojo.dto.ServiceDTO;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
@@ -27,5 +28,5 @@ public interface PlaceService {
 
     boolean isMenuFromPlace(PlaceMenu menu, Place place);
 
-    void newLike(PlaceUser user, long id);
+    int newPlaceRating(int rating, long pId, PlaceUser user);
 }

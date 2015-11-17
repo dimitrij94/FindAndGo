@@ -15,9 +15,11 @@ import java.util.List;
 public class PlaceMenuOptionalService {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
-    String description;
-    int price;
+    private Long id;
+    private String description;
+    private int price;
+    private int hh;
+    private int mm;
 
     @ManyToOne
     @JoinColumn(name = "menu")
@@ -37,6 +39,8 @@ public class PlaceMenuOptionalService {
     public PlaceMenuOptionalService(ServiceDTO serviceDTO) {
         description = serviceDTO.getServiceDescription();
         price = serviceDTO.getServicePrice();
+        hh=serviceDTO.getServiceHours();
+        mm=serviceDTO.getServiceMinutes();
     }
 
     public Long getId() {
@@ -77,5 +81,21 @@ public class PlaceMenuOptionalService {
 
     public void setUserOrderses(List<UserOrders> userOrderses) {
         this.userOrderses = userOrderses;
+    }
+
+    public int getHh() {
+        return hh;
+    }
+
+    public void setHh(int hh) {
+        this.hh = hh;
+    }
+
+    public int getMm() {
+        return mm;
+    }
+
+    public void setMm(int mm) {
+        this.mm = mm;
     }
 }

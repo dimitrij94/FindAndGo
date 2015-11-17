@@ -40,7 +40,7 @@ public class PlaceUser {
     private List<Authorities> authorities;
 
     @OneToMany(mappedBy = "user")
-    private List<PlaceMenuRating> user;
+    private List<PlaceMenuRating> userMenuRatings;
 
     @OneToMany(mappedBy = "placeOwner")
     private List<Place> ownerPlaces;
@@ -156,12 +156,12 @@ public class PlaceUser {
         this.authorities = authorities;
     }
 
-    public List<PlaceMenuRating> getUser() {
-        return user;
+    public List<PlaceMenuRating> getUserMenuRatings() {
+        return userMenuRatings;
     }
 
-    public void setUser(List<PlaceMenuRating> user) {
-        this.user = user;
+    public void setUserMenuRatings(List<PlaceMenuRating> user) {
+        this.userMenuRatings = user;
     }
 
     public List<Place> getUserPlaces() {
@@ -246,6 +246,22 @@ public class PlaceUser {
 
     public void setUserOrderses(List<UserOrders> userOrderses) {
         this.userOrderses = userOrderses;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PlaceUser user = (PlaceUser) o;
+
+        return id.equals(user.id);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }
 

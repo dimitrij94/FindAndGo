@@ -4,6 +4,7 @@ import com.example.domain.Place;
 import com.example.domain.PlaceUser;
 import com.example.pojo.dto.UserPlaceOrdersDTO;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -20,4 +21,7 @@ public interface UserService {
     boolean isAuthenticated();
 
 
+    int newUserLikes(long id, HttpServletResponse response);
+
+    void newUserComment(String comment, int rating, long id);
 }

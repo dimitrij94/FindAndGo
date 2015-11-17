@@ -8,6 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
 
 <!DOCTYPE html>
 <html lang="ru">
@@ -16,12 +17,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Bootstrap 101 Template</title>
+    <title>${user.userName} places</title>
 
-    <link href="/static/css/bootstrap.css" rel="stylesheet"/>
+    <link href="/static/themes/bootstrap.css" rel="stylesheet"/>
     <link href="/static/css/pages/user-place-list.css" rel="stylesheet"/>
-    <link href="/static/css/font-awesome.css" rel="stylesheet"/>
+    <link href="/static/themes/font-awesome.css" rel="stylesheet"/>
     <!-- Bootstrap -->
+
+    <script src="/static/js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/static/js/bootstrap.js"></script>
+    <script src="<c:url value="/static/js/salvattore.min.js"/>"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -81,14 +87,40 @@
             border-left: 0;
             border-radius: 0 4px 4px 0px;
         }
-        .panel-body table{
+
+        .panel-body table {
             border-bottom: 1px solid #ddd;
         }
-        .panel-body table:last-child{
+
+        .panel-body table:last-child {
             border-bottom: 0;
         }
-        .panel-default > .panel-heading{
+
+        .panel-default > .panel-heading {
             background-color: white;
+        }
+
+        .rating span.star {
+            font-family: FontAwesome;
+            font-weight: normal;
+            font-style: normal;
+            display: inline-block;
+        }
+
+        .rating span.star:hover {
+            cursor: pointer;
+        }
+
+        .rating span.star:before {
+            content: "\f006";
+            padding-right: 5px;
+            color: #777777;
+        }
+
+        .rating span.star:hover:before,
+        .rating span.star:hover ~ span.star:before {
+            content: "\f005";
+            color: #e3cf7a;
         }
     </style>
 </head>
@@ -193,14 +225,14 @@
 
                 <li class="list-group-item">
                     <img id="user-photo" class="img-responsive"
-                         <c:if test="${user.photos eq null}">src="http://placehold.it/100x100"</c:if>
+                         <c:if test="${user.photos.size()==0}">src="http://placehold.it/100x100"</c:if>
                             <c:if test="${user.photos ne null}"> src="user/${user.id}/photo/main"</c:if>
                             />
                 </li>
                 <li class="list-group-item">
                     <a href="#"><i class="fa fa-user fa-fm"></i><c:out value="${user.userName}"/></a>
                 </li>
-                <li class="list-group-item"><a href="/user/${user.id}/userOrderses">
+                <li class="list-group-item"><a href="/user/orders">
                     <i class="fa fa-bullhorn fa-fm"></i>Мої замовлення</a>
                 </li>
                 <li class="list-group-item"><a href="/user/${user.id}/events">
@@ -293,7 +325,9 @@
                                                     <tr>
                                                         <td colspan="3">
                                                             <div class="btn-group dropup" style="float: right;">
-                                                                <a href="<c:url value="/menu/${userOrders.menu.id}/ok"/> "
+                                                                <a style="cursor:pointer;" data-toggle="modal"
+                                                                   data-target="#new-comment"
+                                                                   data-id="${userOrders.menu.id}"
                                                                    class="btn btn-default">
                                                                     <i class="fa fa-hand-peace-o"></i>Підтвердити
                                                                 </a>
@@ -331,12 +365,58 @@
         </div>
     </div>
 </div>
+<div id="new-comment" class="modal fade">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button style="margin-top: -9px;" type="button" class="close" data-dismiss="modal"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+            </div>
+            <div style="text-align: center" class="modal-body">
+                <div>
+                    <textarea class="form-control"
+                              style="position:relative; resize:vertical;width: 200px; margin-left: -100px; left:50%"
+                              id="comment" rows="5"></textarea>
+                </div>
 
+                    <span class="rating">
+                    <span class="star" onclick="submit(1)"></span>
+                    <span class="star" onclick="submit(2)"></span>
+                    <span class="star" onclick="submit(3)"></span>
+                    <span class="star" onclick="submit(4)"></span>
+                    <span class="star" onclick="submit(5)"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var id;
+    function submit(rating) {
+        $.ajax({
+            url: "/menu/" + id + "/comment",
+            data: {
+                comment: $("#comment").val(),
+                rating: rating
+            },
+            method: "POST"
+        }).success(function () {
+            $('#new-comment').modal('hide');
+        });
 
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="/static/js/jquery.min.js"></script>
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="/static/js/bootstrap.js"></script>
+    }
+    $(document).ready(function () {
+        $('#new-comment').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            id = button.data('id');
+        });
+        $(".star").click(
+                $(".comment-form").submit()
+        );
+    });
+</script>
+
 <script src="/static/js/salvattore.min.js"></script>
 </body>
 </html>

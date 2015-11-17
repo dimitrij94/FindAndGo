@@ -13,8 +13,6 @@ import com.example.services.placeservice.PlaceService;
 import com.example.services.placeservice.menu.MenuService;
 import com.example.services.registration.RegistrationService;
 import com.example.services.userservice.UserService;
-import com.example.validators.AddressValidator;
-import com.example.validators.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -22,7 +20,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -72,9 +69,8 @@ public class DemoController {
 
     @RequestMapping({"/", "/home"})
     public String getIndexPage(Model model) {
-        if (userService.isAuthenticated()) model.addAttribute(userService.placeUser());
-        model.addAttribute("events", dao.getMainEvents());
         model.addAttribute("places", dao.getMainPlaces());
+        if (userService.isAuthenticated()) model.addAttribute(userService.placeUser());
         return "index";
     }
 
@@ -93,7 +89,7 @@ public class DemoController {
         if (!result.hasErrors()) {
             PlaceUser user = registrationService.register(userForm, request);
             if (user.getId() != null) {
-                model.addAttribute("user",user);
+                model.addAttribute("user", user);
                 return "redirect:/confirm";
             }
         }
@@ -157,26 +153,49 @@ public class DemoController {
             if (p.getPlaceOwner().getId().equals(user.getId())) {
                 model.addAttribute("isOwner", true);
                 model.addAttribute("menu", new MenuDTO());
+                model.addAttribute("used",false);
                 if (p.getPlaceMenu() != null)
                     model.addAttribute("service", new ServiceDTO());
             } else {
-                model.addAttribute("liked", dao.countLiked(user.getId(), p.getId()));
+                model.addAttribute("liked", p.getPlaceUsers().size() == 0 ? 0 : 1);
                 model.addAttribute("isOwner", false);
+                model.addAttribute("used",dao.isUserUsedPlace(p, user));
             }
         }
         model.addAttribute(p);
         return "place";
     }
 
-    @RequestMapping(value = "place/{id}/liked/")
-    public void placeLiked(@PathVariable("id") long id,
-                           @RequestParam("i") int i,
-                           HttpServletResponse response) {
-
+    @RequestMapping(value = "rating/place/${pId}")
+    public @ResponseBody int ratePlace(@PathVariable("pId") long pId,
+                         @RequestParam("rating")int rating){
         PlaceUser user = userService.placeUser();
-        if (i == 1) dao.newPlaceLike(user, id);
-        if (i == 0) dao.removeLike(user, id);
+        return placeService.newPlaceRating(rating,pId,user);
+    }
+
+    @RequestMapping(value = "/user/places")
+    public String getUserPlaces(Model model) {
+        PlaceUser user = userService.placeUser();
+        model.addAttribute("places", user.getUserPlaces());
+        return "places-list";
+    }
+
+    @RequestMapping(value = "/menu/{id}/comment", method = RequestMethod.POST)
+    public void newMenuComment(
+            @RequestParam("comment") String comment,
+            @RequestParam("rating") int rating,
+            @PathVariable("id") long id,
+            HttpServletResponse response) {
+        userService.newUserComment(comment, rating, id);
         response.setStatus(HttpStatus.OK.value());
+    }
+
+    @RequestMapping(value = "/place/{id}/liked/")
+    public
+    @ResponseBody
+    int placeLiked(@PathVariable("id") long id,
+                   HttpServletResponse response) {
+        return userService.newUserLikes(id, response);
     }
 
     @RequestMapping(value = "photo/user/{id}/small",
@@ -185,8 +204,8 @@ public class DemoController {
                                HttpServletResponse respose) throws IOException {
         byte[] photo = dao.getUserPhoto(id, "small");
         if (photo == null)
-        respose.sendRedirect("/static/images/user.png");
-        else{
+            respose.sendRedirect("/static/images/user.png");
+        else {
             return photo;
         }
         throw new IOException();
@@ -257,7 +276,7 @@ public class DemoController {
         return "redirect:/place/" + placeId;
     }
 
-    @RequestMapping(value = "/user/profile", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/orders", method = RequestMethod.GET)
     public String toUserProfile(Model model) {
         PlaceUser user = userService.placeUser();
         model.addAttribute("ordersMap", userService.getOrderedServices(user));

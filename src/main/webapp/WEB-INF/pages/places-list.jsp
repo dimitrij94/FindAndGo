@@ -21,8 +21,8 @@
     <!-- Bootstrap -->
 
     <link href="/static/css/pages/user-place-list.css" rel="stylesheet"/>
-    <link href="/static/css/bootstrap.css" rel="stylesheet"/>
-    <link href="/static/css/font-awesome.css" rel="stylesheet"/>
+    <link href="/static/themes/bootstrap.css" rel="stylesheet"/>
+    <link href="/static/themes/font-awesome.css" rel="stylesheet"/>
     <link href="/static/css/pages/registration.css" rel="stylesheet"/>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -137,28 +137,49 @@
                         <div>
                             <div class="panel panel-default" id="places-list">
                                 <div class="panel-groupe">
-                                    <div class="panel panel-default place-panel">
-                                        <div class="panel-heading">
-                                            <img class="place-img" src="/place/${place.id}/photo/small"
-                                                 onerror="http://placehold.it/100x100"/>
-
-                                            <h2 class="place-name-exp">
-                                                <a href="/place/${place.id}}"><c:out value="${place.placeName}"/></a>
-                                                <i class="fa fa-cultery"></i>
-                                            </h2>
-
-                                            <p>
-                                                <c:out value="${place.placeDescription}"/>
-                                            </p>
-
-                                            <div class="btn-group btn-place-dropdown btn-right">
-                                                <a class="btn btn-primary" data-toggle="collapse" href="#place-${i}">
-                                                    Показати події
-                                                </a>
-                                                <a class="btn btn-primary">
-                                                    <span class="badge">2</span>
-                                                </a>
-                                            </div>
+                                    <div style="margin: 0" class="panel panel-default place-panel">
+                                        <div class="panel-heading" style="padding: 0">
+                                            <table class="table">
+                                                <tr>
+                                                    <td>
+                                                        <img class="place-img" src="/photo/place/${place.id}/small"
+                                                             width="100%" onerror="http://placehold.it/100x100"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div>
+                                                            <h2 style="margin: 0" class="place-name-exp">
+                                                                <a style="margin: 0" href="/place/${place.id}}"><c:out
+                                                                        value="${place.placeName}"/></a>
+                                                                <i class="fa fa-cultery"></i>
+                                                            </h2>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <p>
+                                                            <c:out value="${place.placeDescription}"/>
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <c:if test="${place.placeEvents.size()!=0}">
+                                                    <tr>
+                                                        <td>
+                                                            <div class="btn-group btn-place-dropdown btn-right">
+                                                                <a class="btn btn-primary" data-toggle="collapse"
+                                                                   href="#place-${i}">
+                                                                    Показати події
+                                                                </a>
+                                                                <a class="btn btn-primary">
+                                                                    <span class="badge">${place.placeEvents.size()}</span>
+                                                                </a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </c:if>
+                                            </table>
                                         </div>
                                     </div>
                                     <c:if test="${place.placeEvents!=null}">
@@ -192,22 +213,11 @@
                                                                 <i class="fa fa-cog"></i>Видалити
                                                             </td>
                                                         </tr>
-
                                                     </table>
                                                 </c:forEach>
                                             </div>
                                         </div>
                                     </c:if>
-                                    <c:otherwise>
-                                        <div class="collapse" id="place-${i}">
-                                            <div class="panel-body">
-                                                <div class="jumbotron">
-                                                    <h2>Ніяких заходів ще не було заплановано</h2>
-                                                    <small>повертайтесь пізніше</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </c:otherwise>
                                 </div>
                             </div>
                         </div>

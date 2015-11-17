@@ -33,9 +33,11 @@ public class Place {
     private String placeDescription;
 
     private int placeFinalRating;
-    private int placeRatingsNum;
     private int placeFollowersNum;
-    private String placeSpeciality;
+
+    @OneToOne
+    @JoinColumn(name = "placeSpeciality")
+    private PlaceSpeciality placeSpeciality;
 
     @OneToMany(mappedBy = "place")
     private List<PlaceRating> placeRatings;
@@ -71,13 +73,11 @@ public class Place {
     public Place(HttpServletRequest request){
         this.placeName=request.getParameter("placeName");
         this.placeDescription=request.getParameter("placeDescription");
-        this.placeSpeciality=request.getParameter("placeSpeciality");
     }
 
     public Place(PlaceDTO place){
         this.placeName=place.getName();
         this.placeDescription=place.getDescription();
-        this.placeSpeciality=place.getSpecialization();
     }
 
     public Long getId() {
@@ -112,14 +112,6 @@ public class Place {
         this.placeFinalRating = placeFinalRating;
     }
 
-    public int getPlaceRatingsNum() {
-        return placeRatingsNum;
-    }
-
-    public void setPlaceRatingsNum(int placeRatingsNum) {
-        this.placeRatingsNum = placeRatingsNum;
-    }
-
     public int getPlaceFollowersNum() {
         return placeFollowersNum;
     }
@@ -128,11 +120,11 @@ public class Place {
         this.placeFollowersNum = placeFollowersNum;
     }
 
-    public String getPlaceSpeciality() {
+    public PlaceSpeciality getPlaceSpeciality() {
         return placeSpeciality;
     }
 
-    public void setPlaceSpeciality(String placeSpeciality) {
+    public void setPlaceSpeciality(PlaceSpeciality placeSpeciality) {
         this.placeSpeciality = placeSpeciality;
     }
 

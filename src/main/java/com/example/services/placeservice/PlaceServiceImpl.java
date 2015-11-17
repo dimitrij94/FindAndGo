@@ -6,13 +6,16 @@ import com.example.domain.addresses.PlaceAddress;
 import com.example.dao.IDBBean;
 import com.example.domain.menu.PlaceMenu;
 import com.example.domain.menu.PlaceMenuOptionalService;
+import com.example.domain.ratings.PlaceRating;
 import com.example.pojo.dto.MenuDTO;
 import com.example.pojo.dto.PlaceDTO;
 import com.example.pojo.dto.ServiceDTO;
 import com.example.services.imageservice.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
@@ -34,6 +37,7 @@ public class PlaceServiceImpl implements PlaceService {
         Place place = new Place(placeDTO);
         PlaceAddress placeAddress = new PlaceAddress(placeDTO.getAddress());
         dao.addNewPlace(place, placeAddress, owner);
+        place.setPlaceSpeciality(dao.getPlaceSpeciality(placeDTO.getSpecialization()));
         imageService.uploadPlaceMainPhoto(placeDTO.getPhoto(), place);
         return place;
     }
@@ -68,10 +72,21 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public void newLike(PlaceUser user, long id) {
-        if(dao.countLiked(user.getId(),id)==0){
-            dao.newPlaceLike(user,id);
+    public int newPlaceRating(int rating, long pId, PlaceUser user) {
+        Place place = dao.getPlaceById(pId);
+        if(dao.countUserPlaceRatings(pId,user.getId())>0){
+            dao.newPlaceRating(place,user,rating);
         }
+        else {
+            dao.deleteUserPlaceRating(user.getId(),pId);
+            dao.newPlaceRating(place,user,rating);
+        }
+        long ratingsNum = place.getPlaceRatings().size();
+        int ratingsSum=0;
+        for(PlaceRating p:place.getPlaceRatings()){
+            ratingsSum+=p.getRating();
+        }
+        return Math.round(ratingsSum/ratingsNum);
     }
 
 

@@ -10,8 +10,8 @@ public class PlaceMenuRating {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
-    private float rating;
-
+    private int rating;
+    private String comment;
     @ManyToOne
     @JoinColumn(name = "user")
     private PlaceUser user;
@@ -20,7 +20,7 @@ public class PlaceMenuRating {
     @JoinColumn(name="menu")
     private PlaceMenu menu;
 
-    public PlaceMenuRating rating(float rating){
+    public PlaceMenuRating rating(int rating){
         this.rating=rating;
         return this;
     }
@@ -34,6 +34,10 @@ public class PlaceMenuRating {
         return this;
     }
 
+    public PlaceMenuRating comment(String comment){
+        this.comment=comment;
+        return this;
+    }
     public Long getId() {
         return id;
     }
@@ -46,7 +50,31 @@ public class PlaceMenuRating {
         return rating;
     }
 
-    public void setRating(float rating) {
+    public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public PlaceUser getUser() {
+        return user;
+    }
+
+    public void setUser(PlaceUser user) {
+        this.user = user;
+    }
+
+    public PlaceMenu getMenu() {
+        return menu;
+    }
+
+    public void setMenu(PlaceMenu menu) {
+        this.menu = menu;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

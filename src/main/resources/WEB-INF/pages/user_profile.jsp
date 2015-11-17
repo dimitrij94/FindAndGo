@@ -21,9 +21,9 @@
     <title>Bootstrap 101 Template</title>
 
     <!-- Bootstrap -->
-    <link href="../../../webapp/static/css/bootstrap.css" rel="stylesheet"/>
+    <link href="../../../webapp/static/themes/bootstrap.css" rel="stylesheet"/>
     <link href="../../../webapp/static/css/pages/user-place-list.css" rel="stylesheet"/>
-    <link href="../../../webapp/static/css/font-awesome.css" rel="stylesheet"/>
+    <link href="../../../webapp/static/themes/font-awesome.css" rel="stylesheet"/>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

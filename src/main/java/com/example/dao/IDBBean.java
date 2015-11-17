@@ -7,9 +7,7 @@
 package com.example.dao;
 
 
-import com.example.domain.UserOrders;
-import com.example.domain.Place;
-import com.example.domain.PlaceEvent;
+import com.example.domain.*;
 import com.example.domain.menu.PlaceMenu;
 import com.example.domain.addresses.PlaceAddress;
 import com.example.domain.addresses.UserAddress;
@@ -18,7 +16,6 @@ import com.example.domain.photos.PlaceMenuPhoto;
 import com.example.domain.registration.Authorities;
 import com.example.domain.registration.VerificationToken;
 import com.example.domain.photos.PlacePhoto;
-import com.example.domain.PlaceUser;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -101,11 +98,27 @@ public interface IDBBean {
 
     PlaceUser getUserById(long i);
 
-    int countLiked(Long userId, Long placeId);
-
-    void newPlaceLike(PlaceUser user, long id);
+    void newPlaceLike(PlaceUser user, Place place);
 
     void removeLike(PlaceUser user, long placeId);
 
     public byte[] getUserPhoto(long id, String name);
+
+    long countUserMenuRatings(long menuId, long userId);
+
+    void newPlaceMenuRating(String comment, int rating, PlaceUser user, PlaceMenu placeMenu);
+
+    void deleteComment(PlaceUser user, PlaceMenu placeMenu);
+
+    PlaceSpeciality getPlaceSpeciality(String specialization);
+
+    boolean isUserUsedPlace(Place p, PlaceUser user);
+
+    long countUserPlaceRatings(long pId, Long id);
+
+
+    void newPlaceRating(Place place, PlaceUser user, int rating);
+
+    void deleteUserPlaceRating(Long id, long pId);
+
 }

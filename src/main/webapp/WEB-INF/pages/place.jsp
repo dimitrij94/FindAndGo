@@ -11,7 +11,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="place" scope="request" type="com.example.domain.Place"/>
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="ru">
 <head>
     <title>${place.placeName}</title>
@@ -22,12 +21,13 @@
 
     <link href="<c:url value="/static/css/place-profile.css"/>" rel="stylesheet"/>
     <!-- Bootstrap -->
-    <link href="<c:url value="/static/css/bootstrap.css"/>" rel="stylesheet"/>
-    <link href="<c:url value="/static/css/font-awesome.css"/>" rel="stylesheet"/>
-    <link href="<c:url value="/static/css/jquery.Jcrop.css"/>" rel="stylesheet"/>
-
+    <link href="<c:url value="/static/themes/bootstrap.css"/>" rel="stylesheet"/>
+    <link href="<c:url value="/static/themes/font-awesome.css"/>" rel="stylesheet"/>
+    <link href="<c:url value="/static/themes/jquery.Jcrop.css"/>" rel="stylesheet"/>
+    <link rel="stylesheet" href="<c:url value="/static/themes/fontawesome-stars.css"/>">
     <script type="text/javascript" src="<c:url value="/static/js/jquery.min.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/static/js/jquery-ui-1.8.1.custom.min.js"/>"></script>
+    <script src="jquery.barrating.min.js"></script>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -96,6 +96,7 @@
             vertical-align: middle;
             text-align: right
         }
+
     </style>
 
 </head>
@@ -203,13 +204,13 @@
                    <span class="fa-stack" style="font-size: 60px">
                      <i class="fa fa-circle fa-stack-2x"></i>
                         <c:choose>
-                            <c:when test="${place.placeSpeciality=='Sport'}">
+                            <c:when test="${place.placeSpeciality.speciality=='Sport'}">
                                 <i class="fa fa-footbol fa-stack-1x fa-inverse"></i>
                             </c:when>
-                            <c:when test="${place.placeSpeciality=='NightClub'}">
+                            <c:when test="${place.placeSpeciality.speciality=='NightClub'}">
                                 <i class="fa fa-glass fa-stack-1x fa-inverse"></i>
                             </c:when>
-                            <c:when test="${place.placeSpeciality=='Cafe'}">
+                            <c:when test="${place.placeSpeciality.speciality=='Cafe'}">
                                 <i class="fa fa-coffee fa-stack-1x fa-inverse"></i>
                             </c:when>
                         </c:choose>
@@ -245,21 +246,11 @@
             <c:if test="${isOwner eq false}">
                 <div class="col col-md-2 hidden-sm hidden-xs">
                     <ul class="list-group" id="user-controls">
-
                         <li class="list-group-item">
-                            <img id="user-photo" class="img-responsive" src="photo/user/${user.id}/small"
-                                 onerror="http://placehold.it/100x100"/>
+                            <a href="/user/profile"><i class="fa fa-user fa-fm"></i><c:out value="Мій профайл"/></a>
                         </li>
-
                         <li class="list-group-item">
-                            <a id="like"><i id="heart" class="fa fa-heart-o fa-fw"></i> Подобається</a>
-                        </li>
-
-                        <li class="list-group-item">
-                            <a href="#"><i class="fa fa-user fa-fm"></i><c:out value="${user.userName}"/></a>
-                        </li>
-                        <li class="list-group-item"><a href="/user/${user.id}/userOrderses">
-                            <i class="fa fa-bullhorn fa-fm"></i>Мої замовлення</a>
+                            <a href="/user/orders"> <i class="fa fa-bullhorn fa-fm"></i>Мої замовлення</a>
                         </li>
                         <li class="list-group-item"><a href="/user/${user.id}/events">
                             <i class="fa fa-calendar-check-o fa-fm"></i>Мої події</a></li>
@@ -287,20 +278,29 @@
                 <table class="table">
                     <tr>
                         <td>
-                            <h3>${place.placeName}</h3><span class="badge">${place.placeOwner.name}</span>
+                            <h3>${place.placeName}</h3>
+                            <c:if test="${isOwner eq false}">
+
+                                <a style="color:white; cursor:pointer" id="like">
+                                    <span class="badge">
+                                        <i id="heart"
+                                           <c:if test="${liked eq 0}">class="fa fa-heart-o fa-fw"</c:if>
+                                           <c:if test="${liked eq 1}">class="fa fa-heart fa-fw"</c:if> >
+                                        </i>
+                                           <span id="place-f-n">${place.placeUsers.size()}</span>
+                                    </span>
+                                </a>
+                            </c:if>
                         </td>
                         <td>
                             <div>
-                                <span style="float: right; margin-top: 12px; font-size: 20px;" class="rating">
-                                    <c:forEach varStatus="rp" begin="1" end="5" step="1">
-                                        <c:if test="${place.placeFinalRating>rp.index}">
-                                            <i class="fa fa-star rating-star"></i>
-                                        </c:if>
-                                        <c:if test="${place.placeFinalRating<rp.index}">
-                                            <i class="fa fa-star-o rating-star"></i>
-                                        </c:if>
-                                    </c:forEach>
-                                </span>
+                                <select id="example">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
                             </div>
                         </td>
                     </tr>
@@ -427,7 +427,8 @@
                                                         </button>
                                                     </security:authorize>
                                                     <c:if test="${isOwner eq true}">
-                                                        <a class="dropdown-toggle btn btn-default" data-toggle="dropdown">
+                                                        <a class="dropdown-toggle btn btn-default"
+                                                           data-toggle="dropdown">
                                                             <i class="fa fa-pencil-square-o fa-fw"></i>
                                                             Змінити
                                                             <span class="caret"></span>
@@ -665,30 +666,96 @@
     var latlng = new google.maps.LatLng(${place.address.latitude}, ${place.address.longitude});
     var liked;
 
-    function switchHearts(){
-        if(like=1){
+    $(document).ready(function () {
+        var ratingB=$('#example');
+        ratingB.barrating({
+            theme: 'fontawesome-stars',
+            initialRating:${place.placeFinalRating},
+            readOnly:${used},
+            onSelect: function (value, text, event) {
+                $.ajax({
+                    url: "place/rating/",
+                    data: {rating:value}
+                }).success(function (data) {
+                    ratingB.barrating("set",data)
+                });
+            }
+        });
+
+
+        liked = ${liked};
+        $("#like").click(function () {
+            like("${place.id}");
+        });
+
+        $('#new-menu-service').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var id = button.data('id');
+            var modal = $(this);
+            modal.find('.modal-body .id-input').val(id);
+
+            var description = modal.find(".service-description");
+            var info = modal.find(".service-description-info");
+
+            description.bind("keypress", function () {
+                updateDescriptionSpan(description, info, 60);
+            });
+        });
+
+        $("#new-menu").on("shown.bs.modal", function () {
+            var target = document.getElementById("image");
+            var src = document.getElementById("upload");
+
+            var description = $("#place_description");
+            var info = $("#description-info");
+
+            showImage(src, target);
+            description.bind("keypress", function () {
+                updateDescriptionSpan(description, info, 250);
+            });
+        });
+        initialize();
+        geocoder.geocode({'location': latlng}, function (results, status) {
+            var infowindow = new google.maps.InfoWindow;
+            if (status === google.maps.GeocoderStatus.OK) {
+                if (results[0]) {
+                    map.setZoom(15);
+                    var marker = new google.maps.Marker({
+                        position: latlng,
+                        map: map
+                    });
+                    infowindow.setContent(results[0].formatted_address);
+                    infowindow.open(map, marker);
+                } else {
+                    window.alert('No results found');
+                }
+            } else {
+                window.alert('Geocoder failed due to: ' + status);
+            }
+        });
+    });
+
+
+    function switchHearts() {
+        if (liked == 1) {
             $("#heart").removeClass("fa-heart-o");
             $("#heart").addClass("fa-heart");
         }
-        if(like=0){
+        if (liked == 0) {
             $("#heart").addClass("fa-heart-o");
             $("#heart").removeClass("fa-heart");
         }
     }
 
-    function like(placeId){
-        $("#like").click(function () {
-            liked+=1;
-            liked%=2;
-            $.ajax({
-                url: "/place/"+placeId+"/like",
-                data:{"i":liked},
-                method:"POST"
-            }).success(function(){
-                switchHearts(liked);
-            });
-            switchHearts(like%2);
-
+    function like(placeId) {
+        liked %= 2;
+        $.ajax({
+            url: "/place/" + placeId + "/liked/",
+            method: "GET"
+        }).success(function (data) {
+            switchHearts(liked % 2);
+            liked += 1;
+            $("#place-f-n").text(data);
         });
     }
     function initialize() {
@@ -757,60 +824,6 @@
             }
         });
     }
-
-    $(document).ready(function () {
-
-        liked='${liked}';
-        $("liked").click(function(){
-            liked("${place.id}");
-        });
-
-        $('#new-menu-service').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var id = button.data('id');
-            var modal = $(this);
-            modal.find('.modal-body .id-input').val(id);
-
-            var description = modal.find(".service-description");
-            var info = modal.find(".service-description-info");
-
-            description.bind("keypress", function () {
-                updateDescriptionSpan(description, info, 60);
-            });
-        });
-
-        $("#new-menu").on("shown.bs.modal", function () {
-            var target = document.getElementById("image");
-            var src = document.getElementById("upload");
-
-            var description = $("#place_description");
-            var info = $("#description-info");
-
-            showImage(src, target);
-            description.bind("keypress", function () {
-                updateDescriptionSpan(description, info, 250);
-            });
-        });
-        initialize();
-        geocoder.geocode({'location': latlng}, function (results, status) {
-            var infowindow = new google.maps.InfoWindow;
-            if (status === google.maps.GeocoderStatus.OK) {
-                if (results[0]) {
-                    map.setZoom(15);
-                    var marker = new google.maps.Marker({
-                        position: latlng,
-                        map: map
-                    });
-                    infowindow.setContent(results[0].formatted_address);
-                    infowindow.open(map, marker);
-                } else {
-                    window.alert('No results found');
-                }
-            } else {
-                window.alert('Geocoder failed due to: ' + status);
-            }
-        });
-    });
 
 
 </script>
