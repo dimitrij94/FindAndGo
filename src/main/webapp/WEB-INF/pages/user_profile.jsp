@@ -148,10 +148,10 @@
                         </ul>
                     </li>
                     <security:authorize access="hasRole('ROLE_USER')">
-                        <li>
-                            <a href="/newplace">Приєднатись</a>
-                        </li>
-                    </security:authorize>
+                    <li>
+                        <a href="/newplace">Приєднатись</a>
+                    </li>
+                </security:authorize>
                 </security:authorize>
 
                 <security:authorize access="isAnonymous()">
@@ -236,7 +236,7 @@
                 </li>
 
                 <li class="list-group-item">
-                    <a href="/j_spring_security_logout"><i class="fa fa-power-off fa-fm"></i>Вийти</a>
+                    <a href="/logout"><i class="fa fa-power-off fa-fm"></i>Вийти</a>
                 </li>
             </ul>
         </div>

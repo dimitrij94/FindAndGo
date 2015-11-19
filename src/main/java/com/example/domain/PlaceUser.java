@@ -36,8 +36,11 @@ public class PlaceUser {
     @OneToOne(mappedBy = "user")
     private VerificationToken tokens;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private List<Authorities> authorities;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(joinColumns = @JoinColumn(name = "userId", referencedColumnName = "id"),
+    inverseJoinColumns = @JoinColumn(name="authorityId", referencedColumnName = "id"),
+    name = "user_authorities")
+    private List<Authorities> authority;
 
     @OneToMany(mappedBy = "user")
     private List<PlaceMenuRating> userMenuRatings;
@@ -148,12 +151,12 @@ public class PlaceUser {
         this.tokens = tokens;
     }
 
-    public List<Authorities> getAuthorities() {
-        return authorities;
+    public List<Authorities> getAuthority() {
+        return authority;
     }
 
-    public void setAuthorities(List<Authorities> authorities) {
-        this.authorities = authorities;
+    public void setAuthority(List<Authorities> authority) {
+        this.authority = authority;
     }
 
     public List<PlaceMenuRating> getUserMenuRatings() {

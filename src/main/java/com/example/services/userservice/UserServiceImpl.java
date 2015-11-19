@@ -5,6 +5,7 @@ import com.example.domain.Place;
 import com.example.domain.PlaceUser;
 import com.example.domain.UserOrders;
 import com.example.domain.menu.PlaceMenu;
+import com.example.domain.registration.Authorities;
 import com.example.pojo.dto.UserPlaceOrdersDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -81,5 +82,14 @@ public class UserServiceImpl implements UserService {
         }
         dao.updateMenuFinalRating(placeMenu, dao.getMenuFinalRating(placeMenu));
         dao.setOrderComplete(order, true);
+    }
+
+    @Override
+    public boolean isUser(PlaceUser user) {
+        for(Authorities a:user.getAuthority()){
+            if(a.getAuthority().equals("ROLE_USER"))
+                return true;
+        }
+        return false;
     }
 }

@@ -173,7 +173,7 @@
                     </li>
 
                     <li class="list-group-item">
-                        <a href="/j_spring_security_logout"><i class="fa fa-power-off fa-fm"></i>Вийти</a>
+                        <a href="/logout"><i class="fa fa-power-off fa-fm"></i>Вийти</a>
                     </li>
                 </ul>
             </c:if>

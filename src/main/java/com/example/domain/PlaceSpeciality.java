@@ -1,6 +1,7 @@
 package com.example.domain;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by Dmitrij on 17.11.2015.
@@ -13,8 +14,8 @@ public class PlaceSpeciality {
     @GeneratedValue
     long id;
     String speciality;
-    @OneToOne(mappedBy = "placeSpeciality")
-    Place place;
+    @ManyToMany(mappedBy = "placeSpeciality")
+    List<Place> place;
 
     public long getId() {
         return id;
@@ -32,11 +33,11 @@ public class PlaceSpeciality {
         this.speciality = speciality;
     }
 
-    public Place getPlace() {
+    public List<Place> getPlace() {
         return place;
     }
 
-    public void setPlace(Place place) {
+    public void setPlace(List<Place> place) {
         this.place = place;
     }
 }

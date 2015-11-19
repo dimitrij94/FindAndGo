@@ -1,6 +1,7 @@
 package com.example.services.placeservice;
 
 import com.example.domain.Place;
+import com.example.domain.PlaceSpeciality;
 import com.example.domain.PlaceUser;
 import com.example.domain.addresses.PlaceAddress;
 import com.example.dao.IDBBean;
@@ -33,8 +34,8 @@ public class PlaceServiceImpl implements PlaceService {
     public Place registerNewPlace(PlaceDTO placeDTO, PlaceUser owner) throws IOException {
         Place place = new Place(placeDTO);
         PlaceAddress placeAddress = new PlaceAddress(placeDTO.getAddress());
-        dao.addNewPlace(place, placeAddress, owner);
-        place.setPlaceSpeciality(dao.getPlaceSpeciality(placeDTO.getSpecialization()));
+        PlaceSpeciality speciality = dao.getPlaceSpeciality(placeDTO.getSpecialization());
+        dao.addNewPlace(place, placeAddress, owner,speciality);
         imageService.uploadPlaceMainPhoto(placeDTO.getPhoto(), place);
         return place;
     }

@@ -35,9 +35,11 @@ public class Place {
     private int placeFinalRating;
     private int placeFollowersNum;
 
-    @OneToOne
-    @JoinColumn(name = "placeSpeciality")
-    private PlaceSpeciality placeSpeciality;
+    @ManyToMany
+    @JoinTable(joinColumns = @JoinColumn(name = "placeId",referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name="specialityId",referencedColumnName = "id"),
+            name = "place_specialities")
+    private List<PlaceSpeciality> placeSpeciality;
 
     @OneToMany(mappedBy = "place")
     private List<PlaceRating> placeRatings;
@@ -120,11 +122,11 @@ public class Place {
         this.placeFollowersNum = placeFollowersNum;
     }
 
-    public PlaceSpeciality getPlaceSpeciality() {
+    public List<PlaceSpeciality> getPlaceSpeciality() {
         return placeSpeciality;
     }
 
-    public void setPlaceSpeciality(PlaceSpeciality placeSpeciality) {
+    public void setPlaceSpeciality(List<PlaceSpeciality> placeSpeciality) {
         this.placeSpeciality = placeSpeciality;
     }
 

@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="securit" uri="http://www.springframework.org/security/tags" %>
 <%--
   Created by IntelliJ IDEA.
   User: Dmitrij
@@ -129,9 +130,11 @@
                             </li>
                             <li class="list-group-item"><a href="#"><i class="fa fa-calendar-check-o fa-fm"></i>Мої
                                 події</a></li>
-                            <li class="list-group-item"><a href="/user/places"><i class="fa fa-cutlery fa-fm"></i>Мої заклади</a>
+                            <li class="list-group-item"><a href="/user/places"><i class="fa fa-cutlery fa-fm"></i>Мої
+                                заклади</a>
                             </li>
-                            <li class="list-group-item"><a href="#"><i class="fa fa-power-off fa-fm"></i>Вийти</a></li>
+                            <li class="list-group-item"><a href="/logout"><i class="fa fa-power-off fa-fm"></i>Вийти</a>
+                            </li>
                         </ul>
                     </li>
                     <security:authorize access="hasRole('ROLE_USER')">
@@ -193,6 +196,7 @@
         </div>
     </div>
 </div>
+<c:set var="placeSpeciality" value="${place.placeSpeciality.get(0).speciality}"/>
 
 <div class="container">
     <div class="row">
@@ -204,17 +208,17 @@
                         <li style="text-align: center" class="list-group-item">
                    <span class="fa-stack" style="font-size: 60px">
                      <i class="fa fa-circle fa-stack-2x"></i>
-                        <c:choose>
-                            <c:when test="${place.placeSpeciality.speciality=='Sport'}">
-                                <i class="fa fa-footbol fa-stack-1x fa-inverse"></i>
-                            </c:when>
-                            <c:when test="${place.placeSpeciality.speciality=='NightClub'}">
-                                <i class="fa fa-glass fa-stack-1x fa-inverse"></i>
-                            </c:when>
-                            <c:when test="${place.placeSpeciality.speciality=='Cafe'}">
-                                <i class="fa fa-coffee fa-stack-1x fa-inverse"></i>
-                            </c:when>
-                        </c:choose>
+                         <c:choose>
+                             <c:when test="${placeSpeciality=='Sport'}">
+                                 <i class="fa fa-footbol fa-stack-1x fa-inverse"></i>
+                             </c:when>
+                             <c:when test="${placeSpeciality=='NightClub'}">
+                                 <i class="fa fa-glass fa-stack-1x fa-inverse"></i>
+                             </c:when>
+                             <c:when test="${placeSpeciality=='Cafe'}">
+                                 <i class="fa fa-coffee fa-stack-1x fa-inverse"></i>
+                             </c:when>
+                         </c:choose>
                    </span>
                         </li>
                         <li class="list-group-item">
@@ -251,13 +255,13 @@
                    <span class="fa-stack" style="font-size: 60px">
                      <i class="fa fa-circle fa-stack-2x"></i>
                         <c:choose>
-                            <c:when test="${place.placeSpeciality.speciality=='Sport'}">
+                            <c:when test="${placeSpeciality=='Sport'}">
                                 <i class="fa fa-footbol fa-stack-1x fa-inverse"></i>
                             </c:when>
-                            <c:when test="${place.placeSpeciality.speciality=='NightClub'}">
+                            <c:when test="${placeSpeciality=='NightClub'}">
                                 <i class="fa fa-glass fa-stack-1x fa-inverse"></i>
                             </c:when>
-                            <c:when test="${place.placeSpeciality.speciality=='Cafe'}">
+                            <c:when test="${placeSpeciality=='Cafe'}">
                                 <i class="fa fa-coffee fa-stack-1x fa-inverse"></i>
                             </c:when>
                         </c:choose>
@@ -300,11 +304,13 @@
 
                                 <a style="color:white; cursor:pointer" id="like">
                                     <span class="badge">
-                                        <i id="heart"
-                                           <c:if test="${liked eq 0}">class="fa fa-heart-o fa-fw"</c:if>
-                                           <c:if test="${liked eq 1}">class="fa fa-heart fa-fw"</c:if> >
+                                                    <i id="heart"
+                                                       class="fa fa-fw
+                                                       <c:if test="${liked eq 0}">fa-heart-o "</c:if>
+                                                       <c:if test="${liked eq 1}">fa-heart"  </c:if> >
                                         </i>
-                                           <span id="place-f-n">${place.placeUsers.size()}</span>
+
+                                        <span id="place-f-n">${place.placeUsers.size()}</span>
                                     </span>
                                 </a>
                             </c:if>
@@ -338,60 +344,64 @@
         </div>
     </div>
     <div class="row">
-        <div class="col col-xs-12 col-md-10 col-md-offset-2" id="masonry" data-columns>
-            <c:forEach items="${place.placeMenu}" var="menu" varStatus="m">
-                <div>
-                    <c:url value="/place/${place.id}/menu/${menu.id}" var="neworder"/>
-                    <form method="POST" action="${neworder}">
-                        <div class="thumbnail">
-                            <img src="<c:url value="/photo/menu/${menu.id}/small"/>"
-                                 onerror="http://placehold.it/250x200"/>
+        <div class="col col-xs-12 col-md-10
+        <security:authorize access="isAnonymous()">col-md-offset-1"</security:authorize>
+             <security:authorize access="isAuthenticated()">col-md-offset-2
+        "</security:authorize>
+        id="masonry" data-columns>
+        <c:forEach items="${place.placeMenu}" var="menu" varStatus="m">
+            <div>
+                <c:url value="/place/${place.id}/menu/${menu.id}" var="neworder"/>
+                <form method="POST" action="${neworder}">
+                    <div class="thumbnail">
+                        <img width="100%" src="<c:url value="/photo/menu/${menu.id}/small"/>"
+                             onerror="http://placehold.it/250x200"/>
 
-                            <div class="caption">
-                                <table style="width:100%">
-                                    <tr id="first-row">
-                                        <td>
-                                            <h3 class="service-name">${menu.menuName}</h3>
+                        <div class="caption">
+                            <table style="width:100%">
+                                <tr id="first-row">
+                                    <td>
+                                        <h3 class="service-name">${menu.menuName}</h3>
 
-                                        </td>
-                                        <td>
-                                            <span class="badge">${menu.menuPrice}грн.<i class="fa fa-tags"></i></span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">
-                                            <div class="tabs">
-                                                <ul class="nav nav-tabs">
-                                                    <li style="width: 33%" class="active">
-                                                        <a href="#description-tab-${m.index}" data-toggle="tab">
-                                                            <i class="fa fa-info">
-                                                                <span style="margin-right: 4px"></span> Опис
-                                                            </i>
-                                                        </a>
-                                                    </li>
-                                                    <li style="width: 67%; padding-right:5px">
-                                                        <a href="#options-tab-${m.index}" data-toggle="tab">
-                                                            <i class="fa fa-gift">
-                                                                <span style="margin-right: 4px"></span> Опції
-                                                            </i>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                                <div class="tab-content">
+                                    </td>
+                                    <td>
+                                        <span class="badge">${menu.menuPrice}грн.<i class="fa fa-tags"></i></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="tabs">
+                                            <ul class="nav nav-tabs">
+                                                <li style="width: 33%" class="active">
+                                                    <a href="#description-tab-${m.index}" data-toggle="tab">
+                                                        <i class="fa fa-info">
+                                                            <span style="margin-right: 4px"></span> Опис
+                                                        </i>
+                                                    </a>
+                                                </li>
+                                                <li style="width: 67%; padding-right:5px">
+                                                    <a href="#options-tab-${m.index}" data-toggle="tab">
+                                                        <i class="fa fa-gift">
+                                                            <span style="margin-right: 4px"></span> Опції
+                                                        </i>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                            <div class="tab-content">
 
-                                                    <div style="border-top:0"
-                                                         class="tab-pane description-wrapper caption active fade in"
-                                                         id="description-tab-${m.index}">
-                                                        <table>
-                                                            <tr>
-                                                                <td>
-                                                                    <p>
-                                                                            ${menu.menuDescription}
-                                                                    </p>
-                                                                </td>
-                                                            </tr>
-                                                            <tr style="vertical-align: middle">
-                                                                <td width="80%">
+                                                <div style="border-top:0"
+                                                     class="tab-pane description-wrapper caption active fade in"
+                                                     id="description-tab-${m.index}">
+                                                    <table>
+                                                        <tr>
+                                                            <td>
+                                                                <p>
+                                                                        ${menu.menuDescription}
+                                                                </p>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="vertical-align: middle">
+                                                            <td width="80%">
                                                                 <span class="rating">
                                                                     <c:forEach step="1" varStatus="rm" begin="1"
                                                                                end="5">
@@ -403,90 +413,91 @@
                                                                         </c:if>
                                                                     </c:forEach>
                                                                 </span>
-                                                                </td>
-                                                            </tr>
-                                                        </table>
-                                                    </div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
 
-                                                    <div style="border-top: 0; margin-bottom: 2px; padding: 5px"
-                                                         class="tab-pane thumbnail fade comment-wrapper"
-                                                         id="options-tab-${m.index}">
-                                                        <table class="table">
-                                                            <c:forEach items="${menu.services}" var="service"
-                                                                       varStatus="s">
-                                                                <tr style="vertical-align: middle">
-                                                                    <td width="80%">
-                                                                        <input type="checkbox" name="services"
-                                                                               value="${service.id}"
-                                                                               id="service-${s.index}"
-                                                                               style="margin-top: 15px">
-                                                                        <label for="service-${s.index}">${service.description}</label>
-                                                                    </td>
-                                                                    <td width="20%" class="service-description">
-                                                                    <span class="badge">${service.price} грн.<i
-                                                                            class="fa fa-tag"></i></span></td>
-                                                                </tr>
-                                                            </c:forEach>
-                                                        </table>
-                                                    </div>
+                                                <div style="border-top: 0; margin-bottom: 2px; padding: 5px"
+                                                     class="tab-pane thumbnail fade comment-wrapper"
+                                                     id="options-tab-${m.index}">
+                                                    <table class="table">
+                                                        <c:forEach items="${menu.services}" var="service"
+                                                                   varStatus="s">
+                                                            <tr style="vertical-align: middle">
+                                                                <td width="80%">
+                                                                    <input type="checkbox" name="services"
+                                                                           value="${service.id}"
+                                                                           id="service-${s.index}"
+                                                                           style="margin-top: 15px">
+                                                                    <label for="service-${s.index}">${service.description}</label>
+                                                                </td>
+                                                                <td width="20%" class="service-description">
+                                                                    <span style="display: block;"
+                                                                          class="badge">${service.price}
+                                                                        .грн<i class="fa fa-tag"></i></span></td>
+                                                            </tr>
+                                                        </c:forEach>
+                                                    </table>
                                                 </div>
                                             </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">
-                                            <security:authorize access="isAuthenticated()">
-                                                <div style="float: right; margin: 5px 0 1px 0;" class="btn-group">
-                                                    <security:authorize access="hasRole('ROLE_USER')">
-                                                        <button type="submit" class="btn btn-primary">
-                                                            <i class="fa fa-hand-scissors-o fa-rotate-90 fa-fw"></i>
-                                                            Замовити
-                                                        </button>
-                                                    </security:authorize>
-                                                    <c:if test="${isOwner eq true}">
-                                                        <a class="dropdown-toggle btn btn-default"
-                                                           data-toggle="dropdown">
-                                                            <i class="fa fa-pencil-square-o fa-fw"></i>
-                                                            Змінити
-                                                            <span class="caret"></span>
-                                                        </a>
-                                                        <ul class="dropdown-menu">
-                                                            <li>
-                                                                <a href="#" data-toggle="modal" data-id="${menu.id}"
-                                                                   data-target="#new-menu-service">
-                                                                    <i class="fa fa-gift fa-fw"></i>
-                                                                    Новий бонус
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-pencil-square-o fa-fw"></i>
-                                                                    Змінити послугу
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#">
-                                                                    <i class="fa fa-trash-o fa-fw"></i>
-                                                                    Видалити
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </c:if>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <security:authorize access="isAuthenticated()">
+                                            <div style="float: right; margin: 5px 0 1px 0;" class="btn-group">
+                                                <security:authorize access="hasRole('ROLE_USER')">
+                                                    <button type="submit" class="btn btn-primary">
+                                                        <i class="fa fa-hand-scissors-o fa-rotate-90 fa-fw"></i>
+                                                        Замовити
+                                                    </button>
+                                                </security:authorize>
+                                                <c:if test="${isOwner eq true}">
+                                                    <a class="dropdown-toggle btn btn-default"
+                                                       data-toggle="dropdown">
+                                                        <i class="fa fa-pencil-square-o fa-fw"></i>
+                                                        Змінити
+                                                        <span class="caret"></span>
+                                                    </a>
+                                                    <ul class="dropdown-menu">
+                                                        <li>
+                                                            <a href="#" data-toggle="modal" data-id="${menu.id}"
+                                                               data-target="#new-menu-service">
+                                                                <i class="fa fa-gift fa-fw"></i>
+                                                                Новий бонус
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">
+                                                                <i class="fa fa-pencil-square-o fa-fw"></i>
+                                                                Змінити послугу
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#">
+                                                                <i class="fa fa-trash-o fa-fw"></i>
+                                                                Видалити
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </c:if>
 
-                                                </div>
-                                            </security:authorize>
-                                        </td>
-                                    </tr>
-                                </table>
+                                            </div>
+                                        </security:authorize>
+                                    </td>
+                                </tr>
+                            </table>
 
-                            </div>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
+            </div>
 
-            </c:forEach>
-        </div>
+        </c:forEach>
     </div>
+</div>
 </div>
 
 <c:if test="${isOwner}">
@@ -507,8 +518,8 @@
                             <tr>
                                 <td>
                                     <div class="input-group">
-                                        <sf:textarea path="serviceDescription" class="form-control  service-description"
-                                                     style="resize: none" rows="5"
+                                        <sf:textarea path="serviceDescription" class="form-control"
+                                                     style="resize: none;" rows="5"
                                                      placeholder="Короткий опис послуги"/>
                                     </div>
                                     <div style="text-align: center">
@@ -688,7 +699,7 @@
         ratingB.barrating({
             theme: 'fontawesome-stars',
             initialRating:${place.placeFinalRating},
-            readOnly:${used eq true},
+            readOnly:${used ne true},
             onSelect: function (value, text, event) {
                 if (typeof(event) !== 'undefined') {
                     $.ajax({
@@ -700,13 +711,15 @@
                 }
             }
         });
-
-
+        <security:authorize access="isAuthenticated()">
         liked = ${liked};
+
+
         $("#like").click(function () {
             like("${place.id}");
         });
 
+        </security:authorize>
         $('#new-menu-service').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget);
             var id = button.data('id');
@@ -754,29 +767,27 @@
         });
     });
 
-
-    function switchHearts() {
-        if (liked == 0) {
-            $("#heart").removeClass("fa-heart-o");
-            $("#heart").addClass("fa-heart");
-        }
-        if (liked == 1) {
-            $("#heart").addClass("fa-heart-o");
-            $("#heart").removeClass("fa-heart");
-        }
-    }
-
+    <security:authorize access="isAuthenticated()">
     function like(placeId) {
         liked %= 2;
         $.ajax({
             url: "/place/" + placeId + "/liked/",
             method: "GET"
         }).success(function (data) {
-            switchHearts(liked % 2);
+            is = liked % 2;
+            if (is == 0) {
+                $("#heart").removeClass("fa-heart-o");
+                $("#heart").addClass("fa-heart");
+            }
+            if (is == 1) {
+                $("#heart").addClass("fa-heart-o");
+                $("#heart").removeClass("fa-heart");
+            }
             liked += 1;
             $("#place-f-n").text(data);
         });
     }
+    </security:authorize>
     function initialize() {
 //Определение карты
         var options = {

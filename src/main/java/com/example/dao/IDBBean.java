@@ -36,22 +36,14 @@ public interface IDBBean {
     PlaceUser authorization(String name, String pass);
 
 
-    void addNewPlace(Place place, PlaceAddress placeAddress, PlaceUser owner);
+    void addNewPlace(Place place, PlaceAddress placeAddress, PlaceUser owner, PlaceSpeciality speciality);
+
+    Authorities getAuthority(String name);
 
     ArrayList<PlaceEvent> getMainEvents();
 
     List<Place> getMainPlaces();
 
-
-    /*
-        @Override
-        public long getDbIdFromUserId(long userId){
-           return ((ActiveUserConnections)(em.createQuery("SELECT e from ActiveUserConnections e WHERE e.userId=:userId").setParameter("userId",userId).getSingleResult())).getDbId();
-        }
-    */
-    Integer changePlaceMenuRating(long placeMenuId, long userId, int rating);
-
-    Integer changePlaceRating(long placeId, long userId, int rating);
 
     long checkCredentials(String email, String userName);
 
@@ -134,4 +126,6 @@ public interface IDBBean {
     void updateMenuFinalRating(PlaceMenu placeMenu, int menuFinalRating);
 
     void setOrderComplete(UserOrders order, boolean b);
+
+    long isUserLikedPlace(PlaceUser user, Place p);
 }

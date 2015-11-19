@@ -28,7 +28,7 @@
         }
 
         #enter-main-form {
-            top: 50%;
+            top: 40%;
             margin-top: -75px;
         }
 

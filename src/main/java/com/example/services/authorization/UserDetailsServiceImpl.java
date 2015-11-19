@@ -35,19 +35,19 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             boolean accountNonLocked = true;
 
             return new User(user.getUserEmail(),
-                    user.getUserPass().toLowerCase(),user.isEnabled(),
-                    accountNonExpired,credentialsNonExpired,accountNonLocked,
+                    user.getUserPass().toLowerCase(), user.isEnabled(),
+                    accountNonExpired, credentialsNonExpired, accountNonLocked,
                     getAuthorities(user));
         }
-        throw new UsernameNotFoundException("No user found with username: "+ s);
+        throw new UsernameNotFoundException("No user found with username: " + s);
     }
 
     private List<GrantedAuthority> getAuthorities(PlaceUser user) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         if (user.isEnabled()) {
-            List<Authorities> privileges = user.getAuthorities();
-            for (Authorities privilege : privileges) {
-                authorities.add(new SimpleGrantedAuthority(privilege.getAuthority()));
+            List<Authorities> authoritiesList = user.getAuthority();
+            for (Authorities a : authoritiesList) {
+                authorities.add(new SimpleGrantedAuthority(a.getAuthority()));
             }
         }
         return authorities;

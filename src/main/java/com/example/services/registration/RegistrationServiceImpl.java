@@ -50,7 +50,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             if (tokens.getDate().getTime() > Calendar.getInstance().getTime().getTime()) {
                 PlaceUser user = tokens.getUser();
                 user.setEnabled(true);
-                dao.grandUserAuthorities(user, new Authorities(Authorities.Roles.ROLE_USER.name()));
+                dao.grandUserAuthorities(user,dao.getAuthority("ROLE_USER"));
                 dao.deleteToken(user.getToken());
                 return true;
             }

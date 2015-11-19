@@ -3,21 +3,21 @@ package com.example.domain.registration;
 import com.example.domain.PlaceUser;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by Dmitrij on 21.09.2015.
  */
 @Entity
-@Table(name = "user_authorities")
+@Table(name = "authorities")
 public class Authorities {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
     String authority;
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    PlaceUser user;
+    @ManyToMany(mappedBy = "authority")
+    List<PlaceUser> user;
 
     public Authorities(){}
 
@@ -41,11 +41,15 @@ public class Authorities {
         this.authority = authority;
     }
 
-    public PlaceUser getUser() {
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public List<PlaceUser> getUser() {
         return user;
     }
 
-    public void setUser(PlaceUser user) {
+    public void setUser(List<PlaceUser> user) {
         this.user = user;
     }
 

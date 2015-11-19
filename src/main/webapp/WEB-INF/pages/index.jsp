@@ -5,11 +5,11 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="utf-8" >
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>My Place TO Go</title>
+    <title>MyPlaceToGo</title>
 
     <!-- Bootstrap -->
     <link href="<c:url value="/static/css/bootstrap.css"/>" rel="stylesheet"/>
@@ -49,23 +49,47 @@
                 <li><a href="#">На головну</a></li>
 
                 <security:authorize access="isAuthenticated()">
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Мій профіль<b class="caret"></b></a>
-                        <ul style="padding:0" id="user-menu-dropdown" class="list-group dropdown-menu">
-                            <li id="menu-item-my-page" class="list-group-item"><a href="#"><i
-                                    class="fa fa-user fa-fm"></i>Моя
-                                сторінка</a></li>
-                            <li class="list-group-item"><a href="/user/orders"><i class="fa fa-bullhorn fa-fm"></i>Мої
-                                замовлення</a>
-                            </li>
-                            <li class="list-group-item"><a href="#"><i class="fa fa-calendar-check-o fa-fm"></i>Мої
-                                події</a></li>
-                            <li class="list-group-item"><a href="/user/places"><i class="fa fa-cutlery fa-fm"></i>Мої заклади</a>
-                            </li>
-                            <li class="list-group-item"><a href="#"><i class="fa fa-power-off fa-fm"></i>Вийти</a></li>
-                        </ul>
-                    </li>
                     <security:authorize access="hasRole('ROLE_USER')">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Мій профіль<b class="caret"></b></a>
+                            <ul style="padding:0" id="user-menu-dropdown" class="list-group dropdown-menu">
+                                <li id="menu-item-my-page" class="list-group-item"><a href="#"><i
+                                        class="fa fa-user fa-fm"></i>Моя
+                                    сторінка</a></li>
+                                <li class="list-group-item"><a href="/user/orders"><i class="fa fa-bullhorn fa-fm"></i>Мої
+                                    замовлення</a>
+                                </li>
+                                <li class="list-group-item"><a href="#"><i class="fa fa-calendar-check-o fa-fm"></i>Мої
+                                    події</a></li>
+                                <li class="list-group-item"><a href="/user/places"><i class="fa fa-cutlery fa-fm"></i>Мої
+                                    заклади</a>
+                                </li>
+                                <li class="list-group-item"><a href="/logout"><i class="fa fa-power-off fa-fm"></i>Вийти</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="/newplace">Приєднатись</a>
+                        </li>
+                    </security:authorize>
+                    <security:authorize access="hasRole('ROLE_OWNER')">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Мій профіль<b class="caret"></b></a>
+                            <ul style="padding:0" id="user-menu-dropdown" class="list-group dropdown-menu">
+                                <li id="menu-item-my-page" class="list-group-item"><a href="#"><i
+                                        class="fa fa-user fa-fm"></i>Моя
+                                    сторінка</a></li>
+                                <li class="list-group-item"><a href="#"><i class="fa fa-calendar-check-o fa-fm"></i>Мої
+                                    події</a></li>
+                                <li class="list-group-item"><a href="/owner/places"><i class="fa fa-cutlery fa-fm"></i>Мої
+                                    заклади</a>
+                                </li>
+                                <li class="list-group-item"><a href="/logout"><i class="fa fa-power-off fa-fm"></i>Вийти</a>
+                                </li>
+                            </ul>
+                        </li>
+
                         <li>
                             <a href="/newplace">Приєднатись</a>
                         </li>
@@ -75,7 +99,7 @@
                 <security:authorize access="isAnonymous()">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Увійти<b class="caret"></b></a>
-                        <ul id="enter-form" class="dropdown-menu navbar-form">
+                        <ul id="enter-form" style="box-shadow: 1px 2px 5px black;" class="dropdown-menu navbar-form">
                             <li>
                                 <span id="authorization-span"></span>
 
@@ -95,13 +119,14 @@
 
                                     <div id="authorization-divider" class="divider"></div>
 
-                                    <div id="authorization-group" class="btn-group">
+                                    <div id="authorization-group"
+                                         style="left: 50%;margin-left: -98px;padding-bottom: 10px;" class="btn-group">
 
                                         <button type="submit" class="btn btn-default authentication-button">
                                             <i class="fa fa-circle-thin"><span style="padding-right: 4px"></span>Увійти</i>
                                         </button>
 
-                                        <a href="#" class="btn btn-default authentication-button">
+                                        <a href="/registration" class="btn btn-default authentication-button">
                                             <i class="fa fa-user-plus"><span
                                                     style="padding-right: 4px"></span>Реестрація</i>
                                         </a>
@@ -143,16 +168,16 @@
 
             <c:forEach items="${events}" var="event" varStatus="ev">
 
-                    <div class="item <c:if test="${ev.index eq 0}"> active</c:if>">
-                        <img src="${event.eventPhoto.url}" onerror="placeholder.it/1920x400"
-                             alt="${event.eventName} photo"/>
+                <div class="item <c:if test="${ev.index eq 0}"> active</c:if>">
+                    <img src="${event.eventPhoto.url}" onerror="placeholder.it/1920x400"
+                         alt="${event.eventName} photo"/>
 
-                        <div class="carousel-caption">
-                            <h3>${event.eventName}</h3>
+                    <div class="carousel-caption">
+                        <h3>${event.eventName}</h3>
 
-                            <p>${event.eventDescription}у</p>
-                        </div>
+                        <p>${event.eventDescription}у</p>
                     </div>
+                </div>
             </c:forEach>
 
         </div>
@@ -298,29 +323,31 @@
                             </div>
 
                             <div class="tab-pane fade comment-wrapper" id="comments-tab-${i}">
-                                <c:forEach items="${place.placeComments}" var="comment">
-                                    <div class="comment">
-                                        <i class="fa fa-user" style="margin-right: 4px">
-                                            <span style="margin-right: 4px"></span>
-                                            <a href="#"><b>${comment.commentor.userName}</b></a>
-                                        </i>
-                                        <i>${comment.commentBody}</i>
-                                        <a href="#">
-                                            <i class="fa fa-thumbs-o-up like-ikon">
-                                                <span style="margin-right: 2px"></span>
-                                                Yes!
+                                <c:if test=" ${place.placeComments ne null}">
+                                    <c:forEach items="${place.placeComments}" var="comment">
+                                        <div class="comment">
+                                            <i class="fa fa-user" style="margin-right: 4px">
+                                                <span style="margin-right: 4px"></span>
+                                                <a href="#"><b>${comment.commentor.userName}</b></a>
                                             </i>
-                                        </a>
+                                            <i>${comment.commentBody}</i>
+                                            <a href="#">
+                                                <i class="fa fa-thumbs-o-up like-ikon">
+                                                    <span style="margin-right: 2px"></span>
+                                                    Yes!
+                                                </i>
+                                            </a>
 
-                                    </div>
-                                </c:forEach>
+                                        </div>
+                                    </c:forEach>
+                                </c:if>
                             </div>
-
-                            <a href="/place/${place.id}" class="btn btn-success">
-                                <i class="fa fa-arrow-right"></i> It`s my place
-                            </a>
-
                         </div>
+                    </div>
+                    <div style="text-align: right; margin:5px 0 3px 0">
+                    <a href="/place/${place.id}" class="btn btn-success">
+                        <i class="fa fa-arrow-right"></i> It`s my place
+                    </a>
                     </div>
                 </div>
             </div>

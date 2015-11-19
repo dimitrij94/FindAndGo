@@ -26,15 +26,18 @@ public class DemoSpringSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
 
 
-                .antMatchers(HttpMethod.GET,"rating/place/{pId}","/place/{id}/liked/", "/user/orders",
-                        "/user/places", "/rating/place/{pId}")
+                .regexMatchers(HttpMethod.GET, "rating/place/[0-9]{0,}", "/place/[0-9]{0,}/liked/", "/rating/place/[0-9]{0,}")
                 .hasRole("USER")
 
-                .antMatchers(HttpMethod.POST,"/menu/{id}/comment",
-                        "/place/{placeId}/menu/{menuId}")
+                .antMatchers(HttpMethod.GET, "/user/orders",
+                        "/user/places")
                 .hasRole("USER")
 
-                .antMatchers(HttpMethod.POST, "/place/{placeId}/menu/service", "/place/{id}/menu")
+                .regexMatchers(HttpMethod.POST, "/menu/[0-9]{0,}/comment",
+                        "/place/[0-9]{0,}/menu/[0-9]{0,}")
+                .hasRole("USER")
+
+                .regexMatchers(HttpMethod.POST, "/place/menu/[0-9]{0,}")
                 .hasRole("OWNER")
 
                 .antMatchers(HttpMethod.GET, "/newplace")
@@ -51,7 +54,7 @@ public class DemoSpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .logout()
-                .deleteCookies("JSESSIONID")
+                .logoutUrl("/logout")
                 .logoutSuccessUrl("/");
 
         http

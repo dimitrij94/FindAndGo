@@ -59,7 +59,7 @@ public class DemoJPAConfig extends WebMvcConfigurerAdapter{
     @Bean
     MultipartResolver multipartResolver() {
         CommonsMultipartResolver resolver = new CommonsMultipartResolver();
-        resolver.setMaxUploadSize(250000);
+        resolver.setMaxUploadSize(1000000);
         return resolver;
     }
 

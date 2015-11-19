@@ -55,33 +55,38 @@ public class DBBean implements IDBBean {
     }
 
     public PlaceUser authorization(String email, String pass) {
-        Query userQuery = this.em.createQuery("SELECT e FROM PlaceUser e WHERE (e.userEmail=:email OR e.userName=:email) AND e.userPass=:pass").setParameter("email", email).setParameter("pass", pass);
-        PlaceUser user = null;
-        return (user = (PlaceUser) userQuery.getSingleResult()) != null ? user : null;
+        return (PlaceUser) this.em.createQuery("SELECT e FROM PlaceUser e WHERE (e.userEmail=:email OR e.userName=:email) AND e.userPass=:pass")
+                .setParameter("email", email)
+                .setParameter("pass", pass);
     }
 
     @Transactional
-    public void addNewPlace(Place place, PlaceAddress placeAddress, PlaceUser owner) {
+    public void addNewPlace(Place place, PlaceAddress placeAddress, PlaceUser owner, PlaceSpeciality speciality) {
         place.setPlaceOwner(owner);
+        place.setPlaceSpeciality(setAsList(place.getPlaceSpeciality(), speciality));
         this.em.persist(place);
+        speciality.setPlace(setAsList(speciality.getPlace(), place));
         this.em.flush();
         placeAddress.setPlace(place);
         this.em.persist(placeAddress);
         place.setAddress(placeAddress);
         this.em.flush();
         owner.getOwnerPlaces().add(place);
-        for (Authorities a : owner.getAuthorities()) {
-            if (a.getAuthority().equals("PLACE_OWNER")) return;
-        }
 
-        Authorities authorities = new Authorities("PLACE_OWNER");
-        authorities.setUser(owner);
-        this.em.persist(authorities);
+        Authorities authorities = getAuthority("ROLE_OWNER");
+        authorities.setUser(setAsList(authorities.getUser(), owner));
+        owner.setAuthority(Collections.singletonList(authorities));
         this.em.flush();
-        owner.getAuthorities().add(authorities);
     }
 
-    @Cacheable({"maincahe"})
+    @Override
+    public Authorities getAuthority(String name) {
+        return (Authorities) em.createQuery("SELECT e FROM Authorities e WHERE e.authority=:name")
+                .setParameter("name", name)
+                .getSingleResult();
+    }
+
+
     public ArrayList<PlaceEvent> getMainEvents() {
         ArrayList<PlaceEvent> mainEvents = (ArrayList<PlaceEvent>) em.createQuery("SELECT e FROM PlaceEvent  e order by e.users.size").getResultList();
         if (mainEvents.size() > 5) {
@@ -93,7 +98,7 @@ public class DBBean implements IDBBean {
         return mainEvents;
     }
 
-    @Cacheable({"maincahe"})
+
     public List<Place> getMainPlaces() {
         List<Place> mainPlaces = this.em.createQuery("SELECT e FROM Place e ORDER BY e.placeFollowersNum DESC, e.placeFinalRating DESC")
                 .getResultList();
@@ -103,74 +108,6 @@ public class DBBean implements IDBBean {
         return mainPlaces;
     }
 
-    public Integer changePlaceMenuRating(long placeMenuId, long userId, int rating) {
-        byte finalRating = 0;
-
-        try {
-            this.em.getTransaction().begin();
-            Query ex = this.em.createQuery("SELECT u FROM PlaceMenuRating u WHERE u.user.id=:userId AND u.menu.id=:menuId");
-            if (ex.getSingleResult() == null) {
-                this.em.persist((new PlaceMenuRating()).rating((int) rating).menu((PlaceMenu) this.em.find(PlaceMenu.class, Long.valueOf(placeMenuId))).user((PlaceUser) this.em.find(PlaceUser.class, Long.valueOf(userId))));
-                this.em.getTransaction().commit();
-            } else {
-                this.em.createQuery("update PlaceMenuRating m set m.rating=:rating WHERE m.menu.id=:menuRating AND m.user.id=:userId").setParameter("rating", Integer.valueOf(rating)).setParameter("menuRating", Long.valueOf(placeMenuId)).setParameter("userId", Long.valueOf(userId)).executeUpdate();
-            }
-
-            int menuRatingsCount = this.em.createQuery("SELECT COUNT (r.id) FROM PlaceMenuRating r WHERE r.menu.id=:menuId").setParameter("menuId", Long.valueOf(placeMenuId)).getMaxResults();
-            long menuRatingSumm = (Long) this.em.createQuery("SELECT SUM (r.rating) FROM PlaceMenuRating r WHERE r.menu.id=:menuId").setParameter("menuId", Long.valueOf(placeMenuId)).getSingleResult();
-            if (menuRatingsCount != 0) {
-                int finalRating1 = Math.round((float) (menuRatingSumm / (long) menuRatingsCount));
-                this.em.getTransaction().begin();
-                this.em.createQuery("UPDATE PlaceMenu m SET m.menuFinalRating=:menuRating WHERE m.id=:menuId").setParameter("menuId", Long.valueOf(placeMenuId)).setParameter("menuRating", Integer.valueOf(finalRating1)).executeUpdate();
-                this.em.getTransaction().commit();
-                return finalRating1;
-            } else {
-                throw new ArithmeticException("divade on zero when calc final rating");
-            }
-        } catch (Exception var11) {
-            this.em.getTransaction().rollback();
-            var11.printStackTrace();
-            return (int) finalRating;
-        }
-    }
-
-    public Integer changePlaceRating(long placeId, long userId, int rating) {
-        Query chageRatingQuery = this.em.createQuery("SELECT r FROM PlaceRating r WHERE r.user.id=:userId AND r.place.id=:placeId").setParameter("userId", Long.valueOf(userId)).setParameter("placeId", Long.valueOf(placeId));
-        if (chageRatingQuery.getSingleResult() != null) {
-            try {
-                this.em.getTransaction().begin();
-                this.em.createQuery("UPDATE PlaceRating r SET r.rating=:rating WHERE r.user.id=:userId AND r.place.id=:placeId").setParameter("rating", Integer.valueOf(rating)).setParameter("userId", Long.valueOf(userId)).setParameter("placeId", Long.valueOf(placeId)).executeUpdate();
-                this.em.getTransaction().commit();
-            } catch (Exception var15) {
-                this.em.getTransaction().rollback();
-                var15.printStackTrace();
-            }
-        } else {
-            try {
-                this.em.getTransaction().begin();
-                this.em.persist((new PlaceRating()).place((Place) this.em.find(Place.class, placeId)).user((PlaceUser) this.em.find(PlaceUser.class, Long.valueOf(userId))).rating(rating));
-                this.em.getTransaction().commit();
-            } catch (Exception var14) {
-                this.em.getTransaction().rollback();
-                var14.printStackTrace();
-            }
-        }
-
-        long allRatings = (long) this.em.createQuery("SELECT COUNT(r) FROM PlaceRating r WHERE r.place.id=:placeId").setParameter("placeId", Long.valueOf(placeId)).getMaxResults();
-        long allRatingsSumm = (Long) this.em.createQuery("SELECT SUM(r.rating) FROM PlaceRating r WHERE r.place.id=:placeId").getSingleResult();
-        int finalRating = Math.round((float) (allRatingsSumm / allRatings));
-
-        try {
-            this.em.getTransaction().begin();
-            this.em.createQuery("UPDATE Place p SET p.placeFinalRating=:finalRating WHERE p.id=:placeId").setParameter("placeId", Long.valueOf(placeId)).setParameter("finalRating", Integer.valueOf(finalRating));
-            this.em.getTransaction().commit();
-        } catch (Exception var13) {
-            this.em.getTransaction().rollback();
-            var13.printStackTrace();
-        }
-
-        return finalRating;
-    }
 
     public long checkCredentials(String email, String userName) {
         return (Long) this.em.createQuery("SELECT COUNT (e.id) FROM PlaceUser e WHERE e.userEmail=:email OR e.userName=:userName").setParameter("email", email).setParameter("userName", userName).getSingleResult();
@@ -195,10 +132,8 @@ public class DBBean implements IDBBean {
 
     @Transactional
     public void grandUserAuthorities(PlaceUser user, Authorities authorities) {
-        authorities.setUser(user);
-        this.em.persist(authorities);
+        user.setAuthority(Collections.singletonList(authorities));
         this.em.flush();
-        user.getAuthorities().add(authorities);
     }
 
     @Transactional
@@ -270,7 +205,10 @@ public class DBBean implements IDBBean {
     @Transactional
     @Override
     public PlaceUser registration(PlaceUser user, UserAddress address) {
+        Authorities a = getAuthority("ROLE_USER");
+        grandUserAuthorities(user,a);
         em.persist(user);
+        a.setUser(setAsList(a.getUser(), user));
         address.setUser(user);
         this.em.persist(address);
         this.em.flush();
@@ -375,6 +313,7 @@ public class DBBean implements IDBBean {
         user.setUserPlaces(getUserPlacesAsList(p, user.getUserPlaces()));
         setPlaceUsers(p.getPlaceUsers(), p, user);
         p.setPlaceFollowersNum(p.getPlaceFollowersNum() + 1);
+        em.flush();
     }
 
     private void setPlaceUsers(List<PlaceUser> users, Place p, PlaceUser user) {
@@ -392,7 +331,6 @@ public class DBBean implements IDBBean {
         Place place = getPlaceById(placeId);
         user.getUserPlaces().remove(place);
         place.getPlaceUsers().remove(user);
-        em.flush();
         place.setPlaceFollowersNum(place.getPlaceFollowersNum() - 1);
         em.flush();
     }
@@ -533,6 +471,14 @@ public class DBBean implements IDBBean {
     public void setOrderComplete(UserOrders order, boolean b) {
         order.setIsDone(b);
         em.merge(order);
+    }
+
+    @Override
+    public long isUserLikedPlace(PlaceUser user, Place p) {
+        return (long) em.createQuery("SELECT COUNT (e) FROM Place e INNER JOIN e.placeUsers u WHERE u.id=:uId AND e.id=:pId")
+                .setParameter("uId", user.getId())
+                .setParameter("pId", p.getId())
+                .getSingleResult();
     }
 
     private <T> List<T> setAsList(List<T> list, T object) {

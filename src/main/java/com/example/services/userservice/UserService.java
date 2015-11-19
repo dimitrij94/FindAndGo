@@ -24,4 +24,6 @@ public interface UserService {
     int newUserLikes(long id);
 
     void newUserComment(String comment, int rating, long id);
+
+    boolean isUser(PlaceUser user);
 }

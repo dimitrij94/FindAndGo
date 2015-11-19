@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -70,7 +72,10 @@ public class DemoController {
     @RequestMapping({"/", "/home"})
     public String getIndexPage(Model model) {
         model.addAttribute("places", dao.getMainPlaces());
-        if (userService.isAuthenticated()) model.addAttribute(userService.placeUser());
+        PlaceUser user = userService.placeUser();
+        if (user != null) {
+            model.addAttribute(user);
+        }
         return "index";
     }
 
@@ -143,40 +148,43 @@ public class DemoController {
     }
 
     @RequestMapping(value = "/place/{id}", method = RequestMethod.GET)
-    public String getPlacePage(@PathVariable("id") long placeId,
+    public String getPlacePage(@PathVariable("id") String placeId,
                                Model model) {
         PlaceUser user = userService.placeUser();
-        Place p = dao.getPlaceById(placeId);
+        Place p = dao.getPlaceById(Long.valueOf(placeId));
+        model.addAttribute(p);
         if (user != null) {
             model.addAttribute("user", user);
             if (p.getPlaceOwner().getId().equals(user.getId())) {
                 model.addAttribute("isOwner", true);
                 model.addAttribute("menu", new MenuDTO());
-                model.addAttribute("used",false);
+                model.addAttribute("used", false);
+                model.addAttribute("liked",true);
                 if (p.getPlaceMenu() != null)
                     model.addAttribute("service", new ServiceDTO());
-            } else {
-                model.addAttribute("liked", p.getPlaceUsers().size() == 0 ? 0 : 1);
+            } else if(userService.isUser(user)){
+                model.addAttribute("liked", (!(dao.isUserLikedPlace(user, p) > 0)) ? 0 : 1);
                 model.addAttribute("isOwner", false);
-                model.addAttribute("used",dao.isUserUsedPlace(p, user));
+                model.addAttribute("used", dao.isUserUsedPlace(p, user));
             }
         }
-        model.addAttribute(p);
         return "place";
     }
 
     @RequestMapping(value = "rating/place/{pId}")
-    public @ResponseBody int ratePlace(@PathVariable("pId") long pId,
-                         @RequestParam("rating")int rating){
+    public
+    @ResponseBody
+    int ratePlace(@PathVariable("pId") long pId,
+                  @RequestParam("rating") int rating) {
         PlaceUser user = userService.placeUser();
-        return placeService.newPlaceRating(rating,pId,user);
+        return placeService.newPlaceRating(rating, pId, user);
     }
 
     @RequestMapping(value = "/user/places")
     public String getUserPlaces(Model model) {
         PlaceUser user = userService.placeUser();
         model.addAttribute("places", user.getUserPlaces());
-        model.addAttribute("user",user);
+        model.addAttribute("user", user);
         return "places-list";
     }
 
@@ -248,7 +256,7 @@ public class DemoController {
     }
 
     @RequestMapping(value = "/place/{placeId}/menu/service", method = RequestMethod.POST)
-    public String registerNewPlaceMenuService(@Valid ServiceDTO serviceDTO,
+    public String registerNewPlaceMenuService(ServiceDTO serviceDTO,
                                               @PathVariable("placeId") long placeId,
                                               BindingResult result) {
         if (!result.hasErrors()) {
@@ -263,7 +271,7 @@ public class DemoController {
                 return "redirect:/place/" + placeId;
             }
         }
-        throw new IllegalArgumentException();
+        return "redirect:/place/" + placeId;
     }
 
     @RequestMapping(value = "/place/{placeId}/menu/{menuId}", method = RequestMethod.POST)
@@ -281,6 +289,12 @@ public class DemoController {
         model.addAttribute("ordersMap", userService.getOrderedServices(user));
         model.addAttribute("user", user);
         return "user_profile";
+    }
+
+    @RequestMapping(value = "owner/places")
+    public String getOwnerPlaces(Model model) {
+        model.addAttribute("places", userService.placeUser().getOwnerPlaces());
+        return "places-list";
     }
 
 }
