@@ -1,6 +1,7 @@
-package com.example.domain.validation.annotations;
+package com.example.validators.annotations;
 
-import com.example.domain.validation.FieldEqualValidator;
+
+import com.example.validators.FieldEqualValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

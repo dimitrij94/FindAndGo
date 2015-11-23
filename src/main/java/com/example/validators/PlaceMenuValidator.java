@@ -35,7 +35,7 @@ public class PlaceMenuValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return clazz.isAssignableFrom(PlaceMenu.class);
+        return clazz.isAssignableFrom(MenuDTO.class);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class PlaceMenuValidator implements Validator {
 
         PhotoDTO photo = menu.getPhoto();
         if(Math.round(photo.getW() / photo.getH())!= ImageServiceImpl.ImageSize.PLACE_PROFILE_MENU_IMAGE_SIZE.getIndex()){
-            errors.rejectValue("photo","coordinates.invalid","Невірні координати");
+            errors.rejectValue("photo", "coordinates.invalid", "Невірні координати");
         }
     }
 }

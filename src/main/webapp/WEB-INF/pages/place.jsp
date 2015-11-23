@@ -601,18 +601,26 @@
                                 <table style="margin-bottom: 0" class="table thumbnail">
                                     <tr>
                                         <td>
+                                            <c:set var="nameError">
+                                                <sf:errors path="name"/>
+                                            </c:set>
                                             <div class="input-group">
                                                 <span class="input-group-addon"><i class="fa fa-apple"></i></span>
-                                                <sf:input path="name" cssClass="form-control " placeholder="Назва"/>
+                                                <sf:input data-toggle="tooltip" path="name" cssClass="form-control"
+                                                          title="${nameError}" placeholder="Назва" data-placement="right"/>
                                             </div>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
                                             <div class="input-group">
+                                                <c:set var="descriptionError">
+                                                    <sf:errors path="description"/>
+                                                </c:set>
                                                 <sf:textarea path="description" class="form-control "
                                                              id="place_description" style="resize: none"
-                                                             rows="5"
+                                                             rows="5" data-toggle="tooltip" data-placement="right"
+                                                             title="${descriptionError}"
                                                              placeholder="Короткий опис послуги"/>
                                             </div>
                                             <div style="text-align: center">
@@ -624,13 +632,18 @@
                                     <tr>
                                         <td>
                                             <div class="input-group">
+                                                <c:set var="priceError">
+                                                    <sf:errors path="price"/>
+                                                </c:set>
+
                                                 <span class="input-group-addon" id="basic-addon2">
                                                     <i class="fa fa-tag"></i>
                                                 </span>
 
-                                                <sf:input path="price" type="number" id="form-price"
-                                                          class="form-control "
-                                                          placeholder="Ціна" value="" aria-describedby="basic-addon1"/>
+                                                <sf:input path="price" type="number" id="form-price" title="${priceError}"
+                                                          class="form-control " data-placement="right"
+                                                          placeholder="Ціна" data-toggle="tooltip"
+                                                          value="" aria-describedby="basic-addon1"/>
 
                                                 <span style="padding:2px 5px"
                                                       class="input-group-addon"><i>.грн</i></span>
@@ -638,13 +651,19 @@
                                         </td>
                                     </tr>
                                     <tr>
+                                        <c:set var="hhE"><sf:errors path="hh"/> </c:set>
+                                        <c:set var="mmE"><sf:errors path="mm"/> </c:set>
                                         <td style="text-align: center">
 
                                             <sf:input path="hours" min="0" max="24" type="number"
-                                                      class="form-control  new-menu-form" value="" placeholder="hh"/>
+                                                      class="form-control  new-menu-form" value=""
+                                                      data-toggle="tooltip" data-placement="top"
+                                                      title="${hhE}" placeholder="hh"/>
                                             :
                                             <sf:input path="minutes" min="0" max="60" type="number"
                                                       class="form-control  new-menu-form"
+                                                      data-toggle="tooltip" data-placement="top"
+                                                      title="${mmE}"
                                                       placeholder="mm" value=""/>
 
                                             <br/>
@@ -653,7 +672,13 @@
                                     </tr>
                                     <tr>
                                         <td>
-                                            <sf:input path="photo.image" id="upload" type="file" name="upload"/>
+                                            <c:set var="photoE">
+                                                <sf:errors path="photo"/>
+                                            </c:set>
+                                            <sf:input path="photo.image" id="upload"
+                                                      type="file" name="upload"
+                                                      data-toggle="tooltip" data-placement="bottom"
+                                                      title="${photoE}" />
                                             <sf:hidden path="photo.w" id="w"/>
                                             <sf:hidden path="photo.h" id="h"/>
                                             <sf:hidden path="photo.x" id="x"/>
@@ -686,7 +711,9 @@
         </div>
     </div>
 </c:if>
-
+<c:set var="errors">
+    <sf:errors/>
+</c:set>
 <script type="text/javascript">
     var geocoder;
     var map;
@@ -745,6 +772,8 @@
             description.bind("keypress", function () {
                 updateDescriptionSpan(description, info, 250);
             });
+
+            
         });
         initialize();
         geocoder.geocode({'location': latlng}, function (results, status) {

@@ -16,7 +16,7 @@ import org.springframework.validation.Validator;
 public class PhotoValidator implements Validator {
     @Override
     public boolean supports(Class<?> clazz) {
-        return PlacePhoto.class.isAssignableFrom(clazz);
+        return PhotoDTO.class.isAssignableFrom(clazz);
     }
 
     @Override

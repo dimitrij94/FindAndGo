@@ -1,7 +1,6 @@
-package com.example.domain.validation;
-
+package com.example.validators;
 import com.example.pojo.dto.UserCreateForm;
-import com.example.domain.validation.annotations.UserPasswordsEqual;
+import com.example.validators.annotations.UserPasswordsEqual;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

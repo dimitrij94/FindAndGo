@@ -15,6 +15,7 @@ import com.example.services.registration.RegistrationService;
 import com.example.services.userservice.UserService;
 import com.example.validators.PlaceMenuValidator;
 import com.example.validators.PlaceRegistrationFormValidator;
+import com.example.validators.ServiceValidator;
 import com.example.validators.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -65,6 +66,10 @@ public class DemoController {
 
     @Autowired
     PlaceRegistrationFormValidator placeValidator;
+
+    @Autowired
+    ServiceValidator serviceValidator;
+
     /*
         @Autowired
         UserValidator userValidator;
@@ -74,6 +79,7 @@ public class DemoController {
             binder.addValidators(userValidator);
         }
     */
+    @SuppressWarnings("SpringMVCViewInspection")
     @RequestMapping("/page/login")
     public String login() {
         return "login";
@@ -146,7 +152,7 @@ public class DemoController {
     }
 
     @RequestMapping(value = "/newplace", method = RequestMethod.POST)
-    public String RegisterNewPlace(@Valid @ModelAttribute PlaceDTO placeDTO,
+    public String RegisterNewPlace(@Valid PlaceDTO placeDTO,
                                    Model model,
                                    BindingResult result) throws IOException {
         if (!result.hasErrors()) {
@@ -267,7 +273,7 @@ public class DemoController {
     }
 
     @RequestMapping(value = "/place/{placeId}/menu/service", method = RequestMethod.POST)
-    public String registerNewPlaceMenuService(ServiceDTO serviceDTO,
+    public String registerNewPlaceMenuService(@Valid ServiceDTO serviceDTO,
                                               @PathVariable("placeId") long placeId,
                                               BindingResult result) {
         if (!result.hasErrors()) {
