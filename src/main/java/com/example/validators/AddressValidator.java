@@ -18,15 +18,14 @@ public class AddressValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors,"longitude","field.required");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors,"latitude","field.required");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors,"longitude","field.required","Виберіть область згідно з форматом");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors,"latitude","field.required","Виберіть область згідно з форматом");
         AddressDTO address = (AddressDTO)target;
 
         float latitude = address.getLatitude();
-        if (latitude>90||latitude<0) errors.rejectValue("latitude","field.invalid");
+        if (latitude>90||latitude<0) errors.rejectValue("latitude","field.invalid","Недопустима широта");
 
         float longitude = address.getLongitude();
-        if(longitude>180||longitude<0) errors.rejectValue("longitude","field.invalid");
-
+        if(longitude>180||longitude<0) errors.rejectValue("longitude","field.invalid","Недопустима довгота");
     }
 }

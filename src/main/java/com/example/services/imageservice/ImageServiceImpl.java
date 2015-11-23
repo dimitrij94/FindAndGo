@@ -36,13 +36,22 @@ public class ImageServiceImpl implements ImageService {
         int height;
         int width;
         int index;
-        public int getIndex(){
-            return index;
-        }
         ImageSize(int width, int height) {
             this.width = width;
             this.height = height;
-            this.index=Math.round((width/height)*10);
+            this.index=Math.round(width/height);
+        }
+
+        public int getHeight() {
+            return height;
+        }
+
+        public int getWidth() {
+            return width;
+        }
+
+        public int getIndex(){
+            return index;
         }
     }
 

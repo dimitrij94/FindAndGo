@@ -13,6 +13,9 @@ import com.example.services.placeservice.PlaceService;
 import com.example.services.placeservice.menu.MenuService;
 import com.example.services.registration.RegistrationService;
 import com.example.services.userservice.UserService;
+import com.example.validators.PlaceMenuValidator;
+import com.example.validators.PlaceRegistrationFormValidator;
+import com.example.validators.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -54,6 +57,14 @@ public class DemoController {
     @Autowired
     MenuService menuService;
 
+    @Autowired
+    UserValidator userValidator;
+
+    @Autowired
+    PlaceMenuValidator placeMenuValidator;
+
+    @Autowired
+    PlaceRegistrationFormValidator placeValidator;
     /*
         @Autowired
         UserValidator userValidator;
