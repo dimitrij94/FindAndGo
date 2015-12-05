@@ -13,11 +13,16 @@ import com.example.domain.addresses.PlaceAddress;
 import com.example.domain.addresses.UserAddress;
 import com.example.domain.menu.PlaceMenuOptionalService;
 import com.example.domain.photos.PlaceMenuPhoto;
-import com.example.domain.registration.Authorities;
 import com.example.domain.registration.VerificationToken;
 import com.example.domain.photos.PlacePhoto;
+import com.example.domain.users.PlaceOwner;
+import com.example.domain.users.PlaceUser;
+import com.example.domain.users.employee.PlaceEmployee;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,16 +34,14 @@ public interface IDBBean {
 
     Place getPlaceById(long id);
 
-    Place getOwnerPlaceById(long id, PlaceUser user);
+    Place getOwnerPlaceById(long id, PlaceOwner owner);
 
     PlaceMenu getMenuById(long id);
 
     PlaceUser authorization(String name, String pass);
 
 
-    void addNewPlace(Place place, PlaceAddress placeAddress, PlaceUser owner, PlaceSpeciality speciality);
-
-    Authorities getAuthority(String name);
+    void addNewPlace(Place place, PlaceAddress placeAddress, PlaceOwner owner, PlaceSpeciality speciality);
 
     ArrayList<PlaceEvent> getMainEvents();
 
@@ -53,13 +56,10 @@ public interface IDBBean {
 
     PlaceUser getUserByName(String ownerName);
 
-    void grandUserAuthorities(PlaceUser user, Authorities authorities);
 
     void deleteToken(VerificationToken token);
 
-    byte[] getPlaceMainImage(long id);
-
-    byte[] getPlaceSmallImage(long id);
+    byte[] getPlaceImageByName(long id, String name);
 
     void newMenu(PlaceMenu menu, Place place);
 
@@ -67,9 +67,9 @@ public interface IDBBean {
 
     void newPlaceMenuService(PlaceMenu menu, PlaceMenuOptionalService service);
 
-    byte[] getMenuSmallImage(long id);
+    byte[] getMenuImage(long id, String name);
 
-    void addPlacePhoto(PlacePhoto photo, Place place);
+    void addPlacePhoto(PlacePhoto photo, Place place, String name);
 
     PlaceUser registration(PlaceUser user, UserAddress address);
 
@@ -78,7 +78,7 @@ public interface IDBBean {
     PlaceMenuOptionalService getMenuServicesById(Long l);
 
     @Transactional
-    void newOrder(PlaceUser user, Place place, PlaceMenu menu, List<Long> servicesList);
+    UserOrders newOrder(PlaceUser user, Place place, PlaceMenu menu, List<Long> servicesList, PlaceEmployee employee);
 
     List<UserOrders> getUserPlaceOrders(long userId, long placeId);
 
@@ -86,7 +86,7 @@ public interface IDBBean {
 
     boolean isMenuFromPlace(PlaceMenu menu, Place place);
 
-    Place getOwnerPlace(long placeId, PlaceUser user);
+    Place getOwnerPlace(long placeId, PlaceOwner user);
 
     PlaceUser getUserById(long i);
 
@@ -106,12 +106,7 @@ public interface IDBBean {
 
     boolean isUserUsedPlace(Place p, PlaceUser user);
 
-    long countUserPlaceRatings(long pId, Long id);
 
-
-    void newPlaceRating(Place place, PlaceUser user, int rating);
-
-    void deleteUserPlaceRating(Long id, long pId);
 
     long isPlaceUser(Long id, Long id1);
 
@@ -128,4 +123,12 @@ public interface IDBBean {
     void setOrderComplete(UserOrders order, boolean b);
 
     long isUserLikedPlace(PlaceUser user, Place p);
+
+    PlaceOwner getOwnerByName(String s);
+
+    void updateMenuUserMenuRating(String comment, int rating, PlaceUser user, PlaceMenu placeMenu);
+
+    List<UserOrders> getEmployeeTodayOrders(PlaceEmployee employee, LocalDate date);
+
+    List getEmployeeTodayPauses(PlaceEmployee employee, LocalDateTime localDate);
 }

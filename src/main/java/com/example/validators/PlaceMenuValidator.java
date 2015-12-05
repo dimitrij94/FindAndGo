@@ -1,6 +1,5 @@
 package com.example.validators;
 
-import com.example.domain.menu.PlaceMenu;
 import com.example.pojo.dto.MenuDTO;
 import com.example.pojo.dto.PhotoDTO;
 import com.example.services.imageservice.ImageServiceImpl;
@@ -9,9 +8,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-
-import java.util.regex.Pattern;
 
 /**
  * Created by Dmitrij on 04.11.2015.
@@ -57,11 +53,6 @@ public class PlaceMenuValidator implements Validator {
             ValidationUtils.invokeValidator(this.photoValidator, menu.getPhoto(), errors);
         } finally {
             errors.popNestedPath();
-        }
-
-        PhotoDTO photo = menu.getPhoto();
-        if(Math.round(photo.getW() / photo.getH())!= ImageServiceImpl.ImageSize.PLACE_PROFILE_MENU_IMAGE_SIZE.getIndex()){
-            errors.rejectValue("photo", "coordinates.invalid", "Невірні координати");
         }
     }
 }

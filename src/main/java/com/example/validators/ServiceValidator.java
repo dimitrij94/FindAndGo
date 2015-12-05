@@ -1,6 +1,5 @@
 package com.example.validators;
 
-import com.example.domain.menu.PlaceMenuOptionalService;
 import com.example.pojo.dto.ServiceDTO;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -13,8 +12,7 @@ import java.util.regex.Pattern;
  * Created by Dmitrij on 04.11.2015.
  */
 @Component
-public class ServiceValidator implements Validator
-{
+public class ServiceValidator implements Validator {
     @Override
     public boolean supports(Class<?> clazz) {
         return clazz.isAssignableFrom(ServiceDTO.class);
@@ -22,13 +20,20 @@ public class ServiceValidator implements Validator
 
     @Override
     public void validate(Object target, Errors errors) {
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors,"name","field.required");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors,"description","field.required");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors,"price","field.required");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "serviceDescription", "field.required", "Заповніть поле");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "servicePrice", "field.required", "Заповніть поле");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "serviceHours", "field.required", "Заповніть поле");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "serviceMinutes", "field.required", "Заповніть поле");
+        ServiceDTO service = (ServiceDTO) target;
 
-        ServiceDTO service = (ServiceDTO)target;
-        Pattern pattern=Pattern.compile("[a-zA-Z0-9,.!?-]{4,20}");
-        if(!pattern.matcher(service.getServiceDescription()).matches()) errors.rejectValue("description","field.invalid");
-        
+        if (service.getServicePrice() > 100000 || service.getServicePrice() < 0)
+            errors.rejectValue("servicePrice", "field.invalid", "Невірна ціна");
+
+        if (service.getServiceHours() > 24 || service.getServiceHours() < 0)
+            errors.rejectValue("serviceHours", "field.invalid", "Невірна тривалість");
+
+        if (service.getServiceMinutes() > 60 || service.getServiceMinutes() < 0)
+            errors.rejectValue("serviceMinutes", "field.invalid", "Невірна тривалість");
+
     }
 }

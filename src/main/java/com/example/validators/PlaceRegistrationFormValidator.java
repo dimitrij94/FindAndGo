@@ -12,6 +12,7 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import java.util.Arrays;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 /**
@@ -46,38 +47,37 @@ public class PlaceRegistrationFormValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "field.required", "Вввдіть назву закладу");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "description", "field.required", "Введіть опис закладу");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "specialization", "field.required", "Вибиберіть спеціалізацію закладу");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "photo", "photo.required", "Виберіть фото");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "field.required");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "description", "field.required");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "specialization", "field.required");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "photo", "photo.required");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors,"address.fullAddress","field.required");
         PlaceDTO place = (PlaceDTO) target;
 
-        if (!Pattern.compile("^[a-zA-Z0-9а-яА-Я_-]{3,15}$").matcher(place.getName()).matches()) {
-            errors.rejectValue("name", "field.invalid", "Назва містить недопустимі символи");
+        if (!Pattern.compile("^[a-zA-Z][a-zA-Z0-9-_]{1,20}$").matcher(place.getName()).matches()) {
+            errors.rejectValue("name", "field.invalid");
         }
 
-        if (!Arrays.asList(Arrays.stream(PlaceSpecialities.class.getEnumConstants())
-                .map(PlaceSpecialities::getName).toArray(String[]::new))
-                .contains(place.getSpecialization()))
-            errors.rejectValue("speciality", "field.invalid", "Такої спеціальності не існує");
+        if (!(Arrays.stream(PlaceSpecialities.class.getEnumConstants())
+                .anyMatch((c) -> c.getName().equals(place.getSpecialization()))))
+            errors.rejectValue("speciality", "field.invalid");
 
-        if (Pattern.compile("[а-яА-Яa-zA-Z0-9_-]{60,250}").matcher(place.getDescription()).matches())
-            errors.rejectValue("description", "field.invalid", "");
-        ImageServiceImpl.ImageSize size = ImageServiceImpl.ImageSize.PLACE_PROFILE_IMAGE_SIZE;
-
+        int dL = place.getDescription().length();
+        if (dL == 0 || dL > 250)
+            errors.rejectValue("description", "field.invalid");
 
         try {
-            errors.pushNestedPath("address");
-            ValidationUtils.invokeValidator(this.addressValidator, place.getAddress(), errors);
             errors.pushNestedPath("photo");
             ValidationUtils.invokeValidator(this.photoValidator, place.getPhoto(), errors);
         } finally {
             errors.popNestedPath();
         }
-        PhotoDTO photo = place.getPhoto();
-        if (Math.round(photo.getW() / photo.getH()) !=
-                size.getIndex()) {
-            errors.rejectValue("w", "field.invalid", "Невірні координати");
+
+        try {
+            errors.pushNestedPath("address");
+            ValidationUtils.invokeValidator(this.addressValidator, place.getAddress(), errors);
+        } finally {
+            errors.popNestedPath();
         }
     }
 

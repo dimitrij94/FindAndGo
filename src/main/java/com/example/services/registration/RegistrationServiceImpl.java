@@ -2,10 +2,9 @@ package com.example.services.registration;
 
 
 import com.example.pojo.dto.UserCreateForm;
-import com.example.domain.registration.Authorities;
 import com.example.domain.registration.VerificationToken;
 import com.example.domain.addresses.UserAddress;
-import com.example.domain.PlaceUser;
+import com.example.domain.users.PlaceUser;
 import com.example.services.mail.MailService;
 import com.example.dao.IDBBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +49,6 @@ public class RegistrationServiceImpl implements RegistrationService {
             if (tokens.getDate().getTime() > Calendar.getInstance().getTime().getTime()) {
                 PlaceUser user = tokens.getUser();
                 user.setEnabled(true);
-                dao.grandUserAuthorities(user,dao.getAuthority("ROLE_USER"));
                 dao.deleteToken(user.getToken());
                 return true;
             }

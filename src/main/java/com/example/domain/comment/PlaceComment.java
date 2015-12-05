@@ -1,7 +1,7 @@
 package com.example.domain.comment;
 
 import com.example.domain.Place;
-import com.example.domain.PlaceUser;
+import com.example.domain.users.PlaceUser;
 
 import javax.persistence.*;
 import java.util.List;

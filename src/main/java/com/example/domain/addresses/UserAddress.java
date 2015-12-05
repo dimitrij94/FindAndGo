@@ -1,7 +1,7 @@
 package com.example.domain.addresses;
 
 
-import com.example.domain.PlaceUser;
+import com.example.domain.users.PlaceUser;
 import com.example.pojo.dto.AddressDTO;
 
 import javax.persistence.*;

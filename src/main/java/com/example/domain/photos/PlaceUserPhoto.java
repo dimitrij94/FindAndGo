@@ -1,6 +1,6 @@
 package com.example.domain.photos;
 
-import com.example.domain.PlaceUser;
+import com.example.domain.users.PlaceUser;
 
 import javax.persistence.*;
 

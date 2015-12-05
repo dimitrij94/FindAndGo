@@ -14,8 +14,13 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.view.JstlView;
+
+import java.util.Locale;
 
 /**
  * Created by Dmitrij on 08.10.2015.
@@ -29,16 +34,15 @@ import org.springframework.web.servlet.view.JstlView;
 
 @ComponentScan(basePackages = "com.example.*")
 
-public class DemoJPAConfig extends WebMvcConfigurerAdapter{
-
+public class DemoJPAConfig extends WebMvcConfigurerAdapter {
 
 
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
-       registry.jsp()
-               .suffix(".jsp")
-               .prefix("/WEB-INF/pages/")
-               .viewClass(JstlView.class);
+        registry.jsp()
+                .suffix(".jsp")
+                .prefix("/WEB-INF/pages/")
+                .viewClass(JstlView.class);
     }
 
     @Override
@@ -80,9 +84,22 @@ public class DemoJPAConfig extends WebMvcConfigurerAdapter{
         return factoryBean;
     }
 
+    @Bean
+    LocaleResolver localeResolver() {
+        SessionLocaleResolver sessionLocaleResolver = new SessionLocaleResolver();
+        sessionLocaleResolver.setDefaultLocale(Locale.US);
+        return sessionLocaleResolver;
+    }
 
     @Bean
-    DBBean dao() {
-        return new DBBean();
+    LocaleChangeInterceptor localeChangeInterceptor() {
+        LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();
+        interceptor.setParamName("lang");
+        return interceptor;
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(localeChangeInterceptor());
     }
 }

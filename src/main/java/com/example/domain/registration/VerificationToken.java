@@ -1,6 +1,6 @@
 package com.example.domain.registration;
 
-import com.example.domain.PlaceUser;
+import com.example.domain.users.PlaceUser;
 
 import javax.persistence.*;
 import java.sql.Timestamp;

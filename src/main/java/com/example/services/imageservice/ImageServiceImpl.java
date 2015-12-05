@@ -10,8 +10,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -36,10 +34,11 @@ public class ImageServiceImpl implements ImageService {
         int height;
         int width;
         int index;
+
         ImageSize(int width, int height) {
             this.width = width;
             this.height = height;
-            this.index=Math.round(width/height);
+            this.index = Math.round(width / height);
         }
 
         public int getHeight() {
@@ -50,46 +49,72 @@ public class ImageServiceImpl implements ImageService {
             return width;
         }
 
-        public int getIndex(){
+        public int getIndex() {
             return index;
         }
     }
 
     @Override
     public void uploadPlaceMainPhoto(PhotoDTO image, Place place) {
-        BufferedImage bufferedImage = null;
-        try {
-            bufferedImage = cropImage(getReadableImage(image.getImage()), image);
-            bufferedImage = bufferedImage.getWidth() <= ImageSize.PLACE_PROFILE_IMAGE_SIZE.width ? bufferedImage :
-                    scaleImage(bufferedImage, ImageSize.PLACE_PROFILE_IMAGE_SIZE);
-            savePlaceImage(convertImage(bufferedImage), place, "small");
+        byte[] imageBody = image.getImage().getBytes();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Thread t = new Thread(() -> {
+            try {
+                savePlaceImage(imageBody, place, "main");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        new Thread(() -> {
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            dao.getPlaceImageByName(place.getId(), "main");
+            BufferedImage bufferedImage = null;
+            try {
+                bufferedImage = cropImage(getReadableImage(imageBody), image);
+                bufferedImage = bufferedImage.getWidth() <= ImageSize.PLACE_PROFILE_IMAGE_SIZE.width ? bufferedImage :
+                        scaleImage(bufferedImage, ImageSize.PLACE_PROFILE_IMAGE_SIZE);
+                savePlaceImage(convertImage(bufferedImage), place, "small");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
     }
 
     @Override
     public void uploadMenuPhoto(PhotoDTO image,
                                 PlaceMenu menu) {
 
-        BufferedImage croppedImage = null;
-        try {
-            croppedImage = cropImage(getReadableImage(image.getImage()), image);
-            croppedImage = croppedImage.getWidth() <= ImageSize.PLACE_PROFILE_MENU_IMAGE_SIZE.width ||
-                    croppedImage.getHeight() <= ImageSize.PLACE_PROFILE_MENU_IMAGE_SIZE.height ? croppedImage :
-                    scaleImage(croppedImage, ImageSize.PLACE_PROFILE_MENU_IMAGE_SIZE);
 
-            saveMenuImage(convertImage(croppedImage), menu, "small");
+        byte[] imageBody = image.getImage().getBytes();
+        try {
+            saveMenuImage(imageBody, menu, "main");
         } catch (IOException e) {
             e.printStackTrace();
         }
+        new Thread(() -> {
+            BufferedImage croppedImage = null;
+            try {
+                croppedImage = cropImage(getReadableImage(dao.getMenuImage(menu.getId(), "main")), image);
+                croppedImage = croppedImage.getWidth() <= ImageSize.PLACE_PROFILE_MENU_IMAGE_SIZE.width ||
+                        croppedImage.getHeight() <= ImageSize.PLACE_PROFILE_MENU_IMAGE_SIZE.height ? croppedImage :
+                        scaleImage(croppedImage, ImageSize.PLACE_PROFILE_MENU_IMAGE_SIZE);
+                saveMenuImage(convertImage(croppedImage), menu, "small");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+
     }
 
 
-    private BufferedImage getReadableImage(MultipartFile image) throws IOException {
-        byte[] imageData = image.getBytes();
-        InputStream inputStream = new ByteArrayInputStream(imageData);
+    private BufferedImage getReadableImage(byte[] imageBody) throws IOException {
+        InputStream inputStream = new ByteArrayInputStream(imageBody);
         return ImageIO.read(inputStream);
     }
 
@@ -105,10 +130,10 @@ public class ImageServiceImpl implements ImageService {
     }
 
     private BufferedImage scaleImage(BufferedImage originImage, ImageSize size) {
-        int type = originImage.getType()==0?BufferedImage.TYPE_INT_ARGB:originImage.getType();
+        int type = originImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originImage.getType();
         BufferedImage changedImage = new BufferedImage(size.width, size.height, type);
         Graphics2D g = changedImage.createGraphics();
-        g.drawImage(originImage, 0, 0,size.width,size.height, null);
+        g.drawImage(originImage, 0, 0, size.width, size.height, null);
         g.dispose();
         g.setComposite(AlphaComposite.Src);
 
@@ -141,8 +166,7 @@ public class ImageServiceImpl implements ImageService {
 
     private void savePlaceImage(byte[] image, Place place, String name) throws IOException {
         PlacePhoto photo = new PlacePhoto(image);
-        photo.setName(name);
-        dao.addPlacePhoto(photo, place);
+        dao.addPlacePhoto(photo, place, name);
     }
 
     private BufferedImage toBufferedImage(Image img) {

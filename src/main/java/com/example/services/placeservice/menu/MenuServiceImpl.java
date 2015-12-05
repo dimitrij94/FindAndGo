@@ -1,6 +1,6 @@
 package com.example.services.placeservice.menu;
 
-import com.example.domain.PlaceUser;
+import com.example.domain.users.PlaceUser;
 import com.example.domain.menu.PlaceMenu;
 import com.example.domain.menu.PlaceMenuOptionalService;
 import com.example.dao.IDBBean;

@@ -1,7 +1,3 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -12,9 +8,9 @@
     <title>MyPlaceToGo</title>
 
     <!-- Bootstrap -->
-    <link href="<c:url value="/static/css/bootstrap.css"/>" rel="stylesheet"/>
-    <link href="<c:url value="/static/css/style.css"/>" rel="stylesheet" type="text/css"/>
-    <link href="<c:url value="/static/css/font-awesome.css"/>" rel="stylesheet"/>
+    <link href="<c:url value="../../static/css/bootstrap.css"/>" rel="stylesheet"/>
+    <link href="<c:url value="../../static/css/style.css"/>" rel="stylesheet" type="text/css"/>
+    <link href="<c:url value="../../static/css/font-awesome.css"/>" rel="stylesheet"/>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="<c:url value="/static/js/jquery.min.js"/>"></script>
@@ -279,7 +275,7 @@
                     <table class="table ">
                         <tr>
                             <td>
-                                <h3>${place.placeName}</h3><span class="badge">${place.placeOwner.userName}</span>
+                                <h3>${place.placeName}</h3><span class="badge">${place.placeOwner.name}</span>
                             </td>
                             <td>
                                 <div>
@@ -328,9 +324,9 @@
                                         <div class="comment">
                                             <i class="fa fa-user" style="margin-right: 4px">
                                                 <span style="margin-right: 4px"></span>
-                                                <a href="#"><b>${comment.commentor.userName}</b></a>
+                                                <a href="#"><b>${comment.user.userName}</b></a>
                                             </i>
-                                            <i>${comment.commentBody}</i>
+                                            <i>${comment.comment}</i>
                                             <a href="#">
                                                 <i class="fa fa-thumbs-o-up like-ikon">
                                                     <span style="margin-right: 2px"></span>

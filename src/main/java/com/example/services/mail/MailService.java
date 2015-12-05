@@ -1,6 +1,6 @@
 package com.example.services.mail;
 
-import com.example.domain.PlaceUser;
+import com.example.domain.users.PlaceUser;
 
 import javax.servlet.http.HttpServletRequest;
 

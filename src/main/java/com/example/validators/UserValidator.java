@@ -13,13 +13,15 @@ import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 
+import java.util.regex.Pattern;
+
 /**
  * Created by Dmitrij on 14.11.2015.
  */
 @Component
 public class UserValidator implements Validator {
-    private final AddressValidator addressValidator;
 
+    private final AddressValidator addressValidator;
 
     @Autowired
     RegistrationService service;
@@ -48,8 +50,17 @@ public class UserValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userName", "name.required", "Поле не може бути пустим");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userEmail", "email.required", "Поле не може бути пустим");
         UserCreateForm user = (UserCreateForm) target;
+
+        if (Pattern.compile("^[a-zA-Z][a-zA-Z0-9-_\\.]{1,20}$").matcher(user.getName()).matches())
+            errors.rejectValue("name", "field.invalid");
+
+        if (Pattern.compile("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s).*$").matcher(user.getUserPass()).matches()){
+            errors.rejectValue("pass","field.invalid");
+        }
+
         if (!service.checkCredetials(user.getUserEmail(), user.getUserName()))
             errors.reject("credentials.not.unique", "Такий логін вже зайнятий");
+
 
         try {
             errors.pushNestedPath("address");

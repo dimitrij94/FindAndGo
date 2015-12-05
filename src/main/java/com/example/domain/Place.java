@@ -7,10 +7,11 @@ package com.example.domain;
 
 
 import com.example.domain.menu.PlaceMenu;
-import com.example.domain.ratings.PlaceRating;
 import com.example.domain.addresses.PlaceAddress;
 import com.example.domain.comment.PlaceComment;
 import com.example.domain.photos.PlacePhoto;
+import com.example.domain.users.PlaceOwner;
+import com.example.domain.users.PlaceUser;
 import com.example.pojo.dto.PlaceDTO;
 
 import javax.persistence.*;
@@ -31,7 +32,7 @@ public class Place {
     private String placeName;
 
     private String placeDescription;
-
+    private int timeOffset;
     private int placeFinalRating;
     private int placeFollowersNum;
 
@@ -40,9 +41,6 @@ public class Place {
             inverseJoinColumns = @JoinColumn(name="specialityId",referencedColumnName = "id"),
             name = "place_specialities")
     private List<PlaceSpeciality> placeSpeciality;
-
-    @OneToMany(mappedBy = "place")
-    private List<PlaceRating> placeRatings;
 
     @OneToMany(mappedBy= "menuPlace")
     private List<PlaceMenu>placeMenu;
@@ -61,13 +59,14 @@ public class Place {
 
     @ManyToOne
     @JoinColumn(name = "placeOwner")
-    PlaceUser placeOwner;
+    PlaceOwner placeOwner;
 
     @OneToOne(mappedBy = "place")
     PlaceAddress address;
 
     @OneToMany(mappedBy = "place")
     List<UserOrders> userOrderses;
+
 
     public Place() {
     }
@@ -130,14 +129,6 @@ public class Place {
         this.placeSpeciality = placeSpeciality;
     }
 
-    public List<PlaceRating> getPlaceRatings() {
-        return placeRatings;
-    }
-
-    public void setPlaceRatings(List<PlaceRating> placeRatings) {
-        this.placeRatings = placeRatings;
-    }
-
     public List<PlaceMenu> getPlaceMenu() {
         return placeMenu;
     }
@@ -178,11 +169,11 @@ public class Place {
         this.placeComments = placeComments;
     }
 
-    public PlaceUser getPlaceOwner() {
+    public PlaceOwner getPlaceOwner() {
         return placeOwner;
     }
 
-    public void setPlaceOwner(PlaceUser placeOwner) {
+    public void setPlaceOwner(PlaceOwner placeOwner) {
         this.placeOwner = placeOwner;
     }
 
@@ -202,6 +193,13 @@ public class Place {
         this.userOrderses = userOrderses;
     }
 
+    public int getTimeOffset() {
+        return timeOffset;
+    }
+
+    public void setTimeOffset(int timeOffset) {
+        this.timeOffset = timeOffset;
+    }
 
 
     @Override

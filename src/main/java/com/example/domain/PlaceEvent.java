@@ -1,6 +1,7 @@
 package com.example.domain;
 
 import com.example.domain.photos.PlaceEventPhoto;
+import com.example.domain.users.PlaceUser;
 
 import javax.persistence.*;
 import java.util.List;

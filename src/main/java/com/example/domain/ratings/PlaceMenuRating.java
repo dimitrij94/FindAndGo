@@ -1,7 +1,7 @@
 package com.example.domain.ratings;
 
 import com.example.domain.menu.PlaceMenu;
-import com.example.domain.PlaceUser;
+import com.example.domain.users.PlaceUser;
 
 import javax.persistence.*;
 

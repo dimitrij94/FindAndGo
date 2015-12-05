@@ -1,6 +1,6 @@
 package com.example.services.mail;
 
-import com.example.domain.PlaceUser;
+import com.example.domain.users.PlaceUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;

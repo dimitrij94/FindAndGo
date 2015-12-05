@@ -2,7 +2,7 @@ package com.example.services.registration;
 
 
 import com.example.pojo.dto.UserCreateForm;
-import com.example.domain.PlaceUser;
+import com.example.domain.users.PlaceUser;
 
 import javax.servlet.http.HttpServletRequest;
 

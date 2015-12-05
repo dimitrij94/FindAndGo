@@ -202,56 +202,9 @@
     <div class="row">
 
         <security:authorize access="isAuthenticated()">
-            <c:if test="${isOwner eq true}">
-                <div class="col col-md-2 hidden-sm hidden-xs">
-                    <ul class="list-group" id="user-controls">
-                        <li style="text-align: center" class="list-group-item">
-                   <span class="fa-stack" style="font-size: 60px">
-                     <i class="fa fa-circle fa-stack-2x"></i>
-                         <c:choose>
-                             <c:when test="${placeSpeciality=='Sport'}">
-                                 <i class="fa fa-footbol fa-stack-1x fa-inverse"></i>
-                             </c:when>
-                             <c:when test="${placeSpeciality=='NightClub'}">
-                                 <i class="fa fa-glass fa-stack-1x fa-inverse"></i>
-                             </c:when>
-                             <c:when test="${placeSpeciality=='Cafe'}">
-                                 <i class="fa fa-coffee fa-stack-1x fa-inverse"></i>
-                             </c:when>
-                         </c:choose>
-                   </span>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="#"><i class="fa fa-user fa-fw"></i>${place.placeOwner.name}</a>
-                        </li>
-                        <li class="list-group-item"><a href="#">
-                            <i class="fa fa-bullhorn fa-fw"></i>Додати подію</a>
-                        </li>
-                        <li class="list-group-item">
-                            <a data-toggle="modal" href="#" data-target="#new-menu">
-                                <i class="fa fa-cutlery fa-fw"></i>
-                                Додати послугу
-                            </a>
-                        </li>
-
-                        <li class="list-group-item">
-                            <a href="#"><i class="glyphicon glyphicon-cog fa-fw"></i>Налаштування</a>
-                        </li>
-
-                        <li class="list-group-item">
-                            <a href="#">
-                                <i class="fa fa-close fa-fw"></i> Видалити заклад
-                            </a>
-                        </li>
-
-
-                    </ul>
-                </div>
-            </c:if>
-            <c:if test="${isOwner eq false}">
-                <div class="col col-md-2 hidden-sm hidden-xs">
-                    <ul class="list-group" id="user-controls">
-                        <li style="text-align: center" class="list-group-item">
+            <div class="col col-md-2 hidden-sm hidden-xs">
+                <ul class="list-group" id="user-controls">
+                    <li style="text-align: center" class="list-group-item">
                    <span class="fa-stack" style="font-size: 60px">
                      <i class="fa fa-circle fa-stack-2x"></i>
                         <c:choose>
@@ -266,64 +219,63 @@
                             </c:when>
                         </c:choose>
                    </span>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="/user/profile"><i class="fa fa-user fa-fm"></i><c:out value="Мій профайл"/></a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="/user/orders"> <i class="fa fa-bullhorn fa-fm"></i>Мої замовлення</a>
-                        </li>
-                        <li class="list-group-item"><a href="/user/${user.id}/events">
-                            <i class="fa fa-calendar-check-o fa-fm"></i>Мої події</a></li>
-                        <li class="list-group-item"><a href="/user/${user.id}/places">
-                            <i class="fa fa-cutlery fa-fm"></i>Мої заклади</a>
-                        </li>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/user/profile"><i class="fa fa-user fa-fm"></i><c:out value="Мій профайл"/></a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/user/orders"> <i class="fa fa-bullhorn fa-fm"></i>Мої замовлення</a>
+                    </li>
+                    <li class="list-group-item"><a href="/user/${user.id}/events">
+                        <i class="fa fa-calendar-check-o fa-fm"></i>Мої події</a></li>
+                    <li class="list-group-item"><a href="/user/${user.id}/places">
+                        <i class="fa fa-cutlery fa-fm"></i>Мої заклади</a>
+                    </li>
 
-                        <li class="list-group-item">
-                            <a href="#"><i class="glyphicon glyphicon-cog fa-fm"></i>Налаштування</a>
-                        </li>
+                    <li class="list-group-item">
+                        <a href="#"><i class="glyphicon glyphicon-cog fa-fm"></i>Налаштування</a>
+                    </li>
 
-                        <li class="list-group-item">
-                            <a href="/j_spring_security_logout"><i class="fa fa-power-off fa-fm"></i>Вийти</a>
-                        </li>
+                    <li class="list-group-item">
+                        <a href="/j_spring_security_logout"><i class="fa fa-power-off fa-fm"></i>Вийти</a>
+                    </li>
 
-                    </ul>
-                </div>
-            </c:if>
+                </ul>
+            </div>
         </security:authorize>
 
         <div style="margin-top: 10px; height: 500px;" id="place-info-panel"
              class="col col-xs-12 col-md-5 <security:authorize access="isAnonymous()">col-md-offset-1</security:authorize> thumbnail">
             <div>
-                <img src="<c:url value="/photo/place/${place.id}/small"/>" onerror="http://placehold.it/1600x900">
+                <img src="<c:url value="/photo/place/${place.id}/main"/>" width="100%" onerror="http://placehold.it/160x90">
                 <table class="table">
                     <tr>
                         <td>
                             <h3>${place.placeName}</h3>
-                            <c:if test="${isOwner eq false}">
-
-                                <a style="color:white; cursor:pointer" id="like">
+                            <a style="color:white; cursor:pointer" id="like">
                                     <span class="badge">
                                                     <i id="heart"
                                                        class="fa fa-fw
                                                        <c:if test="${liked eq 0}">fa-heart-o "</c:if>
                                                        <c:if test="${liked eq 1}">fa-heart"  </c:if> >
                                         </i>
-
                                         <span id="place-f-n">${place.placeUsers.size()}</span>
                                     </span>
-                                </a>
-                            </c:if>
+                            </a>
                         </td>
                         <td>
                             <div style="float:right">
-                                <select id="example">
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                </select>
+                                <span class="rating">
+                                    <c:forEach step="1" varStatus="pr" begin="1"
+                                               end="5">
+                                        <c:if test="${place.placeFinalRating >= rm.index}">
+                                            <i class="fa fa-star  rating-star"></i>
+                                        </c:if>
+                                        <c:if test="${place.placeFinalRating < rm.index}">
+                                            <i class="fa fa-star-o  rating-star"></i>
+                                        </c:if>
+                                    </c:forEach>
+                                </span>
                             </div>
                         </td>
                     </tr>
@@ -405,7 +357,7 @@
                                                                 <span class="rating">
                                                                     <c:forEach step="1" varStatus="rm" begin="1"
                                                                                end="5">
-                                                                        <c:if test="${menu.menuFinalRating > rm.index}">
+                                                                        <c:if test="${menu.menuFinalRating >= rm.index}">
                                                                             <i class="fa fa-star  rating-star"></i>
                                                                         </c:if>
                                                                         <c:if test="${menu.menuFinalRating < rm.index}">
@@ -446,46 +398,12 @@
                                 </tr>
                                 <tr>
                                     <td colspan="2">
-                                        <security:authorize access="isAuthenticated()">
-                                            <div style="float: right; margin: 5px 0 1px 0;" class="btn-group">
-                                                <security:authorize access="hasRole('ROLE_USER')">
-                                                    <button type="submit" class="btn btn-primary">
-                                                        <i class="fa fa-hand-scissors-o fa-rotate-90 fa-fw"></i>
-                                                        Замовити
-                                                    </button>
-                                                </security:authorize>
-                                                <c:if test="${isOwner eq true}">
-                                                    <a class="dropdown-toggle btn btn-default"
-                                                       data-toggle="dropdown">
-                                                        <i class="fa fa-pencil-square-o fa-fw"></i>
-                                                        Змінити
-                                                        <span class="caret"></span>
-                                                    </a>
-                                                    <ul class="dropdown-menu">
-                                                        <li>
-                                                            <a href="#" data-toggle="modal" data-id="${menu.id}"
-                                                               data-target="#new-menu-service">
-                                                                <i class="fa fa-gift fa-fw"></i>
-                                                                Новий бонус
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="#">
-                                                                <i class="fa fa-pencil-square-o fa-fw"></i>
-                                                                Змінити послугу
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="#">
-                                                                <i class="fa fa-trash-o fa-fw"></i>
-                                                                Видалити
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </c:if>
-
-                                            </div>
-                                        </security:authorize>
+                                        <div style="float: right; margin: 5px 0 1px 0;" class="btn-group">
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fa fa-hand-scissors-o fa-rotate-90 fa-fw"></i>
+                                                Замовити
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             </table>
@@ -498,222 +416,7 @@
         </c:forEach>
     </div>
 </div>
-</div>
 
-<c:if test="${isOwner}">
-    <div id="new-menu-service" class="modal fade">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button style="margin-top: -9px;" type="button" class="close" data-dismiss="modal"
-                            aria-label="Close">
-                        <span aria-hidden="true">&times;</span></button>
-                </div>
-
-
-                <div class="modal-body">
-                    <c:url context="/" value="/place/${place.id}/menu/service" var="newservice"/>
-                    <sf:form modelAttribute="service" action="${newservice}" method="post">
-                        <table style="margin-bottom: 0" class="table thumbnail">
-                            <tr>
-                                <td>
-                                    <div class="input-group">
-                                        <sf:textarea path="serviceDescription" class="form-control"
-                                                     style="resize: none;" rows="5"
-                                                     placeholder="Короткий опис послуги"/>
-                                    </div>
-                                    <div style="text-align: center">
-                                        <small class="service-description-info">Залишилося 60 символів</small>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>
-                                    <div class="input-group">
-                                    <span class="input-group-addon">
-                                       <i class="fa fa-tag"></i>
-                                     </span>
-
-                                        <sf:input path="servicePrice" type="number" id="service-price"
-                                                  class="form-control "
-                                                  placeholder="Ціна" value="" aria-describedby="basic-addon1"/>
-
-                                                <span style="padding:2px 5px"
-                                                      class="input-group-addon"><i>.грн</i></span>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="text-align: center">
-
-                                    <sf:input path="serviceHours" min="0" max="24" type="number"
-                                              class="form-control  new-menu-form" value="" placeholder="hh"/>
-                                    :
-                                    <sf:input path="serviceMinutes" min="0" max="60" type="number"
-                                              class="form-control  new-menu-form"
-                                              placeholder="mm" value=""/>
-
-                                    <br/>
-                                    <small>Введіть тривалісь надання послуги</small>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <sf:hidden path="menuId" class="id-input"/>
-                                    <button
-                                            style="left: 50%; position: relative; margin-left: -61px;"
-                                            id="register-menu-service" class="btn btn-primary" type="submit">
-                                        Зареєструвати
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="alert alert-success">
-                                        <i class="fa fa-info"></i> Поля цієї групи є обов'язковими для
-                                        заповнення
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </sf:form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="new-menu" class="modal fade">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button style="margin-top: -9px;" type="button" class="close" data-dismiss="modal"
-                            aria-label="Close">
-                        <span aria-hidden="true">&times;</span></button>
-                </div>
-                <div class="modal-body">
-
-                    <div class="row">
-                        <div class="col-xs-5">
-                            <c:url context="/" value='/place/${place.id}/menu' var="newmenu"/>
-                            <sf:form enctype="multipart/form-data" modelAttribute="menu" method="post"
-                                     action="${newmenu}">
-                                <table style="margin-bottom: 0" class="table thumbnail">
-                                    <tr>
-                                        <td>
-                                            <c:set var="nameError">
-                                                <sf:errors path="name"/>
-                                            </c:set>
-                                            <div class="input-group">
-                                                <span class="input-group-addon"><i class="fa fa-apple"></i></span>
-                                                <sf:input data-toggle="tooltip" path="name" cssClass="form-control"
-                                                          title="${nameError}" placeholder="Назва" data-placement="right"/>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="input-group">
-                                                <c:set var="descriptionError">
-                                                    <sf:errors path="description"/>
-                                                </c:set>
-                                                <sf:textarea path="description" class="form-control "
-                                                             id="place_description" style="resize: none"
-                                                             rows="5" data-toggle="tooltip" data-placement="right"
-                                                             title="${descriptionError}"
-                                                             placeholder="Короткий опис послуги"/>
-                                            </div>
-                                            <div style="text-align: center">
-                                                <small id="description-info">Залишилося 250 символів</small>
-                                            </div>
-                                        </td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>
-                                            <div class="input-group">
-                                                <c:set var="priceError">
-                                                    <sf:errors path="price"/>
-                                                </c:set>
-
-                                                <span class="input-group-addon" id="basic-addon2">
-                                                    <i class="fa fa-tag"></i>
-                                                </span>
-
-                                                <sf:input path="price" type="number" id="form-price" title="${priceError}"
-                                                          class="form-control " data-placement="right"
-                                                          placeholder="Ціна" data-toggle="tooltip"
-                                                          value="" aria-describedby="basic-addon1"/>
-
-                                                <span style="padding:2px 5px"
-                                                      class="input-group-addon"><i>.грн</i></span>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <c:set var="hhE"><sf:errors path="hh"/> </c:set>
-                                        <c:set var="mmE"><sf:errors path="mm"/> </c:set>
-                                        <td style="text-align: center">
-
-                                            <sf:input path="hours" min="0" max="24" type="number"
-                                                      class="form-control  new-menu-form" value=""
-                                                      data-toggle="tooltip" data-placement="top"
-                                                      title="${hhE}" placeholder="hh"/>
-                                            :
-                                            <sf:input path="minutes" min="0" max="60" type="number"
-                                                      class="form-control  new-menu-form"
-                                                      data-toggle="tooltip" data-placement="top"
-                                                      title="${mmE}"
-                                                      placeholder="mm" value=""/>
-
-                                            <br/>
-                                            <small>Введіть тривалісь надання послуги</small>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <c:set var="photoE">
-                                                <sf:errors path="photo"/>
-                                            </c:set>
-                                            <sf:input path="photo.image" id="upload"
-                                                      type="file" name="upload"
-                                                      data-toggle="tooltip" data-placement="bottom"
-                                                      title="${photoE}" />
-                                            <sf:hidden path="photo.w" id="w"/>
-                                            <sf:hidden path="photo.h" id="h"/>
-                                            <sf:hidden path="photo.x" id="x"/>
-                                            <sf:hidden path="photo.y" id="y"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <button id="new-service" class="btn btn-primary" type="submit">Зареєструвати
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="alert alert-success" id="user-detail-info">
-                                                <i class="fa fa-info"></i> Поля цієї групи є обов'язковими для
-                                                заповнення
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </sf:form>
-                        </div>
-                        <div style="float:left" class="thumbnail">
-                            <img id="image"/>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</c:if>
-<c:set var="errors">
-    <sf:errors/>
-</c:set>
 <script type="text/javascript">
     var geocoder;
     var map;
@@ -722,59 +425,14 @@
     var liked;
 
     $(document).ready(function () {
-        var ratingB = $('#example');
-        ratingB.barrating({
-            theme: 'fontawesome-stars',
-            initialRating:${place.placeFinalRating},
-            readOnly:${used ne true},
-            onSelect: function (value, text, event) {
-                if (typeof(event) !== 'undefined') {
-                    $.ajax({
-                        url: "/rating/place/" +${place.id},
-                        data: {rating: value}
-                    }).success(function (data) {
-                        ratingB.barrating("set", data)
-                    });
-                }
-            }
-        });
+
         <security:authorize access="isAuthenticated()">
         liked = ${liked};
-
-
         $("#like").click(function () {
             like("${place.id}");
         });
-
         </security:authorize>
-        $('#new-menu-service').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var id = button.data('id');
-            var modal = $(this);
-            modal.find('.modal-body .id-input').val(id);
 
-            var description = modal.find(".service-description");
-            var info = modal.find(".service-description-info");
-
-            description.bind("keypress", function () {
-                updateDescriptionSpan(description, info, 60);
-            });
-        });
-
-        $("#new-menu").on("shown.bs.modal", function () {
-            var target = document.getElementById("image");
-            var src = document.getElementById("upload");
-
-            var description = $("#place_description");
-            var info = $("#description-info");
-
-            showImage(src, target);
-            description.bind("keypress", function () {
-                updateDescriptionSpan(description, info, 250);
-            });
-
-            
-        });
         initialize();
         geocoder.geocode({'location': latlng}, function (results, status) {
             var infowindow = new google.maps.InfoWindow;
@@ -797,7 +455,7 @@
     });
 
     <security:authorize access="isAuthenticated()">
-    function like(placeId) {
+        function like(placeId) {
         liked %= 2;
         $.ajax({
             url: "/place/" + placeId + "/liked/",
@@ -817,6 +475,7 @@
         });
     }
     </security:authorize>
+
     function initialize() {
 //Определение карты
         var options = {
@@ -835,53 +494,6 @@
             position: latlng
         });
 
-    }
-
-    function updateDescriptionSpan(description, info, num) {
-        info.text(function () {
-            var i = num - description.val().length;
-            if (i >= 0) {
-                return "Залишилося " + i + " символів";
-            }
-            if (i < 0) {
-                return "Ви перевищили дозволену кількість символів символів";
-            }
-        });
-    }
-
-    function showCoords(c) {
-        $('#x').val(c.x);
-        $('#y').val(c.y);
-        $('#w').val(c.w);
-        $('#h').val(c.h);
-    }
-
-    function initJcrop(img) {
-
-        jQuery(img).Jcrop({
-            aspectRatio: 16 / 9,
-
-            onChange: showCoords,
-            setSelect: [0, 90, 160, 0],
-            onSelect: showCoords
-        });
-    }
-
-    function showImage(src, target) {
-        var fr = new FileReader();
-        // when image is loaded, set the src of the image where you want to display it
-        fr.onload = function (e) {
-            target.src = this.result;
-            initJcrop(target);
-        };
-
-        src.addEventListener("change", function () {
-            // fill fr with image data
-            fr.readAsDataURL(src.files[0]);
-            if (jcrop_api != null) {
-                jcrop_api.destroy();
-            }
-        });
     }
 
 

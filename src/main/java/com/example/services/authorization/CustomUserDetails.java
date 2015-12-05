@@ -1,6 +1,6 @@
 package com.example.services.authorization;
 
-import com.example.domain.PlaceUser;
+import com.example.domain.users.PlaceUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 

@@ -1,10 +1,11 @@
 package com.example.services.userservice;
 
 import com.example.domain.Place;
-import com.example.domain.PlaceUser;
+import com.example.domain.users.PlaceOwner;
+import com.example.domain.users.PlaceUser;
 import com.example.pojo.dto.UserPlaceOrdersDTO;
+import org.springframework.security.core.Authentication;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ public interface UserService {
 
     PlaceUser placeUser();
 
-    Place findPlaceByOwnerId(PlaceUser user, long id);
+    boolean hasRole(Authentication authentication, String role);
 
     List<UserPlaceOrdersDTO> getOrderedServices(PlaceUser user);
 
@@ -25,5 +26,6 @@ public interface UserService {
 
     void newUserComment(String comment, int rating, long id);
 
-    boolean isUser(PlaceUser user);
+    PlaceOwner placeOwner();
+
 }

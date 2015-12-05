@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@taglib prefix="sf" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <!--
 To change this license header, choose License Headers in Project Properties.
@@ -129,6 +131,11 @@ and open the template in the editor.
             resize: none;
         }
 
+        .error{
+            box-shadow: 0 0 4px #F41919;
+            border: 1px solid #FB6868;
+        }
+
     </style>
 
 </head>
@@ -235,55 +242,65 @@ and open the template in the editor.
                     <table class="table" border="0">
                         <tr>
                             <td>
-                                <div class="input-group input-group">
+                                <spring:bind path="name">
+                                    <div class="input-group input-group ${status.error?'error':''}">
                                     <span class="input-group-addon" id="basic-addon1">
                                        <i class="glyphicon glyphicon-apple"></i>
                                      </span>
-                                    <sf:input path="name" id="form-name" class="form-control"
-                                              placeholder="Назва" value=""
-                                              aria-describedby="basic-addon1"/>
-                                </div>
+                                        <sf:input path="name" id="form-name" class="form-control"
+                                                  placeholder="Назва" value=""
+                                                  aria-describedby="basic-addon1"/>
+                                    </div>
+                                </spring:bind>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <div class="input-group">
+                                <spring:bind path="specialization">
+                                    <div class="input-group ${status.error?'error':''}">
                                     <span id="type_addon" class="input-group-addon"><i
                                             class="glyphicon glyphicon-glass"></i></span>
-                                    <sf:select path="specialization" id="place_type" class="form-control">
-                                        <sf:option value="NightClub">Night club</sf:option>
-                                        <sf:option value="Sport"/>
-                                        <sf:option value="Cafe"/>
-                                    </sf:select>
-                                </div>
+                                        <sf:select path="specialization" id="place_type" class="form-control">
+                                            <sf:option value="" label="-- Спеціалізація --"/>
+                                            <sf:option value="NightClub" label="Night club"/>
+                                            <sf:option value="Sport"/>
+                                            <sf:option value="Cafe"/>
+                                        </sf:select>
+                                    </div>
+                                </spring:bind>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <div class="input-group">
-                                    <sf:textarea path="description" class="form-control"
-                                                 placeholder="Короткий опис закладу"
-                                                 id="place_description"/>
-                                </div>
-                                <small id="place_description-addon">Залишилося 160 символів</small>
+                                <spring:bind path="description">
+                                    <div class="input-group ${status.error?'error':''}">
+                                        <sf:textarea path="description" class="form-control"
+                                                     placeholder="Короткий опис закладу"
+                                                     id="place_description"/>
+                                    </div>
+                                </spring:bind>
+                                <small id="place_description-addon">Залишилося 250 символів</small>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <div class="input-group">
-                                    <sf:input path="photo.image" type="file" id="upload" name="image"/>
-                                    <sf:hidden path="photo.x" id="x"/>
-                                    <sf:hidden path="photo.y" id="y"/>
-                                    <sf:hidden path="photo.h" id="h"/>
-                                    <sf:hidden path="photo.w" id="w"/>
-                                </div>
+                                <spring:bind path="photo">
+                                    <div class="input-group ${status.error?'error':''}">
+                                        <sf:input path="photo.image" type="file" id="upload" name="image"/>
+                                        <sf:hidden path="photo.x" id="x"/>
+                                        <sf:hidden path="photo.y" id="y"/>
+                                        <sf:hidden path="photo.h" id="h"/>
+                                        <sf:hidden path="photo.w" id="w"/>
+                                    </div>
+                                </spring:bind>
                             </td>
                         </tr>
                     </table>
                 </div>
             </div>
 
-            <div class="col col-xs-4" style="width:390px; padding: 0 15px; margin-top: 40px; border-radius: 4px; display: inline">
+            <div class="col col-xs-4"
+                 style="width:390px; padding: 0 15px; margin-top: 40px; border-radius: 4px; display: inline">
                 <div style="border: #dddddd 1px solid; padding: 4px;"
                      id="image-holder">
                     <img style="min-width: 349px; max-width: 349px" src="http://placehold.it/433x300" id="image"/>
@@ -296,8 +313,9 @@ and open the template in the editor.
 
             <div class="col-xs-12 col-md-6 col-lg-4">
                 <div class="thumbnail" id="address-wrapper">
-                    <sf:input path="address.fullAddress" id="address"/>
-
+                    <spring:bind path="address">
+                        <sf:input path="address.fullAddress" cssClass="${status.error?'error':''}" id="address"/>
+                    </spring:bind>
                     <div id="map_canvas" style="width:100%; height:100%"></div>
                     <sf:input path="address.latitude" id="latitude"/>
                     <sf:input path="address.longitude" id="longitude"/>
@@ -311,17 +329,17 @@ and open the template in the editor.
 </div>
 
 
-<script type="text/javascript" src="/static/js/jquery.min.js"></script>
+<script type="text/javascript" src="<c:url value="/static/js/jquery.min.js"/>"></script>
 
-<script type="text/javascript" src="/static/js/jquery-ui-1.8.1.custom.min.js"></script>
+<script type="text/javascript" src="<c:url value="/static/js/jquery-ui-1.8.1.custom.min.js"/>"></script>
 
-<script type="text/javascript" src="/static/js/jquery.Jcrop.min.js"></script>
+<script type="text/javascript" src="<c:url value="/static/js/jquery.Jcrop.min.js"/>"></script>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 
 <!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="/static/js/bootstrap.js"></script>
+<script src="<c:url value="/static/js/bootstrap.js"/>"></script>
 
 
 <script type="text/javascript">
@@ -418,7 +436,7 @@ and open the template in the editor.
 
         function updateDescriptionSpan() {
             descriptionFieldAddon.text(function () {
-                var i = 160 - descriptionField.val().length;
+                var i = 250 - descriptionField.val().length;
                 if (i >= 0) {
                     $("#warning-sighn").hide();
                     descriptionFieldAddon.css("backgroundColor", "#EEE");
@@ -464,10 +482,10 @@ and open the template in the editor.
     }
 
     function showCoords(c) {
-        $('#x').val(c.x*mIndex);
-        $('#y').val(c.y*mIndex);
-        $('#w').val(c.w*mIndex);
-        $('#h').val(c.h*mIndex);
+        $('#x').val(c.x * mIndex);
+        $('#y').val(c.y * mIndex);
+        $('#w').val(c.w * mIndex);
+        $('#h').val(c.h * mIndex);
     }
 
     function initJcrop(img) {
@@ -477,7 +495,7 @@ and open the template in the editor.
                     setSelect: [0, 90, 160, 0],
                     onSelect: showCoords
                 },
-                function(){
+                function () {
                 });
     }
 
@@ -487,12 +505,10 @@ and open the template in the editor.
         // when image is loaded, set the src of the image where you want to display it
         fr.onload = function (e) {
             $(".jcrop-holder").remove();
-            var imga =$('#image');
+            var imga = $('#image');
             imga.attr("src", this.result);
-            imga.load(function(){
-                console.log(this.width);
-                mIndex=this.width/351   ;
-                console.log(mIndex)
+            imga.load(function () {
+                mIndex = this.width / 351;
             });
             initJcrop(target);
         };

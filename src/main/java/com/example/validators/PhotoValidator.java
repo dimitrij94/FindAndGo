@@ -22,18 +22,19 @@ public class PhotoValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors,"image","field.required");
+
         PhotoDTO photo = (PhotoDTO)target;
 
         if(photo.getImage().isEmpty()){
-            errors.rejectValue("photo","field.required","Виберіть фото");
+            errors.rejectValue("image","field.required","Виберіть фото");
         }
 
         if(!photo.getImage().getContentType().split("/")[0].equals("image")){
-            errors.rejectValue("photo","field.invalid","Невірний формат зображення");
+            errors.rejectValue("image","field.invalid","Невірний формат зображення");
         }
 
         if(photo.getW()==0||photo.getH()==0){
-            errors.rejectValue("photo","field.invalid","Невірні координати");
+            errors.rejectValue("image","field.invalid","Невірні координати");
         }
     }
 }

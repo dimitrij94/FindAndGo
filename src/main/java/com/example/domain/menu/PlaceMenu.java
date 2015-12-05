@@ -15,6 +15,7 @@ import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequ
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -48,8 +49,7 @@ public class PlaceMenu implements Serializable {
     @OneToMany(mappedBy = "menu")
     private List<UserOrders> userOrderses;
 
-    private int durationH;
-    private int durationM;
+    private long durationMinutes;
 
     public PlaceMenu() {
     }
@@ -64,8 +64,8 @@ public class PlaceMenu implements Serializable {
         this.menuName=menuDTO.getName();
         this.menuDescription=menuDTO.getDescription();
         this.menuPrice=menuDTO.getPrice();
-        this.durationH=menuDTO.getHours();
-        this.durationM=menuDTO.getMinutes();
+        this.durationMinutes =(Duration.ofHours(menuDTO.getHours()).plus(
+                Duration.ofMinutes(menuDTO.getMinutes())).toMinutes());
     }
 
     public static long getSerialVersionUID() {
@@ -152,20 +152,12 @@ public class PlaceMenu implements Serializable {
         this.userOrderses = userOrderses;
     }
 
-    public int getDurationH() {
-        return durationH;
+    public long getDurationMinutes() {
+        return durationMinutes;
     }
 
-    public void setDurationH(int durationH) {
-        this.durationH = durationH;
-    }
-
-    public int getDurationM() {
-        return durationM;
-    }
-
-    public void setDurationM(int durationM) {
-        this.durationM = durationM;
+    public void setDurationMinutes(long duration) {
+        this.durationMinutes = duration;
     }
 
     @Override

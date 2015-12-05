@@ -2,19 +2,28 @@ package com.example.services.placeservice;
 
 import com.example.domain.Place;
 import com.example.domain.PlaceSpeciality;
-import com.example.domain.PlaceUser;
+import com.example.domain.UserOrders;
+import com.example.domain.users.PlaceOwner;
+import com.example.domain.users.PlaceUser;
 import com.example.domain.addresses.PlaceAddress;
 import com.example.dao.IDBBean;
 import com.example.domain.menu.PlaceMenu;
 import com.example.domain.menu.PlaceMenuOptionalService;
+import com.example.domain.users.employee.EmployeeBreaks;
+import com.example.domain.users.employee.EmployeePauses;
+import com.example.domain.users.employee.PlaceEmployee;
+import com.example.pojo.dto.EmployeeTimePeriod;
 import com.example.pojo.dto.MenuDTO;
 import com.example.pojo.dto.PlaceDTO;
 import com.example.pojo.dto.ServiceDTO;
 import com.example.services.imageservice.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.LocaleResolver;
 
 import java.io.IOException;
+import java.time.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,12 +39,15 @@ public class PlaceServiceImpl implements PlaceService {
     @Autowired
     IDBBean dao;
 
+    @Autowired
+    LocaleResolver localeResolver;
+
     @Override
-    public Place registerNewPlace(PlaceDTO placeDTO, PlaceUser owner) throws IOException {
+    public Place registerNewPlace(PlaceDTO placeDTO, PlaceOwner owner) throws IOException {
         Place place = new Place(placeDTO);
         PlaceAddress placeAddress = new PlaceAddress(placeDTO.getAddress());
         PlaceSpeciality speciality = dao.getPlaceSpeciality(placeDTO.getSpecialization());
-        dao.addNewPlace(place, placeAddress, owner,speciality);
+        dao.addNewPlace(place, placeAddress, owner, speciality);
         imageService.uploadPlaceMainPhoto(placeDTO.getPhoto(), place);
         return place;
     }
@@ -55,10 +67,15 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public void sendNewOrder(PlaceUser user, long placeId, long menuId, List<Long> services) {
+    public void sendNewOrder(PlaceUser user, long placeId,
+                             long menuId, List<Long> services,
+                             PlaceEmployee employee) {
 
-        dao.newOrder(user, dao.getPlaceById(placeId), dao.getMenuById(menuId), services);
+        Place place = dao.getPlaceById(placeId);
+        PlaceMenu menu = dao.getMenuById(menuId);
+        UserOrders order = dao.newOrder(user, place, menu, services, employee);
     }
+
 
     @Override
     public boolean isMenuFromPlace(PlaceMenu menu, Place place) {
@@ -67,21 +84,6 @@ public class PlaceServiceImpl implements PlaceService {
             if (m.getId() == id) return true;
         }
         return false;
-    }
-
-    @Override
-    public int newPlaceRating(int rating, long pId, PlaceUser user) {
-        Place place = dao.getPlaceById(pId);
-        if(!(dao.countUserPlaceRatings(pId,user.getId())>0)){
-            dao.newPlaceRating(place,user,rating);
-        }
-        else {
-            dao.deleteUserPlaceRating(user.getId(),pId);
-            dao.newPlaceRating(place,user,rating);
-        }
-        int finalRating = dao.getPlaceFinalRating(place);
-        dao.updatePlaceRating(place,finalRating);
-        return finalRating;
     }
 
 

@@ -5,6 +5,7 @@ import com.example.pojo.dto.ServiceDTO;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
 import javax.persistence.*;
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -18,8 +19,7 @@ public class PlaceMenuOptionalService {
     private Long id;
     private String description;
     private int price;
-    private int hh;
-    private int mm;
+    private long durationMinutes;
 
     @ManyToOne
     @JoinColumn(name = "menu")
@@ -39,8 +39,8 @@ public class PlaceMenuOptionalService {
     public PlaceMenuOptionalService(ServiceDTO serviceDTO) {
         description = serviceDTO.getServiceDescription();
         price = serviceDTO.getServicePrice();
-        hh=serviceDTO.getServiceHours();
-        mm=serviceDTO.getServiceMinutes();
+        this.durationMinutes = Duration.ofHours(serviceDTO.getServiceHours())
+                .plusMinutes(serviceDTO.getServiceMinutes()).toMinutes();
     }
 
     public Long getId() {
@@ -83,19 +83,11 @@ public class PlaceMenuOptionalService {
         this.userOrderses = userOrderses;
     }
 
-    public int getHh() {
-        return hh;
+    public long getDurationMinutes() {
+        return durationMinutes;
     }
 
-    public void setHh(int hh) {
-        this.hh = hh;
-    }
-
-    public int getMm() {
-        return mm;
-    }
-
-    public void setMm(int mm) {
-        this.mm = mm;
+    public void setDurationMinutes(long durationSeconds) {
+        this.durationMinutes = durationSeconds;
     }
 }
