@@ -1,13 +1,15 @@
 package com.example.services.imageservice;
 
-import com.example.domain.Place;
-import com.example.domain.menu.PlaceMenu;
-import com.example.domain.photos.PlaceMenuPhoto;
-import com.example.domain.photos.PlacePhoto;
+import com.example.adapters.image.IImageTypeAdapter;
+import com.example.constants.image.ImageContainerType;
+import com.example.constants.image.sizes.ImageSize;
 import com.example.dao.IDBBean;
+import com.example.functional.photos.GetPhotoFunction;
+import com.example.functional.photos.SavePhotoFunction;
+import com.example.interfaces.PhotoCotainable;
 import com.example.pojo.dto.PhotoDTO;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.example.services.MyExecutorService;
+import javassist.tools.web.BadHttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,125 +17,88 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImagingOpException;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.concurrent.ExecutorService;
 
-/**
- * Created by Dmitrij on 25.10.2015.
- */
 @Service
 public class ImageServiceImpl implements ImageService {
     @Autowired
     IDBBean dao;
 
-    private Log log = LogFactory.getLog(this.getClass());
+    @Autowired
+    MyExecutorService threadPoolContainer;
 
-    public enum ImageSize {
-        PLACE_PROFILE_IMAGE_SIZE(480, 271),
-        PLACE_PROFILE_MENU_IMAGE_SIZE(267, 150);
+    @Autowired
+    IImageTypeAdapter adapter;
 
-        int height;
-        int width;
-        int index;
+    public void upload(PhotoDTO image, PhotoCotainable domain, ImageContainerType type) throws BadHttpRequest {
 
-        ImageSize(int width, int height) {
-            this.width = width;
-            this.height = height;
-            this.index = Math.round(width / height);
-        }
+        ExecutorService threadPool = threadPoolContainer.getExecutor();
 
-        public int getHeight() {
-            return height;
-        }
-
-        public int getWidth() {
-            return width;
-        }
-
-        public int getIndex() {
-            return index;
-        }
-    }
-
-    @Override
-    public void uploadPlaceMainPhoto(PhotoDTO image, Place place) {
-        byte[] imageBody = image.getImage().getBytes();
-
-        Thread t = new Thread(() -> {
-            try {
-                savePlaceImage(imageBody, place, "main");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-        new Thread(() -> {
-            try {
-                t.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            dao.getPlaceImageByName(place.getId(), "main");
-            BufferedImage bufferedImage = null;
-            try {
-                bufferedImage = cropImage(getReadableImage(imageBody), image);
-                bufferedImage = bufferedImage.getWidth() <= ImageSize.PLACE_PROFILE_IMAGE_SIZE.width ? bufferedImage :
-                        scaleImage(bufferedImage, ImageSize.PLACE_PROFILE_IMAGE_SIZE);
-                savePlaceImage(convertImage(bufferedImage), place, "small");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
-
-    }
-
-    @Override
-    public void uploadMenuPhoto(PhotoDTO image,
-                                PlaceMenu menu) {
-
+        SavePhotoFunction saveFunction = adapter.getSaveFunction(type);
+        GetPhotoFunction getPhotoFunction = adapter.getGetPhotoFunction(type);
 
         byte[] imageBody = image.getImage().getBytes();
+
+        saveFunction.savePhoto(imageBody, domain, "main");
+/*
+        final BufferedImage finalBufferedImage =
+                cropImage(
+                        getReadableImage(
+                                getPhotoFunction.getByName("main", domain.getId())
+                                        .getBody()), image);
+*/
+        final BufferedImage finalBufferedImage =
+                getReadableImage(getPhotoFunction.getByName("main", domain.getId()).getBody());
+
+        if(finalBufferedImage !=null) {
+            for (ImageSize size : type.getSizes()) {
+                threadPool.execute(() -> {
+                    BufferedImage bufferedImage = null;
+                    try {
+                        int imageWidth = finalBufferedImage.getWidth();
+                        bufferedImage = imageWidth <= size.getWidth() ?
+                                finalBufferedImage :
+                                scaleImage(finalBufferedImage, size);
+                        saveFunction
+                                .savePhoto(convertImage(bufferedImage), domain, size.getName());
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+        }
+        else throw new BadHttpRequest();
+    }
+
+
+    private BufferedImage getReadableImage(byte[] imageBody) {
+        InputStream inputStream = new ByteArrayInputStream(imageBody);
         try {
-            saveMenuImage(imageBody, menu, "main");
+            return ImageIO.read(inputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        new Thread(() -> {
-            BufferedImage croppedImage = null;
-            try {
-                croppedImage = cropImage(getReadableImage(dao.getMenuImage(menu.getId(), "main")), image);
-                croppedImage = croppedImage.getWidth() <= ImageSize.PLACE_PROFILE_MENU_IMAGE_SIZE.width ||
-                        croppedImage.getHeight() <= ImageSize.PLACE_PROFILE_MENU_IMAGE_SIZE.height ? croppedImage :
-                        scaleImage(croppedImage, ImageSize.PLACE_PROFILE_MENU_IMAGE_SIZE);
-                saveMenuImage(convertImage(croppedImage), menu, "small");
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
-
+        return null;
     }
 
-
-    private BufferedImage getReadableImage(byte[] imageBody) throws IOException {
-        InputStream inputStream = new ByteArrayInputStream(imageBody);
-        return ImageIO.read(inputStream);
-    }
-
-    private BufferedImage cropImage(BufferedImage bufferedImage, PhotoDTO image)
-            throws ImagingOpException {
+    private BufferedImage cropImage(BufferedImage bufferedImage, PhotoDTO image) {
         int x = Math.round(image.getX());
         int y = Math.round(image.getY());
         int w = Math.round(image.getW());
         int h = Math.round(image.getH());
-
         return bufferedImage.getSubimage(x, y, w, h);
-
     }
 
     private BufferedImage scaleImage(BufferedImage originImage, ImageSize size) {
         int type = originImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originImage.getType();
-        BufferedImage changedImage = new BufferedImage(size.width, size.height, type);
+        BufferedImage changedImage = new BufferedImage(size.getWidth(), size.getHeight(), type);
         Graphics2D g = changedImage.createGraphics();
-        g.drawImage(originImage, 0, 0, size.width, size.height, null);
+        g.drawImage(originImage, 0, 0, size.getWidth(), size.getHeight(), null);
         g.dispose();
         g.setComposite(AlphaComposite.Src);
 
@@ -157,32 +122,87 @@ public class ImageServiceImpl implements ImageService {
         }
         throw new IOException("failed to read bytes from image");
     }
+}
 
-    private void saveMenuImage(byte[] image, PlaceMenu menu, String name) throws IOException {
+/*
+    private void saveMenuImage(byte[] image, PlaceMenu menu, String name) {
         PlaceMenuPhoto photo = new PlaceMenuPhoto(image);
         photo.setName(name);
-        dao.saveMenuPhoto(menu, photo);
+        dao.addMenuPhoto(menu, photo,image, );
     }
 
-    private void savePlaceImage(byte[] image, Place place, String name) throws IOException {
+    private void savePlaceImage(byte[] image, Place place, String name) {
         PlacePhoto photo = new PlacePhoto(image);
         dao.addPlacePhoto(photo, place, name);
     }
 
-    private BufferedImage toBufferedImage(Image img) {
-        if (img instanceof BufferedImage) {
-            return (BufferedImage) img;
-        }
 
-        // Create a buffered image with transparency
-        BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-
-        // Draw the image on to the buffered image
-        Graphics2D bGr = bimage.createGraphics();
-        bGr.drawImage(img, 0, 0, null);
-        bGr.dispose();
-
-        // Return the buffered image
-        return bimage;
+    private void saveEmployeeImage(byte[] imageBody, PlaceEmployee employee, String name) {
+        eDao.addEmployeePhoto(new PlaceEmployeePhoto(imageBody, employee, name));
     }
 }
+
+
+    public void uploadMenuPhoto(PhotoDTO image,
+                                PlaceMenu menu) {
+
+
+        byte[] imageBody = image.getImage().getBytes();
+        saveMenuImage(imageBody, menu, "main");
+        for (MenuImageSizes size : MenuImageSizes.values()) {
+            new Thread(() -> {
+                BufferedImage croppedImage = null;
+                try {
+                    croppedImage = cropImage(getReadableImage(dao.getMenuImageBodyByName(menu.getId(), "main")), image);
+                    croppedImage = croppedImage.getWidth() <= size.getWidth() ||
+                            croppedImage.getHeight() <= size.getHeight() ? croppedImage :
+                            scaleImage(croppedImage, size);
+                    saveMenuImage(convertImage(croppedImage), menu, size.getName());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }
+
+    }
+    public void uploadPlacePhoto(PhotoDTO image, Place place) {
+        byte[] imageBody = image.getImage().getBytes();
+        savePlaceImage(imageBody, place, "main");
+        for (PlaceImageSizes size : PlaceImageSizes.values()) {
+            new Thread(() -> {
+                dao.getPlaceImageBodyByName(place.getId(), "main");
+                BufferedImage bufferedImage = null;
+                try {
+                    bufferedImage = cropImage(getReadableImage(imageBody), image);
+                    int imageWidth = bufferedImage.getWidth();
+                    bufferedImage = imageWidth <= size.getWidth() ? bufferedImage :
+                            scaleImage(bufferedImage, size);
+                    savePlaceImage(convertImage(bufferedImage), place, size.getName());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }
+
+    }
+
+    public void uploadEmployeePhoto(PhotoDTO photo, PlaceEmployee employee) {
+        byte[] imageBody = photo.getImage().getBytes();
+        saveEmployeeImage(imageBody, employee, "main");
+        for (EmployeeImageSizes size : EmployeeImageSizes.values()) {
+            new Thread(() -> {
+                BufferedImage croppedImage = null;
+                try {
+                    croppedImage = cropImage(getReadableImage(eDao.getEmployeeMainPhoto(employee.getId(), "main")), photo);
+                    croppedImage = croppedImage.getWidth() <= size.getWidth() ||
+                            croppedImage.getHeight() <= size.getHeight() ? croppedImage :
+                            scaleImage(croppedImage, size);
+                    saveEmployeeImage(convertImage(croppedImage), employee, size.getName());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }
+    }
+
+*/

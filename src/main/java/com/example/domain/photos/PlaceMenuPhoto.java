@@ -1,6 +1,12 @@
 package com.example.domain.photos;
 
+import com.example.constants.image.sizes.ImageSize;
+import com.example.constants.image.sizes.MenuImageSizes;
+import com.example.dao.IDBBean;
 import com.example.domain.menu.PlaceMenu;
+import com.example.interfaces.PhotoCotainable;
+import com.example.functional.photos.SavePhotoFunction;
+import com.example.interfaces.Scaleble;
 
 import javax.persistence.*;
 
@@ -8,24 +14,26 @@ import javax.persistence.*;
  * Created by Dmitrij on 30.10.2015.
  */
 @Entity
-@Table(name="place_menu_photo")
-public class PlaceMenuPhoto {
+@Table(name = "place_menu_photo")
+public class PlaceMenuPhoto implements Scaleble {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+    private Long id;
 
     byte[] body;
-    String name;
+    private   String name;
 
     @ManyToOne
     @JoinColumn(name = "menu")
-    PlaceMenu menu;
+    private   PlaceMenu menu;
 
     public PlaceMenuPhoto() {
     }
 
-    public PlaceMenuPhoto(byte[] body) {
+    public PlaceMenuPhoto(byte[] body, String name,PlaceMenu menu) {
+        this.name = name;
         this.body = body;
+        this.menu = menu;
     }
 
     public Long getId() {
@@ -51,6 +59,7 @@ public class PlaceMenuPhoto {
     public void setName(String name) {
         this.name = name;
     }
+
 
     public PlaceMenu getMenu() {
         return menu;

@@ -27,5 +27,4 @@ public interface UserService {
     void newUserComment(String comment, int rating, long id);
 
     PlaceOwner placeOwner();
-
 }

@@ -14,7 +14,7 @@ public class EmployeeVecations {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    long id;
+    private long id;
     @Column(name="starts",columnDefinition = "DATETIME NULL")
     private LocalTime start;
     @Column(name="ends",columnDefinition = "DATETIME NULL")
@@ -27,7 +27,7 @@ public class EmployeeVecations {
 
     @ManyToOne
     @JoinColumn(name = "employee_id")
-    PlaceEmployee employee;
+    private PlaceEmployee employee;
 
 
     public long getId() {

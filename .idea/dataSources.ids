@@ -1,16 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component name="dataSourceStorage">
-  <data-source name="MySQL - myplacetogo@localhost" uuid="6e64a390-865c-4996-98ce-023b079da179">
+  <data-source name="MySQL - myplacetogo@127.0.0.1" uuid="6e64a390-865c-4996-98ce-023b079da179">
     <database-info product="MySQL" version="5.5.25" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.35 ( Revision: 5fb9c5849535c13917c2cf9baaece6ef9693ef27 )">
       <extra-name-characters>#@</extra-name-characters>
       <identifier-quote-string>`</identifier-quote-string>
     </database-info>
     <case-sensitivity plain-identifiers="lower" quoted-identifiers="lower"/>
+    <schema name="" catalog="geodata"/>
     <schema name="" catalog="information_schema"/>
     <schema name="" catalog="myplacetogo"/>
     <schema name="" catalog="mysql"/>
     <schema name="" catalog="performance_schema"/>
     <schema name="" catalog="phpmyadmin"/>
+    <table name="_cities" schema="" catalog="geodata" type="TABLE">
+      <column name="city_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="country_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="important" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <column name="region_id" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="title_ru" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_ru" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_ru" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_ua" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_ua" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_ua" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_be" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_be" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_be" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_en" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_en" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_en" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_es" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_es" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_es" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_pt" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_pt" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_pt" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_de" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_de" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_de" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_fr" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_fr" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_fr" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_it" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_it" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_it" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_pl" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_pl" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_pl" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_ja" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_ja" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_ja" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_lt" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_lt" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_lt" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_lv" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_lv" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_lv" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_cz" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_cz" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_cz" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="_regions" schema="" catalog="geodata" type="TABLE">
+      <column name="region_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="country_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="title_ru" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_ua" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_be" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_en" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_es" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_pt" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_de" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_fr" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_it" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_pl" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_ja" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_lt" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_lv" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_cz" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+    </table>
     <table name="CHARACTER_SETS" schema="" catalog="information_schema" type="SYSTEM VIEW">
       <column name="CHARACTER_SET_NAME" sqlType="VARCHAR" precision="32" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
       <column name="DEFAULT_COLLATE_NAME" sqlType="VARCHAR" precision="32" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
@@ -493,6 +560,89 @@
       <column name="CHARACTER_SET_CLIENT" sqlType="VARCHAR" precision="32" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
       <column name="COLLATION_CONNECTION" sqlType="VARCHAR" precision="32" scale="0" nullable="false" jdbcType="12" def="Jyc="/>
     </table>
+    <table name="_cities" schema="" catalog="myplacetogo" type="TABLE">
+      <column name="city_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="country_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="important" sqlType="TINYINT" precision="3" scale="0" nullable="false" jdbcType="-6"/>
+      <column name="region_id" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="title_ru" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_ru" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_ru" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_ua" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_ua" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_ua" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_be" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_be" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_be" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_en" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_en" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_en" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_es" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_es" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_es" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_pt" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_pt" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_pt" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_de" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_de" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_de" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_fr" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_fr" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_fr" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_it" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_it" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_it" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_pl" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_pl" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_pl" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_ja" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_ja" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_ja" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_lt" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_lt" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_lt" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_lv" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_lv" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_lv" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_cz" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="area_cz" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="region_cz" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="_countries" schema="" catalog="myplacetogo" type="TABLE">
+      <column name="country_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="title_ru" sqlType="VARCHAR" precision="60" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_ua" sqlType="VARCHAR" precision="60" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_be" sqlType="VARCHAR" precision="60" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_en" sqlType="VARCHAR" precision="60" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_es" sqlType="VARCHAR" precision="60" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_pt" sqlType="VARCHAR" precision="60" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_de" sqlType="VARCHAR" precision="60" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_fr" sqlType="VARCHAR" precision="60" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_it" sqlType="VARCHAR" precision="60" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_pl" sqlType="VARCHAR" precision="60" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_ja" sqlType="VARCHAR" precision="60" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_lt" sqlType="VARCHAR" precision="60" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_lv" sqlType="VARCHAR" precision="60" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_cz" sqlType="VARCHAR" precision="60" scale="0" nullable="true" jdbcType="12"/>
+    </table>
+    <table name="_regions" schema="" catalog="myplacetogo" type="TABLE">
+      <column name="region_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="country_id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="title_ru" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_ua" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_be" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_en" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_es" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_pt" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_de" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_fr" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_it" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_pl" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_ja" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_lt" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_lv" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+      <column name="title_cz" sqlType="VARCHAR" precision="150" scale="0" nullable="true" jdbcType="12"/>
+    </table>
     <table name="employee_breaks" schema="" catalog="myplacetogo" type="TABLE">
       <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
       <column name="starts" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93"/>
@@ -506,7 +656,10 @@
       <column name="pause_date" sqlType="DATE" precision="10" scale="0" nullable="true" jdbcType="91"/>
       <column name="starts" sqlType="TIME" precision="8" scale="0" nullable="false" jdbcType="92"/>
       <column name="ends" sqlType="TIME" precision="8" scale="0" nullable="false" jdbcType="92"/>
+      <column name="employee" sqlType="BIGINT" precision="19" scale="0" nullable="true" jdbcType="-5"/>
       <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="FK_2s8qegwlao22fpilw51nj1q2r" columns="employee" ref-table="employees" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="FK_2s8qegwlao22fpilw51nj1q2r" unique="false" columns="employee"/>
     </table>
     <table name="employee_photos" schema="" catalog="myplacetogo" type="TABLE">
       <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
@@ -526,13 +679,18 @@
       <column name="emploeeFinalRating" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <column name="starts" sqlType="TIME" precision="8" scale="0" nullable="true" jdbcType="92"/>
       <column name="ends" sqlType="TIME" precision="8" scale="0" nullable="true" jdbcType="92"/>
+      <column name="employeeFinalRating" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="surname" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
       <primary-key name="PRIMARY" columns="id"/>
       <foreign-key name="employees_ibfk_2" columns="place" ref-table="place" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
       <exported-key name="employee_breaks_ibfk_1" table="employee_breaks" schema="" catalog="myplacetogo" columns="employee_id"/>
+      <exported-key name="FK_2s8qegwlao22fpilw51nj1q2r" table="employee_pauses" schema="" catalog="myplacetogo" columns="employee"/>
       <exported-key name="employee_photos_ibfk_1" table="employee_photos" schema="" catalog="myplacetogo" columns="employeeId"/>
       <exported-key name="employees_pauses_ibfk_1" table="employees_pauses" schema="" catalog="myplacetogo" columns="employee_id"/>
       <exported-key name="employees_services_ibfk_1" table="employees_services" schema="" catalog="myplacetogo" columns="emploeeId"/>
+      <exported-key name="FK_g45vvv4q5aqyfkm1nb3sbyfh7" table="place_employee_photo" schema="" catalog="myplacetogo" columns="employee"/>
       <exported-key name="placemenurating_ibfk_3" table="placemenurating" schema="" catalog="myplacetogo" columns="emploee"/>
+      <exported-key name="FK_ifk5nfj450qn7pjrgf3a32q9q" table="user_order" schema="" catalog="myplacetogo" columns="employee"/>
     </table>
     <table name="employees_pauses" schema="" catalog="myplacetogo" type="TABLE">
       <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
@@ -549,8 +707,8 @@
       <column name="emploeeId" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
       <column name="placeId" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
       <primary-key name="PRIMARY" columns="id"/>
-      <foreign-key name="employees_services_ibfk_2" columns="placeId" ref-table="placemenu" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
       <foreign-key name="employees_services_ibfk_1" columns="emploeeId" ref-table="employees" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
+      <foreign-key name="employees_services_ibfk_2" columns="placeId" ref-table="placemenu" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
       <index name="emploeeId" unique="false" columns="placeId"/>
     </table>
     <table name="event" schema="" catalog="myplacetogo" type="TABLE">
@@ -562,7 +720,6 @@
       <primary-key name="PRIMARY" columns="id"/>
       <foreign-key name="event_ibfk_1" columns="place_id" ref-table="place" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
       <exported-key name="event_users_ibfk_1" table="event_users" schema="" catalog="myplacetogo" columns="event_id"/>
-      <exported-key name="FK_p754ee8fhjjew54jgcnrt8hu3" table="place_event_photo" schema="" catalog="myplacetogo" columns="event"/>
       <index name="eventName" unique="false" columns="eventName"/>
     </table>
     <table name="event_users" schema="" catalog="myplacetogo" type="TABLE">
@@ -574,6 +731,16 @@
       <foreign-key name="event_users_ibfk_2" columns="user_id" ref-table="placeuser" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
       <index name="event_id" unique="false" columns="user_id"/>
     </table>
+    <table name="menu_tags" schema="" catalog="myplacetogo" type="TABLE">
+      <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
+      <column name="menu_id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
+      <column name="tag_id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="FK_gblu6kv4y8mx7aopoum4lg43m" columns="menu_id" ref-table="placemenu" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="menu_tags_ibfk_1" columns="tag_id" ref-table="place_menu_tags" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
+      <index name="unique_id" unique="true" columns="id"/>
+      <index name="menu_id" unique="false" columns="tag_id"/>
+    </table>
     <table name="place" schema="" catalog="myplacetogo" type="TABLE">
       <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
       <column name="placeName" sqlType="VARCHAR" precision="40" scale="0" nullable="false" jdbcType="12"/>
@@ -584,8 +751,8 @@
       <column name="placeSpeciality" sqlType="BIGINT" precision="19" scale="0" nullable="true" jdbcType="-5" def="MQ=="/>
       <column name="timeOffset" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="FK_sj8vmcq8i3w3ng7jrwwv71u5k" columns="placeSpeciality" ref-table="place_speciality" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
       <foreign-key name="place_ibfk_1" columns="placeOwner" ref-table="place_owner" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
-      <foreign-key name="place_ibfk_2" columns="placeSpeciality" ref-table="place_speciality" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
       <exported-key name="employees_ibfk_2" table="employees" schema="" catalog="myplacetogo" columns="place"/>
       <exported-key name="event_ibfk_1" table="event" schema="" catalog="myplacetogo" columns="place_id"/>
       <exported-key name="place_address_ibfk_1" table="place_address" schema="" catalog="myplacetogo" columns="place_id"/>
@@ -613,14 +780,14 @@
       <foreign-key name="place_clients_ibfk_2" columns="placeId" ref-table="place" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
       <index name="clientId" unique="false" columns="placeId"/>
     </table>
-    <table name="place_event_photo" schema="" catalog="myplacetogo" type="TABLE">
+    <table name="place_employee_photo" schema="" catalog="myplacetogo" type="TABLE">
       <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
       <column name="name" sqlType="VARCHAR" precision="25" scale="0" nullable="true" jdbcType="12"/>
       <column name="body" sqlType="BLOB" precision="65535" scale="0" nullable="false" jdbcType="-4"/>
-      <column name="event" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
+      <column name="employee" sqlType="BIGINT" precision="19" scale="0" nullable="true" jdbcType="-5"/>
       <primary-key name="PRIMARY" columns="id"/>
-      <foreign-key name="FK_p754ee8fhjjew54jgcnrt8hu3" columns="event" ref-table="event" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
-      <index name="FK_p754ee8fhjjew54jgcnrt8hu3" unique="false" columns="event"/>
+      <foreign-key name="FK_g45vvv4q5aqyfkm1nb3sbyfh7" columns="employee" ref-table="employees" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="FK_g45vvv4q5aqyfkm1nb3sbyfh7" unique="false" columns="employee"/>
     </table>
     <table name="place_menu_photo" schema="" catalog="myplacetogo" type="TABLE">
       <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
@@ -637,9 +804,17 @@
       <column name="menu" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
       <column name="hh" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
       <column name="mm" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="durationMinutes" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
       <primary-key name="PRIMARY" columns="id"/>
       <foreign-key name="place_menu_services_ibfk_1" columns="menu" ref-table="placemenu" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
       <exported-key name="service_orders_ibfk_2" table="service_orders" schema="" catalog="myplacetogo" columns="service_id"/>
+    </table>
+    <table name="place_menu_tags" schema="" catalog="myplacetogo" type="TABLE">
+      <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
+      <column name="name" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="menu_tags_ibfk_1" table="menu_tags" schema="" catalog="myplacetogo" columns="tag_id"/>
+      <index name="unique_id" unique="true" columns="id"/>
     </table>
     <table name="place_owner" schema="" catalog="myplacetogo" type="TABLE">
       <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
@@ -662,7 +837,7 @@
       <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
       <column name="speciality" sqlType="VARCHAR" precision="20" scale="0" nullable="true" jdbcType="12"/>
       <primary-key name="PRIMARY" columns="id"/>
-      <exported-key name="place_ibfk_2" table="place" schema="" catalog="myplacetogo" columns="placeSpeciality"/>
+      <exported-key name="FK_sj8vmcq8i3w3ng7jrwwv71u5k" table="place" schema="" catalog="myplacetogo" columns="placeSpeciality"/>
       <index name="unique_id" unique="true" columns="id"/>
     </table>
     <table name="placemenu" schema="" catalog="myplacetogo" type="TABLE">
@@ -673,9 +848,11 @@
       <column name="menuFinalRating" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" def="MQ=="/>
       <column name="menuPlace" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
       <column name="duration" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <column name="durationMinutes" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
       <primary-key name="PRIMARY" columns="id"/>
       <foreign-key name="placemenu_ibfk_1" columns="menuPlace" ref-table="place" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
       <exported-key name="employees_services_ibfk_2" table="employees_services" schema="" catalog="myplacetogo" columns="placeId"/>
+      <exported-key name="FK_gblu6kv4y8mx7aopoum4lg43m" table="menu_tags" schema="" catalog="myplacetogo" columns="menu_id"/>
       <exported-key name="place_menu_photo_ibfk_1" table="place_menu_photo" schema="" catalog="myplacetogo" columns="menu"/>
       <exported-key name="place_menu_services_ibfk_1" table="place_menu_services" schema="" catalog="myplacetogo" columns="menu"/>
       <exported-key name="placemenurating_ibfk_2" table="placemenurating" schema="" catalog="myplacetogo" columns="menu"/>
@@ -689,9 +866,9 @@
       <column name="comment" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
       <column name="emploee" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
       <primary-key name="PRIMARY" columns="id"/>
-      <foreign-key name="placemenurating_ibfk_3" columns="emploee" ref-table="employees" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
       <foreign-key name="placemenurating_ibfk_1" columns="user" ref-table="placeuser" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
       <foreign-key name="placemenurating_ibfk_2" columns="menu" ref-table="placemenu" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
+      <foreign-key name="placemenurating_ibfk_3" columns="emploee" ref-table="employees" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
       <index name="user" unique="false" columns="menu"/>
     </table>
     <table name="placerating" schema="" catalog="myplacetogo" type="TABLE">
@@ -762,7 +939,9 @@
       <column name="employee" sqlType="BIGINT" precision="19" scale="0" nullable="true" jdbcType="-5"/>
       <column name="order_date" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93"/>
       <column name="finish_date" sqlType="DATETIME" precision="19" scale="0" nullable="true" jdbcType="93"/>
+      <column name="active" sqlType="BIT" precision="1" scale="0" nullable="false" jdbcType="-7"/>
       <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="FK_ifk5nfj450qn7pjrgf3a32q9q" columns="employee" ref-table="employees" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
       <foreign-key name="user_order_ibfk_1" columns="place" ref-table="place" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
       <foreign-key name="user_order_ibfk_2" columns="user" ref-table="placeuser" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
       <foreign-key name="user_order_ibfk_3" columns="menu" ref-table="placemenu" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>

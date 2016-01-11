@@ -12,18 +12,21 @@ import com.example.domain.menu.PlaceMenu;
 import com.example.domain.addresses.PlaceAddress;
 import com.example.domain.addresses.UserAddress;
 import com.example.domain.menu.PlaceMenuOptionalService;
+import com.example.domain.menu.PlaceMenuTags;
+import com.example.domain.photos.PlaceEmployeePhoto;
 import com.example.domain.photos.PlaceMenuPhoto;
+import com.example.domain.photos.PlaceUserPhoto;
 import com.example.domain.registration.VerificationToken;
 import com.example.domain.photos.PlacePhoto;
 import com.example.domain.users.PlaceOwner;
 import com.example.domain.users.PlaceUser;
 import com.example.domain.users.employee.PlaceEmployee;
+import com.example.interfaces.PhotoCotainable;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,8 +46,6 @@ public interface IDBBean {
 
     void addNewPlace(Place place, PlaceAddress placeAddress, PlaceOwner owner, PlaceSpeciality speciality);
 
-    ArrayList<PlaceEvent> getMainEvents();
-
     List<Place> getMainPlaces();
 
 
@@ -59,17 +60,22 @@ public interface IDBBean {
 
     void deleteToken(VerificationToken token);
 
-    byte[] getPlaceImageByName(long id, String name);
+    byte[] getPlaceImageBodyByName(long id, String name);
 
-    void newMenu(PlaceMenu menu, Place place);
+    @Cacheable("photo-cache")
+    PlacePhoto getPlacePhotoByName(String name, long id);
 
-    void saveMenuPhoto(PlaceMenu menu, PlaceMenuPhoto photo);
+    void newMenu(PlaceMenu menu, Place place, List<PlaceMenuTags> tags);
+
+    void addMenuPhoto(byte[] body, PhotoCotainable domain, String name);
 
     void newPlaceMenuService(PlaceMenu menu, PlaceMenuOptionalService service);
 
-    byte[] getMenuImage(long id, String name);
+    byte[] getMenuImageBodyByName(long id, String name);
 
-    void addPlacePhoto(PlacePhoto photo, Place place, String name);
+    PlaceMenuPhoto getMenuPhotoByName(String name, long id);
+
+    void addPlacePhoto(byte[] body, PhotoCotainable domain, String name);
 
     PlaceUser registration(PlaceUser user, UserAddress address);
 
@@ -94,7 +100,9 @@ public interface IDBBean {
 
     void removeLike(PlaceUser user, long placeId);
 
-    public byte[] getUserPhoto(long id, String name);
+    public byte[] getUserPhotoBodyByName(String name, long id);
+
+    PlaceUserPhoto getUserPhotoByName(String name, long id);
 
     long countUserMenuRatings(long menuId, long userId);
 
@@ -131,4 +139,28 @@ public interface IDBBean {
     List<UserOrders> getEmployeeTodayOrders(PlaceEmployee employee, LocalDate date);
 
     List getEmployeeTodayPauses(PlaceEmployee employee, LocalDateTime localDate);
+
+    List<PlaceMenu> getBestMenus(int from, int to);
+
+    PlaceEmployee getEmployeeById(long employeeID);
+
+    UserOrders activateOrder(UserOrders order);
+
+    UserOrders findOrderById(long id, PlaceUser user);
+
+    List<PlaceMenu> findMenuWithTag(List<Long> tagsId, int startFrom, int endAt);
+
+    List<PlaceMenuTags> findTagsByName(String t);
+
+    PlaceMenuTags findTagByName(String name);
+
+    PlaceMenuTags newTag(String t);
+
+    PlaceEmployee getEmployeeByName(String s);
+
+    PlaceEmployeePhoto getEmployeePhotoByName(String name, long id);
+
+    void addEmployeePhoto(byte[] body, PhotoCotainable domain, String name);
+
+    void addPlaceUserPhoto(byte[] body, PhotoCotainable domain, String name);
 }

@@ -6,10 +6,14 @@
 package com.example.domain.menu;
 
 
+import com.example.dao.IDBBean;
 import com.example.domain.UserOrders;
 import com.example.domain.Place;
 import com.example.domain.ratings.PlaceMenuRating;
 import com.example.domain.photos.PlaceMenuPhoto;
+import com.example.functional.photos.GetPhotoFunction;
+import com.example.interfaces.PhotoCotainable;
+import com.example.interfaces.Scaleble;
 import com.example.pojo.dto.MenuDTO;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 
@@ -23,11 +27,11 @@ import java.util.List;
  * @author Dmitrij
  */
 @Entity
-public class PlaceMenu implements Serializable {
+public class PlaceMenu implements Serializable, PhotoCotainable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private long id;
     private String menuName;
     private String menuDescription;
     private int menuPrice;
@@ -50,6 +54,8 @@ public class PlaceMenu implements Serializable {
     private List<UserOrders> userOrderses;
 
     private long durationMinutes;
+    @ManyToMany(mappedBy = "menus")
+    private List<PlaceMenuTags>menuTags;
 
     public PlaceMenu() {
     }
@@ -68,6 +74,14 @@ public class PlaceMenu implements Serializable {
                 Duration.ofMinutes(menuDTO.getMinutes())).toMinutes());
     }
 
+    public List<PlaceMenuTags> getMenuTags() {
+        return menuTags;
+    }
+
+    public void setMenuTags(List<PlaceMenuTags> menuTags) {
+        this.menuTags = menuTags;
+    }
+
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
@@ -80,7 +94,7 @@ public class PlaceMenu implements Serializable {
         this.menuFinalRating = menuFinalRating;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
@@ -172,12 +186,13 @@ public class PlaceMenu implements Serializable {
 
         PlaceMenu menu = (PlaceMenu) o;
 
-        return id.equals(menu.id);
+        return id == menu.id;
 
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return (int) (id ^ (id >>> 32));
     }
+
 }

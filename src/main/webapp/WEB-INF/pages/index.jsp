@@ -1,3 +1,5 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -42,7 +44,7 @@
         </div>
         <div class="collapse navbar-collapse" id="responcive-menu">
             <ul class="nav navbar-nav">
-                <li><a href="#">На головну</a></li>
+                <li class="active"><a href="#">На головну</a></li>
 
                 <security:authorize access="isAuthenticated()">
                     <security:authorize access="hasRole('ROLE_USER')">
@@ -262,10 +264,36 @@
     </div>
 </div>
 
+<div class="container-flex">
+    <nav>
+        <div class="nav navbar-default">
+            <c:url value="/find" var="searchUrl"/>
+            <form action="${searchUrl}">
+                <div class="input-group">
+                    <input class="form-control" type="text" name="name" id="tag-name"/>
+                    <div id="tags-wrapper"></div>
+                </div>
+            </form>
+        </div>
+    </nav>
+</div>
 
 <div class="container">
     <div class="row masonry" data-columns>
         <jsp:useBean id="places" scope="request" type="java.util.List<com.example.domain.Place>"/>
+        <jsp:useBean id="menus" scope="request" type="java.util.List<com.example.domain.menu.PlaceMenu>"/>
+        <jsp:useBean id="sizes" scope="application" type="com.example.constants.image.sizes.MenuImageSizes"/>
+        <c:forEach items="${menus}" var="menu" varStatus="m" begin="0" end="3">
+            <div class="col-xs-6, col-md-5 col-md-offset-1 col-lg-4">
+                <img width="100%" src="<c:url value='/photo/menu/+${menu.id}+/300'/>"/>
+            </div>
+        </c:forEach>
+        <c:forEach items="${menus}" var="menu" varStatus="m" begin="0" end="3">
+            <div class="col-xs-12, col-md-4, col-lg-6">
+                <img width="100%" src="<c:url value='/photo/menu/+${menu.id}+/600'/>"/>
+            </div>
+
+        </c:forEach>
         <c:forEach items="${places}" var="place" varStatus="i">
             <div class="cell">
                 <div class="thumbnail">
@@ -341,9 +369,9 @@
                         </div>
                     </div>
                     <div style="text-align: right; margin:5px 0 3px 0">
-                    <a href="/place/${place.id}" class="btn btn-success">
-                        <i class="fa fa-arrow-right"></i> It`s my place
-                    </a>
+                        <a href="/place/${place.id}" class="btn btn-success">
+                            <i class="fa fa-arrow-right"></i> It`s my place
+                        </a>
                     </div>
                 </div>
             </div>
@@ -351,5 +379,35 @@
     </div>
 </div>
 <script src="<c:url value="/static/js/salvattore.min.js"/>"></script>
+<script>
+    var userTags = [];
+    $('#tag-name').autocomplete({
+        delay: 300,
+        source: function (request, response) {
+            $.ajax({
+                method: "GET",
+                url: "${searchUrl}",
+                data: tags
+            });
+        },
+        select: function (event, ui) {
+            var tags = ui.item;
+            var wrapper = $("#tags-wrapper");
+            for (t in tags) {
+                userTags.push(t);
+                var input = $("<input>")
+                        .attr("type", "hidden")
+                        .attr("name", "tags")
+                        .val(t);
+
+                var t = $("<span>")
+                        .attr("class","badge")
+                        .text(t);
+
+                wrapper.append(t);
+            }
+        }
+    });
+</script>
 </body>
 </html>

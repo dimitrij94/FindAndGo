@@ -66,9 +66,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     public PlaceUser register(UserCreateForm blank, HttpServletRequest request) {
             PlaceUser user = new PlaceUser();
 
-            user.setUserEmail(blank.getUserEmail());
+            user.setEmail(blank.getUserEmail());
             user.setUserName(blank.getUserName());
-            user.setUserPass(blank.getUserPass());
+            user.setPassword(blank.getUserPass());
 
             user.setSex(blank.getSex());
             user.setName(blank.getName());

@@ -1,13 +1,11 @@
 package com.example.validators;
 
-import com.example.domain.photos.PlacePhoto;
 import com.example.pojo.dto.PhotoDTO;
-import com.example.services.imageservice.ImageService;
-import com.example.services.imageservice.ImageServiceImpl;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Created by Dmitrij on 03.11.2015.
@@ -23,18 +21,15 @@ public class PhotoValidator implements Validator {
     public void validate(Object target, Errors errors) {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors,"image","field.required");
 
-        PhotoDTO photo = (PhotoDTO)target;
+        MultipartFile photo = ((PhotoDTO)target).getImage();
 
-        if(photo.getImage().isEmpty()){
+        if(photo.isEmpty()){
             errors.rejectValue("image","field.required","Виберіть фото");
         }
 
-        if(!photo.getImage().getContentType().split("/")[0].equals("image")){
+        if(!photo.getContentType().split("/")[0].equals("image")){
             errors.rejectValue("image","field.invalid","Невірний формат зображення");
         }
 
-        if(photo.getW()==0||photo.getH()==0){
-            errors.rejectValue("image","field.invalid","Невірні координати");
-        }
     }
 }

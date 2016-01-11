@@ -1,34 +1,32 @@
 package com.example.services.placeservice;
 
+import com.example.constants.image.ImageContainerType;
+import com.example.dao.IDBBean;
 import com.example.domain.Place;
 import com.example.domain.PlaceSpeciality;
-import com.example.domain.UserOrders;
-import com.example.domain.users.PlaceOwner;
-import com.example.domain.users.PlaceUser;
 import com.example.domain.addresses.PlaceAddress;
-import com.example.dao.IDBBean;
 import com.example.domain.menu.PlaceMenu;
 import com.example.domain.menu.PlaceMenuOptionalService;
-import com.example.domain.users.employee.EmployeeBreaks;
-import com.example.domain.users.employee.EmployeePauses;
+import com.example.domain.menu.PlaceMenuTags;
+import com.example.domain.users.PlaceOwner;
+import com.example.domain.users.PlaceUser;
 import com.example.domain.users.employee.PlaceEmployee;
-import com.example.pojo.dto.EmployeeTimePeriod;
 import com.example.pojo.dto.MenuDTO;
 import com.example.pojo.dto.PlaceDTO;
 import com.example.pojo.dto.ServiceDTO;
 import com.example.services.imageservice.ImageService;
+import javassist.tools.web.BadHttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.LocaleResolver;
 
 import java.io.IOException;
-import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Dmitrij on 25.10.2015.
- */
+ **/
 
 @Service
 public class PlaceServiceImpl implements PlaceService {
@@ -48,15 +46,32 @@ public class PlaceServiceImpl implements PlaceService {
         PlaceAddress placeAddress = new PlaceAddress(placeDTO.getAddress());
         PlaceSpeciality speciality = dao.getPlaceSpeciality(placeDTO.getSpecialization());
         dao.addNewPlace(place, placeAddress, owner, speciality);
-        imageService.uploadPlaceMainPhoto(placeDTO.getPhoto(), place);
+        try {
+            imageService.upload(placeDTO.getPhoto(), place, ImageContainerType.PLACE);
+        } catch (BadHttpRequest badHttpRequest) {
+            badHttpRequest.printStackTrace();
+        }
         return place;
     }
 
     @Override
-    public PlaceMenu registerNewPlaceMenu(Place place, MenuDTO menuDTO) {
+    public PlaceMenu registerNewPlaceMenu(Place place, MenuDTO menuDTO, List<String> tagNames) {
         PlaceMenu menu = new PlaceMenu(menuDTO);
-        dao.newMenu(menu, place);
-        imageService.uploadMenuPhoto(menuDTO.getPhoto(), menu);
+        List<PlaceMenuTags> tags = new ArrayList<>();
+
+        for (String t : tagNames) {
+            PlaceMenuTags tag = dao.findTagByName(t);
+            if (tag != null) {
+                tags.add(tag);
+            } else tags.add(dao.newTag(t));
+        }
+
+        dao.newMenu(menu, place, tags);
+        try {
+            imageService.upload(menuDTO.getPhoto(), menu, ImageContainerType.PLACE_MENU);
+        } catch (BadHttpRequest badHttpRequest) {
+            badHttpRequest.printStackTrace();
+        }
         return menu;
     }
 
@@ -73,7 +88,7 @@ public class PlaceServiceImpl implements PlaceService {
 
         Place place = dao.getPlaceById(placeId);
         PlaceMenu menu = dao.getMenuById(menuId);
-        UserOrders order = dao.newOrder(user, place, menu, services, employee);
+        dao.newOrder(user, place, menu, services, employee);
     }
 
 
@@ -84,11 +99,6 @@ public class PlaceServiceImpl implements PlaceService {
             if (m.getId() == id) return true;
         }
         return false;
-    }
-
-
-    private int calculateServiceDuration() {
-        return 0;
     }
 
 }

@@ -378,7 +378,8 @@
                                                                    varStatus="s">
                                                             <tr style="vertical-align: middle">
                                                                 <td width="80%">
-                                                                    <input type="checkbox" name="services"
+                                                                    <input type="checkbox"
+                                                                           name="services"
                                                                            value="${service.id}"
                                                                            id="service-${s.index}"
                                                                            style="margin-top: 15px">

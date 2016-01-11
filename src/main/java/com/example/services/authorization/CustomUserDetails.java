@@ -1,6 +1,6 @@
 package com.example.services.authorization;
 
-import com.example.domain.users.PlaceUser;
+import com.example.interfaces.Authenticational;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
@@ -10,19 +10,45 @@ import java.util.Collection;
  * Created by Dmitrij on 03.11.2015.
  */
 public class CustomUserDetails extends User {
-    private PlaceUser user;
 
-    public CustomUserDetails(PlaceUser user, String username, String password, Collection<? extends GrantedAuthority> authorities) {
-        super(username, password, authorities);
-        this.user=user;
+    private Long id;
+    private String userEmail;
+
+
+    public CustomUserDetails(Authenticational user,
+                             Collection<? extends GrantedAuthority> authorities) {
+        super(
+                user.getName(),
+                user.getPassword().toLowerCase(),
+                user.isEnabled(),
+                true,
+                true,
+                true,
+                authorities);
+        upadateValues(user);
     }
 
-    public CustomUserDetails(PlaceUser user, String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
-        super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
-        this.user=user;
+    private void upadateValues(Authenticational user) {
+        this.id = user.getId();
+        this.userEmail = user.getEmail();
     }
 
-    public PlaceUser getUser() {
-        return user;
+
+    public Long getId() {
+        return id;
     }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
 }

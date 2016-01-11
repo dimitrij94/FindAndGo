@@ -5,11 +5,15 @@
 
 package com.example.dao;
 
-import com.example.domain.*;
+import com.example.domain.Place;
+import com.example.domain.PlaceSpeciality;
+import com.example.domain.UserOrders;
 import com.example.domain.addresses.PlaceAddress;
 import com.example.domain.addresses.UserAddress;
 import com.example.domain.menu.PlaceMenu;
 import com.example.domain.menu.PlaceMenuOptionalService;
+import com.example.domain.menu.PlaceMenuTags;
+import com.example.domain.photos.PlaceEmployeePhoto;
 import com.example.domain.photos.PlaceMenuPhoto;
 import com.example.domain.photos.PlacePhoto;
 import com.example.domain.photos.PlaceUserPhoto;
@@ -18,23 +22,23 @@ import com.example.domain.registration.VerificationToken;
 import com.example.domain.users.PlaceOwner;
 import com.example.domain.users.PlaceUser;
 import com.example.domain.users.employee.EmployeePauses;
-import com.example.domain.users.employee.EmployeeVecations;
 import com.example.domain.users.employee.PlaceEmployee;
-import org.springframework.stereotype.Repository;
+import com.example.interfaces.PhotoCotainable;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
-@Repository
+@Component
 public class DBBean implements IDBBean {
+
     @PersistenceContext
     EntityManager em;
 
@@ -43,32 +47,36 @@ public class DBBean implements IDBBean {
     }
 
     public PlacePhoto getUserPhoto() {
-        Query query = this.em.createQuery("SELECT e FROM PlacePhoto e WHERE e.id=:id");
-        return (PlacePhoto) query.getSingleResult();
+        return em.createQuery("SELECT e FROM PlacePhoto e WHERE e.id=:id", PlacePhoto.class)
+                .getSingleResult();
     }
 
     public Place getPlaceById(long id) {
-        return (Place) this.em.find(Place.class, id);
+        return this.em.find(Place.class, id);
     }
 
     public Place getOwnerPlaceById(long id, PlaceOwner owner) {
-        return (Place) this.em.createQuery("SELECT e FROM PlaceOwner e WHERE e.id=:id").setParameter("id", id).getSingleResult();
+        return this.em.createQuery("SELECT e FROM PlaceOwner e WHERE e.id=:id", Place.class)
+                .setParameter("id", id)
+                .getSingleResult();
     }
 
     public PlaceMenu getMenuById(long id) {
-        return (PlaceMenu) this.em.find(PlaceMenu.class, id);
+        return  this.em.find(PlaceMenu.class, id);
     }
 
     public PlaceUser authorization(String email, String pass) {
-        return (PlaceUser) this.em.createQuery("SELECT e FROM PlaceUser e WHERE (e.userEmail=:email OR e.userName=:email) AND e.userPass=:pass")
+        return this.em.createQuery("SELECT e FROM PlaceUser e " +
+                "WHERE (e.email=:email OR e.userName=:email) AND e.password=:pass", PlaceUser.class)
                 .setParameter("email", email)
-                .setParameter("pass", pass);
+                .setParameter("pass", pass)
+                .getSingleResult();
     }
 
     @Transactional
     public void addNewPlace(Place place, PlaceAddress placeAddress, PlaceOwner owner, PlaceSpeciality speciality) {
         place.setPlaceOwner(owner);
-        place.setPlaceSpeciality(setAsList(place.getPlaceSpeciality(), speciality));
+        place.setPlaceSpeciality(speciality);
         this.em.persist(place);
         speciality.setPlace(setAsList(speciality.getPlace(), place));
         this.em.flush();
@@ -81,21 +89,10 @@ public class DBBean implements IDBBean {
     }
 
 
-    public ArrayList<PlaceEvent> getMainEvents() {
-        ArrayList<PlaceEvent> mainEvents = (ArrayList<PlaceEvent>) em.createQuery("SELECT e FROM PlaceEvent  e order by e.users.size").getResultList();
-        if (mainEvents.size() > 5) {
-            mainEvents.subList(0, 4);
-        }
-
-        Comparator<PlaceEvent> comparator = (e1, e2) -> Integer.valueOf(e1.getUsers().size()).compareTo(e2.getUsers().size());
-        mainEvents.sort(comparator);
-        return mainEvents;
-    }
-
-
     public List<Place> getMainPlaces() {
-        List<Place> mainPlaces = this.em.createQuery("SELECT e FROM Place e ORDER BY e.placeFollowersNum DESC, e.placeFinalRating DESC")
-                .getResultList();
+        List<Place> mainPlaces =
+                this.em.createQuery("SELECT e FROM Place e ORDER BY e.placeFollowersNum DESC, e.placeFinalRating DESC", Place.class)
+                        .getResultList();
         if (mainPlaces.size() > 15) {
             mainPlaces.subList(0, 20);
         }
@@ -104,7 +101,7 @@ public class DBBean implements IDBBean {
 
 
     public long checkCredentials(String email, String userName) {
-        return (Long) this.em.createQuery("SELECT COUNT (e.id) FROM PlaceUser e WHERE e.userEmail=:email OR e.userName=:userName").setParameter("email", email).setParameter("userName", userName).getSingleResult();
+        return (Long) this.em.createQuery("SELECT COUNT (e.id) FROM PlaceUser e WHERE e.email=:email OR e.userName=:userName").setParameter("email", email).setParameter("userName", userName).getSingleResult();
     }
 
     @Transactional
@@ -121,7 +118,7 @@ public class DBBean implements IDBBean {
     }
 
     public PlaceUser getUserByName(String ownerName) {
-        return (PlaceUser) this.em.createQuery("SELECT e FROM PlaceUser e WHERE e.userEmail=:userName")
+        return (PlaceUser) this.em.createQuery("SELECT e FROM PlaceUser e WHERE e.email=:userName")
                 .setParameter("userName", ownerName).getSingleResult();
     }
 
@@ -130,35 +127,42 @@ public class DBBean implements IDBBean {
         em.remove(token);
     }
 
-    public byte[] getPlaceImageByName(long id, String name) {
-        return ((PlacePhoto) this.em.createQuery("SELECT e FROM PlacePhoto e WHERE e.name=:name AND e.place.id=:id")
+    @Cacheable("photo-cache")
+    public byte[] getPlaceImageBodyByName(long id, String name) {
+        return (this.em.createQuery("SELECT e FROM PlacePhoto e WHERE e.name=:name AND e.place.id=:id", PlacePhoto.class)
                 .setParameter("name", name)
-                .setParameter("id", id).getSingleResult()).getBody();
+                .setParameter("id", id).getSingleResult())
+                .getBody();
+    }
+
+    @Cacheable("photo-cache")
+    @Override
+    public PlacePhoto getPlacePhotoByName(String name, long id) {
+        return this.em.createQuery("SELECT e FROM PlacePhoto e WHERE e.name=:name AND e.place.id=:id", PlacePhoto.class)
+                .setParameter("name", name)
+                .setParameter("id", id).getSingleResult();
     }
 
     @Transactional
-    public void newMenu(PlaceMenu menu, Place place) {
+    public void newMenu(PlaceMenu menu, Place place, List<PlaceMenuTags> tags) {
         menu.setMenuPlace(place);
+        menu.setMenuTags(tags);
         this.em.persist(menu);
+        for (PlaceMenuTags t : tags)
+            t.setMenus(setAsList(t.getMenus(), menu));
         this.em.flush();
         place.getPlaceMenu().add(menu);
         this.em.flush();
     }
 
     @Transactional
-    public void saveMenuPhoto(PlaceMenu menu, PlaceMenuPhoto photo) {
-        photo.setMenu(menu);
+    public void addMenuPhoto(byte[] body, PhotoCotainable domain, String name) {
+        PlaceMenu menu = (PlaceMenu) domain;
+        PlaceMenuPhoto photo = new PlaceMenuPhoto(body, name, menu);
         this.em.persist(photo);
         this.em.flush();
-        List<PlaceMenuPhoto> menuPhotos = menu.getPhoto();
-        if (menuPhotos != null) {
-            menuPhotos.add(photo);
-            menu.setPhoto(menuPhotos);
-        } else {
-            menu.setPhoto(Collections.singletonList(photo));
-        }
-
-        this.em.flush();
+        menu.setPhoto(setAsList(menu.getPhoto(), photo));
+        em.merge(menu);
     }
 
     @Transactional
@@ -170,22 +174,30 @@ public class DBBean implements IDBBean {
         this.em.flush();
     }
 
-    public byte[] getMenuImage(long id, String name) {
-        return ((PlaceMenuPhoto) this.em.createQuery("SELECT e FROM PlaceMenuPhoto e WHERE e.menu.id=:id AND e.name=:name")
+    public byte[] getMenuImageBodyByName(long id, String name) {
+        return (this.em.createQuery("SELECT e FROM PlaceMenuPhoto e WHERE e.menu.id=:id AND e.name=:name", PlaceMenuPhoto.class)
                 .setParameter("id", id)
                 .setParameter("name", name)
                 .getSingleResult())
                 .getBody();
     }
 
+    @Override
+    public PlaceMenuPhoto getMenuPhotoByName(String name, long id) {
+        return this.em.createQuery("SELECT e FROM PlaceMenuPhoto e WHERE e.menu.id=:id AND e.name=:name", PlaceMenuPhoto.class)
+                .setParameter("id", id)
+                .setParameter("name", name)
+                .getSingleResult();
+    }
+
     @Transactional
-    public void addPlacePhoto(PlacePhoto photo, Place place, String name) {
-        photo.setName(name);
+    public void addPlacePhoto(byte[] body, PhotoCotainable domain, String name) {
+        Place place = (Place) domain;
+        PlacePhoto photo = new PlacePhoto(body, name);
         photo.setPlace(place);
         this.em.persist(photo);
         this.em.flush();
         place.setPlacePhotos(savePlacePhotoAsList(place.getPlacePhotos(), photo));
-        this.em.flush();
     }
 
     private List<PlacePhoto> savePlacePhotoAsList(List<PlacePhoto> list, PlacePhoto photo) {
@@ -254,7 +266,7 @@ public class DBBean implements IDBBean {
             }
         }
 
-        user.setUserOrderses(getOrdersList(userOrders, user.getUserOrderses()));
+        user.setUserOrders(getOrdersList(userOrders, user.getUserOrders()));
         em.merge(user);
         place.setUserOrderses(getOrdersList(userOrders, place.getUserOrderses()));
         em.merge(place);
@@ -268,7 +280,7 @@ public class DBBean implements IDBBean {
     @Override
     public List<UserOrders> getUserPlaceOrders(long userId, long placeId) {
         return em.createQuery("SELECT e FROM UserOrders e " +
-                "WHERE e.place.id=:placeId AND e.user.id=:userId AND e.isDone=false")
+                "WHERE e.place.id=:placeId AND e.user.id=:userId AND e.active=false", UserOrders.class)
                 .setParameter("placeId", placeId)
                 .setParameter("userId", userId)
                 .getResultList();
@@ -276,8 +288,8 @@ public class DBBean implements IDBBean {
 
     @Override
     public List<Place> getPlacesWithUserOrder(PlaceUser user) {
-        return em.createQuery("SELECT DISTINCT p FROM Place p,PlaceUser u INNER JOIN u.userOrderses o " +
-                "WHERE o.user.id=:userId AND o.place.id=p.id AND o.isDone=false")
+        return em.createQuery("SELECT DISTINCT p FROM Place p,PlaceUser u INNER JOIN u.userOrders o " +
+                "WHERE o.user.id=:userId AND o.place.id=p.id AND o.active=false", Place.class)
                 .setParameter("userId", user.getId())
                 .getResultList();
     }
@@ -335,11 +347,20 @@ public class DBBean implements IDBBean {
     }
 
     @Override
-    public byte[] getUserPhoto(long id, String name) {
-        return ((PlaceUserPhoto) em.createQuery("SELECT e FROM PlaceUserPhoto e " +
-                "WHERE e.user.id=:userId AND e.name=:name")
+    public byte[] getUserPhotoBodyByName(String name, long id) {
+        return em.createQuery("SELECT e FROM PlaceUserPhoto e WHERE e.user.id=:userId AND e.name=:name", PlaceUserPhoto.class)
                 .setParameter("userId", id)
-                .setParameter("name", name)).getBody();
+                .setParameter("name", name)
+                .getSingleResult()
+                .getBody();
+    }
+
+    @Override
+    public PlaceUserPhoto getUserPhotoByName(String name, long id) {
+        return em.createQuery("SELECT e FROM PlaceUserPhoto e WHERE e.user.id=:userId AND e.name=:name", PlaceUserPhoto.class)
+                .setParameter("userId", id)
+                .setParameter("name", name)
+                .getSingleResult();
     }
 
     @Override
@@ -436,7 +457,7 @@ public class DBBean implements IDBBean {
     @Override
     @Transactional
     public void setOrderComplete(UserOrders order, boolean b) {
-        order.setIsDone(b);
+        order.setActive(b);
         em.merge(order);
     }
 
@@ -482,12 +503,109 @@ public class DBBean implements IDBBean {
     @SuppressWarnings("unchecked")
     @Override
     public List<EmployeePauses> getEmployeeTodayPauses(PlaceEmployee employee, LocalDateTime localDate) {
-        return (List<EmployeePauses>)em.createQuery("SELECT e FROM EmployeePauses e " +
+        return (List<EmployeePauses>) em.createQuery("SELECT e FROM EmployeePauses e " +
                 "WHERE e.start =:date AND e.employee.id=:eId ORDER BY e.start")
-                .setParameter("eId",employee.getId())
-                .setParameter("date",localDate)
+                .setParameter("eId", employee.getId())
+                .setParameter("date", localDate)
                 .getResultList();
     }
+
+    @Override
+    public List<PlaceMenu> getBestMenus(int from, int to) {
+        return em.createQuery("SELECT e FROM PlaceMenu e ORDER BY e.userOrderses.size DESC, e.menuFinalRating DESC ", PlaceMenu.class)
+                .setFirstResult(from)
+                .setMaxResults(to)
+                .getResultList();
+    }
+
+    @Override
+    public PlaceEmployee getEmployeeById(long employeeID) {
+        return em.find(PlaceEmployee.class, employeeID);
+    }
+
+    @Override
+    public UserOrders activateOrder(UserOrders orders) {
+        orders.setActive(true);
+        em.merge(orders);
+        return orders;
+    }
+
+    @Override
+    public UserOrders findOrderById(long id, PlaceUser user) {
+        return em.createQuery("SELECT e FROM UserOrders e WHERE e.user=:user AND e.id=:id", UserOrders.class)
+                .setParameter("user", user)
+                .setParameter("id", id)
+                .getSingleResult();
+    }
+
+    @Override
+    public List<PlaceMenu> findMenuWithTag(List<Long> tagsId, int startFrom, int endAt) {
+        return em.createQuery("SELECT e from PlaceMenu e inner join e.menuTags t WHERE t.id IN :tId", PlaceMenu.class)
+                .setParameter("tId", tagsId)
+                .setFirstResult(startFrom)
+                .setMaxResults(endAt)
+                .getResultList();
+    }
+
+    @Override
+    public List<PlaceMenuTags> findTagsByName(String t) {
+        return em.createQuery("SELECT e FROM PlaceMenuTags e WHERE e.name LIKE :pattern", PlaceMenuTags.class)
+                .setParameter("pattern", t + "%")
+                .setMaxResults(5)
+                .getResultList();
+    }
+
+    @Override
+    public PlaceMenuTags findTagByName(String name) {
+        return em.createQuery("SELECT e FROM PlaceMenuTags e WHERE e.name=:name", PlaceMenuTags.class)
+                .setParameter("name", name)
+                .setMaxResults(5)
+                .getSingleResult();
+    }
+
+    @Override
+    public PlaceMenuTags newTag(String t) {
+        PlaceMenuTags tag = new PlaceMenuTags(t);
+        em.persist(tag);
+        return tag;
+    }
+
+    @Override
+    public PlaceEmployee getEmployeeByName(String s) {
+        return em.createQuery("SELECT e FROM PlaceEmployee e WHERE e.name =:name", PlaceEmployee.class)
+                .setParameter("name", s)
+                .getSingleResult();
+    }
+
+    @Override
+    public PlaceEmployeePhoto getEmployeePhotoByName(String name, long id) {
+        return em.createQuery("SELECT e FROM PlaceEmployeePhoto e WHERE e.name = :name AND e.id = :id", PlaceEmployeePhoto.class)
+                .setParameter("name", name)
+                .setParameter("id", id)
+                .getSingleResult();
+    }
+
+    @Override
+    @Transactional
+    public void addEmployeePhoto(byte[] body, PhotoCotainable domain, String name) {
+        PlaceEmployee employee = (PlaceEmployee) domain;
+        PlaceEmployeePhoto photo = new PlaceEmployeePhoto();
+        photo.setName(name);
+        photo.setEmployee(employee);
+        photo.setBody(body);
+        em.persist(photo);
+        em.flush();
+        employee.setPhoto(setAsList(employee.getPhoto(), photo));
+    }
+
+    @Override
+    public void addPlaceUserPhoto(byte[] body, PhotoCotainable domain, String name) {
+        PlaceUser user = (PlaceUser) domain;
+        PlaceUserPhoto photo = new PlaceUserPhoto(body, user, name);
+        em.persist(photo);
+        user.setPhotos(setAsList(user.getPhotos(), photo));
+    }
+
 
     private <T> List<T> setAsList(List<T> list, T object) {
         if (list == null) {

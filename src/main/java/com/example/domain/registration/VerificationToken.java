@@ -15,15 +15,15 @@ import java.util.Date;
 public class VerificationToken {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
-    String token;
+    private  Long id;
+    private  String token;
 
     @Column(name = "expiry_date")
-    Date date;
+    private   Date date;
 
     @OneToOne
     @JoinColumn(name = "user_id")
-    PlaceUser user;
+    private   PlaceUser user;
 
     public VerificationToken() {
         this.date=calculateExpiryDate(240);

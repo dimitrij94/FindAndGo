@@ -17,38 +17,38 @@ import java.util.List;
 public class UserOrders {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "place")
-    Place place;
+    private Place place;
 
     @ManyToOne
     @JoinColumn(name = "user")
-    PlaceUser user;
+    private PlaceUser user;
 
     @ManyToOne
     @JoinColumn(name = "menu")
-    PlaceMenu menu;
+    private PlaceMenu menu;
 
     @ManyToOne
     @JoinColumn(name = "employee")
-    PlaceEmployee employee;
+    private PlaceEmployee employee;
 
-    boolean isDone;
+    private boolean active;
 
     @Column(name = "order_date", columnDefinition = "DATETIME NULL")
-    LocalDateTime startTime;
+    private LocalDateTime startTime;
 
     @Column(name = "finish_date", columnDefinition = "DATETIME NULL")
-    LocalDateTime finishTime;
+    private LocalDateTime finishTime;
 
     @ManyToMany
     @JoinTable(
             joinColumns = @JoinColumn(name = "order_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "service_id", referencedColumnName = "id"),
             name = "service_orders")
-    List<PlaceMenuOptionalService> services;
+    private List<PlaceMenuOptionalService> services;
 
     public Long getId() {
         return id;
@@ -91,11 +91,11 @@ public class UserOrders {
     }
 
     public boolean isDone() {
-        return isDone;
+        return active;
     }
 
-    public void setIsDone(boolean isDone) {
-        this.isDone = isDone;
+    public void setActive(boolean isDone) {
+        this.active = isDone;
     }
 
     public PlaceEmployee getEmployee() {

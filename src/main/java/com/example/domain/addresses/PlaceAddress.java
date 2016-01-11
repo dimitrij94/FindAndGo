@@ -14,31 +14,23 @@ import javax.persistence.*;
 public class PlaceAddress {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+    private  Long id;
 
-    float latitude;
+    private    float latitude;
 
-    float longitude;
+    private   float longitude;
 
-    String fullAddress;
-
-    public PlaceAddress(DefaultMultipartHttpServletRequest dmhsRequest) {
-        this.longitude = Float.valueOf(dmhsRequest.getParameter("longitude"));
-        this.latitude = Float.valueOf(dmhsRequest.getParameter("latitude"));
-        this.fullAddress=dmhsRequest.getParameter("fullAddress");
-    }
 
     public PlaceAddress() {
     }
 
     @OneToOne
     @JoinColumn(name = "place_id")
-    Place place;
+    private  Place place;
 
     public PlaceAddress(AddressDTO address) {
         this.latitude=address.getLatitude();
         this.longitude=address.getLongitude();
-        this.fullAddress=address.getFullAddress();
     }
 
     public void setId(Long id) {
@@ -59,14 +51,6 @@ public class PlaceAddress {
 
     public void setLongitude(float longitude) {
         this.longitude = longitude;
-    }
-
-    public String getFullAddress() {
-        return fullAddress;
-    }
-
-    public void setFullAddress(String fullAddress) {
-        this.fullAddress = fullAddress;
     }
 
     public Long getId() {

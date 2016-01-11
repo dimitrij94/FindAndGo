@@ -1,20 +1,15 @@
 package com.example.services.imageservice;
 
-import com.example.domain.Place;
-import com.example.domain.menu.PlaceMenu;
+import com.example.constants.image.ImageContainerType;
+import com.example.interfaces.PhotoCotainable;
 import com.example.pojo.dto.PhotoDTO;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
-
-import java.io.IOException;
+import javassist.tools.web.BadHttpRequest;
 
 /**
  * Created by Dmitrij on 25.10.2015.
  */
 public interface ImageService {
 
-    void uploadPlaceMainPhoto(PhotoDTO image, Place place);
 
-    void uploadMenuPhoto(PhotoDTO image, PlaceMenu menu);
-
+    <T extends PhotoCotainable> void upload(PhotoDTO image, T domain, ImageContainerType type) throws BadHttpRequest;
 }

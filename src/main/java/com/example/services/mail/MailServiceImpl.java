@@ -30,7 +30,7 @@ public class MailServiceImpl implements MailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setSubject("Please confirm your emali");
             helper.setFrom("MyPlaceToGo");
-            helper.setTo(user.getUserEmail());
+            helper.setTo(user.getEmail());
             helper.setText("Please go with the following link, to confirm your email " +
                             "http://localhost:8080/"+"/confirm/"+user.getToken().getToken() +
                             " Else ,just ignore the email",

@@ -23,10 +23,10 @@ public class PlaceMenuOptionalService {
 
     @ManyToOne
     @JoinColumn(name = "menu")
-    PlaceMenu menu;
+    private PlaceMenu menu;
 
     @ManyToMany(mappedBy = "services")
-    List<UserOrders> userOrderses;
+    private   List<UserOrders> userOrderses;
 
     public PlaceMenuOptionalService() {
     }

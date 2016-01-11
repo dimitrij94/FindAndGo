@@ -1,0 +1,125 @@
+<div class="container">
+    <div class="row">
+        <div class="col col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-lg-6 col-lg-offset-3 jumbotron">
+            <form action="" method="get" class="form-horizontal alert alert-info">
+                <fieldset>
+                    <legend style="color:white">Key style</legend>
+
+                    <div class="form-group">
+                        <label for="service-name" class="col-lg-4 control-label">Знайти послугу</label>
+
+                        <div class="col col-lg-8">
+                            <input id="service-name" class="form-control" type="text"
+                                   placeholder="Ввведіть назву послуги"/>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: -15px">
+                        <div class="col-lg-12" id="search-type-wrapper">
+                            <div class="radio col-md-4">
+                                <label>
+                                    <input type="radio" name="type" id="services-radio" value="service"
+                                           checked="checked">
+                                    Послуги
+                                </label>
+                            </div>
+                            <div class="radio col-md-4">
+                                <label>
+                                    <input type="radio" name="type" id="place-radio" value="place">
+                                    Заклади
+                                </label>
+                            </div>
+                            <div class="radio col-md-4">
+                                <label>
+                                    <input type="radio" name="type" id="employee-radio" value="employee">
+                                    Працівники
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="city-input" class="col-lg-4 control-label">Виберіть місто</label>
+
+                        <div class="col-lg-8">
+                            <input id="city-input" class="form-control" type="text" placeholder="Адреса"/>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button style="float:right" type="submit" class="btn btn-success">
+                            <i class="fa fa-search"></i>
+                            Знайти
+                        </button>
+                    </div>
+
+                    <input class="field" value="" id="street_number" type="hidden"/>
+                    <input class="field" value="" id="route" type="hidden"/>
+                    <input class="field" value="" id="locality" type="hidden"/>
+                    <input class="field" value="" id="administrative_area_level_1" type="hidden"/>
+                    <input class="field" value="" id="postal_code" type="hidden"/>
+                    <input class="field" value="" id="country" type="hidden"/>
+
+                </fieldset>
+            </form>
+
+        </div>
+    </div>
+</div>
+<script>
+    var componentForm = {
+        street_number: 'short_name',
+        route: 'long_name',
+        locality: 'long_name',
+        administrative_area_level_1: 'short_name',
+        country: 'long_name',
+        postal_code: 'short_name'
+    };
+
+    var autocomplete;
+    $(document).ready(function () {
+        var lan = navigator.language || navigator.userLanguage;
+        var cityInput = document.getElementById("city-input");
+        autocomplete = new google.maps.places.Autocomplete(cityInput, {});
+        autocomplete.addListener('place_changed', fillInAddress);
+        $("#employee-radio, #place-radio, #services-radio").change(checkType);
+    });
+
+    function checkType() {
+        var input = $("form :radio[name='type']:checked");
+        var s = getPlaceHolder(input);
+        var inputQuery = $("#service-name");
+        inputQuery.val("");
+        inputQuery.attr("placeholder", s);
+    }
+
+    function getPlaceHolder(input) {
+        switch (input.val()) {
+            case "service":
+                return "Ввведіть назву послуги";
+                break;
+            case "place":
+                return "Ввведіть назву закладу";
+                break;
+            case "employee":
+                return "Ввведіть ім'я працівника";
+                break;
+        }
+    }
+    function fillInAddress() {
+        // Get the place details from the autocomplete object.
+        var place = autocomplete.getPlace();
+
+        // Get each component of the address from the place details
+        // and fill the corresponding field on the form.
+        for (var i = 0; i < place.address_components.length; i++) {
+            var addressType = place.address_components[i].types[0];
+            if (componentForm[addressType]) {
+                var val = place.address_components[i][componentForm[addressType]];
+                document.getElementById(addressType).value = val;
+                console.log(val);
+            }
+        }
+    }
+
+</script>

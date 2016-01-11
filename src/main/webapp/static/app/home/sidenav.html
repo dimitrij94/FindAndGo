@@ -1,0 +1,14 @@
+<md-sidenav class="md-sidenav-left"
+            layout="column"
+            layout-align="start stretch"
+            md-component-id="left"
+            md-is-locked-open="$mdMedia('gt-sm')">
+
+    <md-toolbar layout="column" layout-align="space-around center" >
+        <h1 class="md-toolbar-tools">The Key style</h1>
+        <md-button>Close</md-button>
+    </md-toolbar>
+    <md-content layout layout-padding>
+        <div ui-view="sidenavContent" flex></div>
+    </md-content>
+</md-sidenav>

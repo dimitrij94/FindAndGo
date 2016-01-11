@@ -94,12 +94,12 @@
         }
     </style>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
-
     <script type="text/javascript" src="../../static/js/jquery.min.js"></script>
 
     <script type="text/javascript" src="../../static/js/jquery-ui-1.8.1.custom.min.js"></script>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="../../static/js/jquery.Jcrop.min.js"></script>
 
@@ -189,7 +189,6 @@
 </div>
 
 
-
 <script type="text/javascript">
     var target = document.getElementById("image");
     var src = document.getElementById("upload");
@@ -207,7 +206,7 @@
             updateDescriptionSpan(description, info);
         });
 
-        showImage(src,target);
+        showImage(src, target);
 
 
     });
@@ -225,21 +224,21 @@
     }
 
     function showCoords(c) {
-        $('#x').val(c.x*mIndex);
-        $('#y').val(c.y*mIndex);
-        $('#w').val(c.w*mIndex);
-        $('#h').val(c.h*mIndex);
+        $('#x').val(c.x * mIndex);
+        $('#y').val(c.y * mIndex);
+        $('#w').val(c.w * mIndex);
+        $('#h').val(c.h * mIndex);
     }
 
     function initJcrop(img) {
         jQuery(img).Jcrop({
-            aspectRatio: 16 / 9,
-            onChange: showCoords,
-            setSelect: [0, 90, 160, 0],
-            onSelect: showCoords
-        },
-        function(){
-        });
+                    aspectRatio: 16 / 9,
+                    onChange: showCoords,
+                    setSelect: [0, 90, 160, 0],
+                    onSelect: showCoords
+                },
+                function () {
+                });
     }
 
 
@@ -248,11 +247,11 @@
         // when image is loaded, set the src of the image where you want to display it
         fr.onload = function (e) {
             $(".jcrop-holder").remove();
-            var imga =$('#image');
+            var imga = $('#image');
             imga.attr("src", this.result);
-            imga.load(function(){
+            imga.load(function () {
                 console.log(this.width);
-                mIndex=this.width/351   ;
+                mIndex = this.width / 351;
                 console.log(mIndex)
             });
             initJcrop(target);

@@ -1,5 +1,7 @@
 package com.example.pojo.dto;
 
+import com.example.domain.users.PlaceUser;
+
 /**
  * Created by Dmitrij on 14.10.2015.
  */
@@ -19,6 +21,19 @@ public class UserCreateForm {
     private String name;
 
     private String sname;
+
+    private PhotoDTO photo;
+
+    public UserCreateForm() {
+        photo = new PhotoDTO();
+    }
+
+    public UserCreateForm(PlaceUser user) {
+        this.userEmail=user.getEmail();
+        this.userName=user.getUserName();
+        this.name=user.getName();
+        this.sname=user.getSname();
+    }
 
     public String getUserEmail() {
         return userEmail;
@@ -90,5 +105,13 @@ public class UserCreateForm {
 
     public void setSname(String sname) {
         this.sname = sname;
+    }
+
+    public PhotoDTO getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(PhotoDTO photo) {
+        this.photo = photo;
     }
 }

@@ -12,10 +12,10 @@ import java.util.List;
 public class PlaceSpeciality {
     @Id
     @GeneratedValue
-    long id;
-    String speciality;
-    @ManyToMany(mappedBy = "placeSpeciality")
-    List<Place> place;
+    private long id;
+    private String speciality;
+    @OneToMany(mappedBy = "placeSpeciality")
+    private List<Place> place;
 
     public long getId() {
         return id;

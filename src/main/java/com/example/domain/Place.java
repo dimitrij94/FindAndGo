@@ -6,12 +6,15 @@
 package com.example.domain;
 
 
+import com.example.dao.IDBBean;
 import com.example.domain.menu.PlaceMenu;
 import com.example.domain.addresses.PlaceAddress;
-import com.example.domain.comment.PlaceComment;
 import com.example.domain.photos.PlacePhoto;
 import com.example.domain.users.PlaceOwner;
 import com.example.domain.users.PlaceUser;
+import com.example.functional.photos.GetPhotoFunction;
+import com.example.interfaces.PhotoCotainable;
+import com.example.interfaces.Scaleble;
 import com.example.pojo.dto.PlaceDTO;
 
 import javax.persistence.*;
@@ -19,15 +22,14 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
- *
  * @author Dmitrij
  */
 @Entity
-public class Place {
+public class Place implements PhotoCotainable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private long id;
 
     private String placeName;
 
@@ -36,14 +38,12 @@ public class Place {
     private int placeFinalRating;
     private int placeFollowersNum;
 
-    @ManyToMany
-    @JoinTable(joinColumns = @JoinColumn(name = "placeId",referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name="specialityId",referencedColumnName = "id"),
-            name = "place_specialities")
-    private List<PlaceSpeciality> placeSpeciality;
+    @ManyToOne
+    @JoinColumn(name = "placeSpeciality")
+    private PlaceSpeciality placeSpeciality;
 
-    @OneToMany(mappedBy= "menuPlace")
-    private List<PlaceMenu>placeMenu;
+    @OneToMany(mappedBy = "menuPlace")
+    private List<PlaceMenu> placeMenu;
 
     @ManyToMany(mappedBy = "userPlaces")
     private List<PlaceUser> placeUsers;
@@ -51,37 +51,31 @@ public class Place {
     @OneToMany(mappedBy = "place")
     private List<PlacePhoto> placePhotos;
 
-    @OneToMany(mappedBy = "place")
-    List<PlaceEvent>placeEvents;
-
-    @OneToMany(mappedBy = "place")
-    List<PlaceComment>placeComments;
-
     @ManyToOne
     @JoinColumn(name = "placeOwner")
-    PlaceOwner placeOwner;
+    private PlaceOwner placeOwner;
 
     @OneToOne(mappedBy = "place")
-    PlaceAddress address;
+    private PlaceAddress address;
 
     @OneToMany(mappedBy = "place")
-    List<UserOrders> userOrderses;
+    private List<UserOrders> userOrderses;
 
 
     public Place() {
     }
 
-    public Place(HttpServletRequest request){
-        this.placeName=request.getParameter("placeName");
-        this.placeDescription=request.getParameter("placeDescription");
+    public Place(HttpServletRequest request) {
+        this.placeName = request.getParameter("placeName");
+        this.placeDescription = request.getParameter("placeDescription");
     }
 
-    public Place(PlaceDTO place){
-        this.placeName=place.getName();
-        this.placeDescription=place.getDescription();
+    public Place(PlaceDTO place) {
+        this.placeName = place.getName();
+        this.placeDescription = place.getDescription();
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
@@ -105,6 +99,14 @@ public class Place {
         this.placeDescription = placeDescription;
     }
 
+    public int getTimeOffset() {
+        return timeOffset;
+    }
+
+    public void setTimeOffset(int timeOffset) {
+        this.timeOffset = timeOffset;
+    }
+
     public int getPlaceFinalRating() {
         return placeFinalRating;
     }
@@ -121,11 +123,11 @@ public class Place {
         this.placeFollowersNum = placeFollowersNum;
     }
 
-    public List<PlaceSpeciality> getPlaceSpeciality() {
+    public PlaceSpeciality getPlaceSpeciality() {
         return placeSpeciality;
     }
 
-    public void setPlaceSpeciality(List<PlaceSpeciality> placeSpeciality) {
+    public void setPlaceSpeciality(PlaceSpeciality placeSpeciality) {
         this.placeSpeciality = placeSpeciality;
     }
 
@@ -153,21 +155,6 @@ public class Place {
         this.placePhotos = placePhotos;
     }
 
-    public List<PlaceEvent> getPlaceEvents() {
-        return placeEvents;
-    }
-
-    public void setPlaceEvents(List<PlaceEvent> placeEvents) {
-        this.placeEvents = placeEvents;
-    }
-
-    public List<PlaceComment> getPlaceComments() {
-        return placeComments;
-    }
-
-    public void setPlaceComments(List<PlaceComment> placeComments) {
-        this.placeComments = placeComments;
-    }
 
     public PlaceOwner getPlaceOwner() {
         return placeOwner;
@@ -193,13 +180,7 @@ public class Place {
         this.userOrderses = userOrderses;
     }
 
-    public int getTimeOffset() {
-        return timeOffset;
-    }
 
-    public void setTimeOffset(int timeOffset) {
-        this.timeOffset = timeOffset;
-    }
 
 
     @Override
@@ -209,12 +190,14 @@ public class Place {
 
         Place place = (Place) o;
 
-        return id.equals(place.id);
+        return id == place.id;
 
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return (int) (id ^ (id >>> 32));
     }
+
+
 }

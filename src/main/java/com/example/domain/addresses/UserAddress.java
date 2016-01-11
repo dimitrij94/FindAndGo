@@ -15,21 +15,21 @@ public class UserAddress {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+    private Long id;
 
-    String latitude;
-    String longitude;
+    private String latitude;
+    private String longitude;
 
     @OneToOne
     @JoinColumn(name = "user_id")
-    PlaceUser user;
+    private PlaceUser user;
 
     public UserAddress() {
     }
 
     public UserAddress(AddressDTO form) {
-        this.latitude=Float.toString(form.getLatitude());
-        this.longitude=Float.toString(form.getLongitude());
+        this.latitude = Float.toString(form.getLatitude());
+        this.longitude = Float.toString(form.getLongitude());
     }
 
     public Long getId() {
