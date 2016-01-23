@@ -280,7 +280,7 @@
 
 <div class="container">
     <div class="row masonry" data-columns>
-        <jsp:useBean id="places" scope="request" type="java.util.List<com.example.domain.Place>"/>
+        <jsp:useBean id="places" scope="request" type="java.util.List<com.example.domain.place.Place>"/>
         <jsp:useBean id="menus" scope="request" type="java.util.List<com.example.domain.menu.PlaceMenu>"/>
         <jsp:useBean id="sizes" scope="application" type="com.example.constants.image.sizes.MenuImageSizes"/>
         <c:forEach items="${menus}" var="menu" varStatus="m" begin="0" end="3">

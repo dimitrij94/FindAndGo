@@ -26,7 +26,7 @@ public class PlaceMenuOptionalService {
     private PlaceMenu menu;
 
     @ManyToMany(mappedBy = "services")
-    private   List<UserOrders> userOrderses;
+    private   List<UserOrders> userOrders;
 
     public PlaceMenuOptionalService() {
     }
@@ -75,12 +75,12 @@ public class PlaceMenuOptionalService {
         this.menu = menu;
     }
 
-    public List<UserOrders> getUserOrderses() {
-        return userOrderses;
+    public List<UserOrders> getUserOrders() {
+        return userOrders;
     }
 
-    public void setUserOrderses(List<UserOrders> userOrderses) {
-        this.userOrderses = userOrderses;
+    public void setUserOrders(List<UserOrders> userOrderses) {
+        this.userOrders = userOrderses;
     }
 
     public long getDurationMinutes() {
@@ -90,4 +90,6 @@ public class PlaceMenuOptionalService {
     public void setDurationMinutes(long durationSeconds) {
         this.durationMinutes = durationSeconds;
     }
+
+
 }

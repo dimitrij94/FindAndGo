@@ -1,8 +1,8 @@
 package com.example.services.registration;
 
 
-import com.example.pojo.dto.UserCreateForm;
 import com.example.domain.users.PlaceUser;
+import com.example.pojo.dto.UserDTO;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,6 +20,6 @@ public interface RegistrationService {
 
     boolean checkCredetials(String email, String userName);
 
-    PlaceUser register(UserCreateForm blank, HttpServletRequest request);
+    PlaceUser register(UserDTO blank, HttpServletRequest request);
 
 }

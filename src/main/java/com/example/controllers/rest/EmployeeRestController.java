@@ -1,6 +1,6 @@
 package com.example.controllers.rest;
 
-import com.example.domain.users.employee.PlaceEmployee;
+import com.example.domain.employee.PlaceEmployee;
 import com.example.pojo.dto.EmployeeDTO;
 import com.example.services.EmployeeService;
 import com.example.validators.EmployeeValidtor;

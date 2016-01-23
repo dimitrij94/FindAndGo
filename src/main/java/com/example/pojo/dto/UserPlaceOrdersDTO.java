@@ -1,7 +1,7 @@
 package com.example.pojo.dto;
 
 import com.example.domain.UserOrders;
-import com.example.domain.Place;
+import com.example.domain.place.Place;
 
 import java.util.List;
 

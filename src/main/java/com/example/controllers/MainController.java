@@ -19,4 +19,6 @@ public class MainController {
                           @PathVariable("component") String component) {
         return "/static/app/"+name+"/"+ component + ".html";
     }
+
+
 }

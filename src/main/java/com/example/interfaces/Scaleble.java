@@ -11,6 +11,8 @@ public interface Scaleble {
 
     void setName(String name);
 
+    long getId();
+
     String getName();
 
 }

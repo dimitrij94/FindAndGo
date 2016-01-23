@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="KeyStyle">
+<head>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <link rel="stylesheet" href="/static/bower/angular-material/angular-material.css"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic"/>
+    <link rel="stylesheet" href="/static/bower/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/static/css/user_registraion_style.css"/>
+    <link rel="stylesheet" href="/static/bower/ng-img-crop/compile/minified/ng-img-crop.css"/>
+    <link rel="stylesheet" href="/static/css/sidenav_login.css"/>
+    <link rel="stylesheet" href="/static/css/states_transactions.css"/>
+    <title>Key style page</title>
+</head>
+<body>
+<div layout="row" layout-fill>
+    <div ui-view="sidenav" layout="row" layout-align="start stretch"></div>
+
+    <div flex layout="column">
+        <div ui-view="header"></div>
+        <div ui-view="content" flex layout="column"></div>
+    </div>
+    <div ui-view="usernav" layout="row" layout-align="start stretch"></div>
+</div>
+
+<script src="/static/bower/angular-1.5.0-rc.0/angular.js"></script>
+<script src="/static/bower/angular-1.5.0-rc.0/angular-messages.js"></script>
+<script src="/static/bower/angular-1.5.0-rc.0/angular-ui-router.js"></script>
+<script src="/static/bower/angular-1.5.0-rc.0/angular-resource.js"></script>
+
+
+<script src="/static/bower/angular-aria/angular-aria.js"></script>
+<script src="/static/bower/angular-animate/angular-animate.js"></script>
+<script src="/static/bower/angular-material/angular-material.js"></script>
+
+<script src="/static/bower/ng-file-upload/ng-file-upload-shim.js"></script>
+<script src="/static/bower/ng-file-upload/ng-file-upload.min.js"></script>
+<script src="/static/bower/ng-img-crop/compile/minified/ng-img-crop.js"></script>
+
+<script src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
+
+<script src="/static/js/directives/scheduler.js"></script>
+<script src="/static/js/directives/schedule_groupe.js"></script>
+
+<script src="/static/js/services/domain.js"></script>
+
+<script src="/static/js/controllers/place_registration_controller.js"></script>
+<script src="/static/js/controllers/user_nav_controller.js"></script>
+<script src="/static/js/controllers/header-controller.js"></script>
+<script src="/static/js/controllers/content.js"></script>
+<script src="/static/js/controllers/user_nav_controller.js"></script>
+<script src="/static/js/controllers/user-registraion-controller.js"></script>
+<script src="/static/js/app.js"></script>
+
+
+</body>
+</html>

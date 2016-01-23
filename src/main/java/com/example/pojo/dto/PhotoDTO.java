@@ -13,6 +13,13 @@ public class PhotoDTO {
 
     private CommonsMultipartFile image;
 
+    public PhotoDTO(CommonsMultipartFile image) {
+        this.image = image;
+    }
+
+    public PhotoDTO() {
+    }
+
     public float getX() {
         return x;
     }

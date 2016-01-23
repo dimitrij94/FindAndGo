@@ -1,8 +1,6 @@
 package com.example.pojo.dto;
 
-import com.example.domain.addresses.UserAddress;
-
-import javax.validation.constraints.Pattern;
+import com.example.domain.users.UserAddress;
 
 /**
  * Created by Dmitrij on 17.10.2015.

@@ -1,8 +1,7 @@
 package com.example.validators;
 
-import com.example.pojo.dto.AddressDTO;
 import com.example.pojo.dto.PhotoDTO;
-import com.example.pojo.dto.UserCreateForm;
+import com.example.pojo.dto.UserDTO;
 import com.example.services.registration.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,7 +39,7 @@ public class UserValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return UserCreateForm.class.isAssignableFrom(clazz);
+        return UserDTO.class.isAssignableFrom(clazz);
     }
 
     @Override
@@ -48,7 +47,9 @@ public class UserValidator implements Validator {
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userName", "name.required", "Поле не може бути пустим");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userEmail", "email.required", "Поле не може бути пустим");
-        UserCreateForm user = (UserCreateForm) target;
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "userPass", "password.required", "Поле не може бути пустим");
+
+        UserDTO user = (UserDTO) target;
 
         if (Pattern.compile("^[a-zA-Z][a-zA-Z0-9-_\\.]{1,20}$").matcher(user.getName()).matches())
             errors.rejectValue("name", "field.invalid");

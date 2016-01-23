@@ -3,7 +3,7 @@ package com.example.services.imageservice;
 import com.example.adapters.image.IImageTypeAdapter;
 import com.example.constants.image.ImageContainerType;
 import com.example.constants.image.sizes.ImageSize;
-import com.example.dao.IDBBean;
+import com.example.dao.photos.PhotoDAO;
 import com.example.functional.photos.GetPhotoFunction;
 import com.example.functional.photos.SavePhotoFunction;
 import com.example.interfaces.PhotoCotainable;
@@ -12,21 +12,22 @@ import com.example.services.MyExecutorService;
 import javassist.tools.web.BadHttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImagingOpException;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 
 @Service
 public class ImageServiceImpl implements ImageService {
     @Autowired
-    IDBBean dao;
+    PhotoDAO dao;
 
     @Autowired
     MyExecutorService threadPoolContainer;
@@ -34,8 +35,10 @@ public class ImageServiceImpl implements ImageService {
     @Autowired
     IImageTypeAdapter adapter;
 
+
     public void upload(PhotoDTO image, PhotoCotainable domain, ImageContainerType type) throws BadHttpRequest {
 
+        ArrayList<Long> locations = new ArrayList<>(type.getSizes().length + 1);
         ExecutorService threadPool = threadPoolContainer.getExecutor();
 
         SavePhotoFunction saveFunction = adapter.getSaveFunction(type);
@@ -43,18 +46,15 @@ public class ImageServiceImpl implements ImageService {
 
         byte[] imageBody = image.getImage().getBytes();
 
-        saveFunction.savePhoto(imageBody, domain, "main");
+        saveFunction.savePhoto(imageBody, domain, "main").getId();
 /*
-        final BufferedImage finalBufferedImage =
-                cropImage(
-                        getReadableImage(
-                                getPhotoFunction.getByName("main", domain.getId())
-                                        .getBody()), image);
+        final BufferedImage finalBufferedImage = cropImage(getReadableImage(getPhotoFunction.getByName("main", domain.getId()).getBody()), image);
 */
+
         final BufferedImage finalBufferedImage =
                 getReadableImage(getPhotoFunction.getByName("main", domain.getId()).getBody());
 
-        if(finalBufferedImage !=null) {
+        if (finalBufferedImage != null) {
             for (ImageSize size : type.getSizes()) {
                 threadPool.execute(() -> {
                     BufferedImage bufferedImage = null;
@@ -63,16 +63,13 @@ public class ImageServiceImpl implements ImageService {
                         bufferedImage = imageWidth <= size.getWidth() ?
                                 finalBufferedImage :
                                 scaleImage(finalBufferedImage, size);
-                        saveFunction
-                                .savePhoto(convertImage(bufferedImage), domain, size.getName());
-
+                        saveFunction.savePhoto(convertImage(bufferedImage), domain, size.getName());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 });
             }
-        }
-        else throw new BadHttpRequest();
+        } else throw new BadHttpRequest();
     }
 
 
@@ -121,6 +118,14 @@ public class ImageServiceImpl implements ImageService {
             e.printStackTrace();
         }
         throw new IOException("failed to read bytes from image");
+    }
+
+    @Override
+    public boolean validate(CommonsMultipartFile image) {
+        if (!image.getContentType().split("/")[0].equals("image")) {
+            return false;
+        }
+        return true;
     }
 }
 

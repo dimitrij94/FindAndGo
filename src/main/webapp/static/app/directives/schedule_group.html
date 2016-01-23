@@ -1,0 +1,25 @@
+<div layout="column" layout-align="start stretch"
+     style="text-align: center; width:100%">
+
+    <div layout="row" layout-align="space-around stretch" layout-padding>
+        <div flex>DAY</div>
+        <div flex>STARTS</div>
+        <div flex>ENDS</div>
+        <div flex>DAY OFF?</div>
+    </div>
+
+    <div layout="row" layout-align="space-around center" layout-padding
+         ng-repeat="day in days"
+         style="background-color:{{day.schedule.color}}">
+
+        <div flex>{{day.name}}</div>
+        <div flex>{{day.open.hour+":"+day.open.minutes+":"+day.open.part}}</div>
+        <div flex>{{day.closes.hour+":"+day.closes.minutes+":"+day.closes.part}}</div>
+        <div flex layout="column" layout-align="center stretch">
+            <md-checkbox ng-disabled="!changeable" ng-change="nullDaySchedule(day)" ng-model="day.working"
+                         style="margin-bottom: 0;">
+                {{day.working?"Working!":"Day off!"}}
+            </md-checkbox>
+        </div>
+    </div>
+</div>

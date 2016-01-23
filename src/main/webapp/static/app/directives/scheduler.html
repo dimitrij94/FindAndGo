@@ -1,0 +1,82 @@
+<md-content md-theme="dark-no-err" layout="column" layout-align="center stretch">
+
+    <div layout="row" layout-align="space-around center" layout-padding>
+        <md-button ng-repeat="day in days" ng-click="setSchedule(day)"
+                   ng-disabled="!day.working"
+                   style="background-color:{{day.schedule.color}}">{{day.name}}
+        </md-button>
+    </div>
+    <form name="scheduleForm"  layout="column" layout-align="center stretch">
+        <div layout="row" layout-align="space-around center" layout-padding>
+            <div layout="row" layout-align="center stretch">
+                <div layout="column" layout-align="center stretch">
+                    <div>Select opening time</div>
+                    <div>
+                        <md-input-container>
+                            <label>HH</label>
+                            <md-select required ng-model="activeSchedule.opens.hour">
+                                <md-option ng-repeat="hour in hours track by $index">{{hour}}</md-option>
+                            </md-select>
+                        </md-input-container>
+                        :
+                        <md-input-container>
+                            <label>MM</label>
+                            <md-select required ng-model="activeSchedule.opens.minutes">
+                                <md-option ng-repeat="minute in minutes">{{minute}}</md-option>
+                            </md-select>
+                        </md-input-container>
+
+                        <md-input-container>
+                            <label>AM/PM</label>
+                            <md-select required ng-model="activeSchedule.opens.part">
+                                <md-option>AM</md-option>
+                                <md-option>PM</md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+
+            <div layout="row" layout-align="center stretch" layout-padding>
+                <div layout="column" layout-align="center stretch">
+                    <div>Select closing time</div>
+                    <div>
+                        <md-input-container>
+                            <label>HH</label>
+                            <md-select required ng-model="activeSchedule.closes.hour">
+                                <md-option ng-repeat="hour in hours track by $index">{{hour}}</md-option>
+                            </md-select>
+                        </md-input-container>
+                        :
+                        <md-input-container>
+                            <label>MM</label>
+                            <md-select required ng-model="activeSchedule.closes.minutes">
+                                <md-option ng-repeat="minute in minutes">{{minute}}</md-option>
+                            </md-select>
+                        </md-input-container>
+
+                        <md-input-container>
+                            <label>AM/PM</label>
+                            <md-select required ng-model="activeSchedule.closes.part">
+                                <md-option>AM</md-option>
+                                <md-option>PM</md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div layout="row" layout-align="stretch center">
+            <md-button
+                    ng-disabled="scheduleForm.$invalid"
+                    class="md-primary"
+                    ng-class="{'md-hue-1 md-raised': scheduleForm.$valid && scheduleForm.$dirty}"
+                    flex ng-click="createScheduleGroup()">Update</md-button>
+        </div>
+    </form>
+    <div layout="row" layout-align="stretch center">
+        <schedule changeable="changable" days="days"></schedule>
+    </div>
+
+</md-content>

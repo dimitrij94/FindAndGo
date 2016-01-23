@@ -6,14 +6,9 @@
 package com.example.domain.menu;
 
 
-import com.example.dao.IDBBean;
 import com.example.domain.UserOrders;
-import com.example.domain.Place;
-import com.example.domain.ratings.PlaceMenuRating;
-import com.example.domain.photos.PlaceMenuPhoto;
-import com.example.functional.photos.GetPhotoFunction;
+import com.example.domain.place.Place;
 import com.example.interfaces.PhotoCotainable;
-import com.example.interfaces.Scaleble;
 import com.example.pojo.dto.MenuDTO;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 

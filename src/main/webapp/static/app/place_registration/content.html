@@ -1,0 +1,113 @@
+<div layout="row" layout-align="center center" flex>
+
+    <md-content flex="90" flex-gt-sm="70" flex-gt-md="60"
+                style="margin-top:10px;" layout="column" layout-align="stretch center"
+                class="md-whiteframe-z2">
+
+        <md-toolbar>
+            <h3 class="md-toolbar-tools">
+                Registration of new place
+            </h3>
+        </md-toolbar>
+
+        <md-tabs md-stretch-tabs="always" md-dynamic-height md-border-bottom>
+            <md-tab label="INFO">
+                <form name="placeForm">
+                    <md-content layout="column" layout-align="center stretch"
+                                md-theme="docs-dark">
+
+                        <div layout="row" layout-align="center stretch" layout-padding>
+                            <md-input-container flex="80" class="darkAutofill">
+                                <label>Name</label>
+                                <input name="name" type="text" ng-model="place.name"
+                                       required minlength="5" md-maxlength="40"/>
+
+                                <div class="hint" ng-if="showHints">Enter your place name</div>
+                                <div ng-messages="placeForm.name.$error"></div>
+                            </md-input-container>
+
+                            <md-input-container flex="20" class="darkAutofill">
+                                <label>Speciality</label>
+                                <md-select ng-model="place.speciality">
+                                    <md-optgroup ng-repeat="speciality in specialities" label="{{speciality.label}}">
+                                        <md-option ng-repeat="type in speciality.types">{{type}}</md-option>
+                                    </md-optgroup>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                        <div layout="row" layout-align="start stretch" layout-padding>
+                            <md-input-container flex>
+                                <label>Description</label>
+                                <textarea rows="10" name="description" ng-model="place.description"
+                                          required md-maxlength="1000" minlength="100">
+
+                                </textarea>
+
+                                <div ng-messages="placeForm.description.$error" ng-show="placeForm.$dirty">
+                                    <div ng-message="required">Field is required!</div>
+                                    <div ng-message="minlength">Field is too short</div>
+                                    <div ng-message="md-maxlength">Field is too long</div>
+                                </div>
+                            </md-input-container>
+                        </div>
+                    </md-content>
+                </form>
+            </md-tab>
+
+            <md-tab label="SCHEDULE">
+                <my-scheduler days="place.schedule"></my-scheduler>
+            </md-tab>
+
+            <md-tab label="photos">
+                <md-content md-theme="docs-dark" layout="column" layout-align="center center" layout-padding>
+
+                    <div id="imgCropWrapper"
+                         ngf-drop ngf-pattern="image/*"
+                         ng-model="picFile">
+                        <img-crop image="mainPhoto | ngfDataUrl"
+                                  area-type="square"
+                                  result-image="croppedDataUrl"
+                                  ng-init="croppedDataUrl=''"></img-crop>
+                    </div>
+
+
+                    <div layout="row" layout-align="start stretch" layout-wrap>
+                        <h4 ng-show="photos!=undefined" style="margin-bottom:0">Select the main photo</h4>
+                        <md-button layout="column" layout-align="center stretch"
+                                   style="padding:0 12px"
+                                   ng-repeat="photo in photos"
+                                   class="md-accent"
+                                   ng-class="{'md-raised md-hue-1':isMainPhoto(photo)}"
+                                   ng-click="setMainPhoto(photo)">
+                            <img style="margin-top:12px" height="80px" ngf-src="photo"/>
+                        </md-button>
+                    </div>
+
+                    <md-button id="selectPhotoBtn"
+                               ngf-select ng-model="photos"
+                               ng-model-options="{uploadOn:'change'}"
+                               ngf-multiple="{{true}}"
+                               ngf-accept="'image/*'"
+                               ngf-min-height="200" ngf-min-width="500"
+                               ngf-resize="{width:1000, height:800}"
+                               ngf-resize-if="$width>1000 || height>1000"
+                               ngf-max-size="10MB"
+                               accept="image/*">
+                        Select photo
+                    </md-button>
+
+                    <div style="width: 100%" layout="row" layout-align="end center">
+                        <div>
+                            <md-button ng-click="upload(croppedDataUrl,userForm.$valid)"
+                                       id="nextButtonPhoto">Next
+                            </md-button>
+                            <small>skip this step</small>
+                        </div>
+                    </div>
+
+                </md-content>
+            </md-tab>
+        </md-tabs>
+
+    </md-content>
+</div>

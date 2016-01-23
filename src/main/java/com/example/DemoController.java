@@ -1,21 +1,31 @@
 package com.example;
 
-import com.example.dao.IDBBean;
-import com.example.domain.Place;
+import com.example.dao.employee.EmployeeDAO;
+import com.example.dao.menu.MenuDAO;
+import com.example.dao.menu.menu_optional_services.ServiceDAO;
+import com.example.dao.menu.menu_tag_categories.TagDAO;
+import com.example.dao.order.OrderDAO;
+import com.example.dao.photos.PhotoDAO;
+import com.example.dao.place.PlaceDAO;
+import com.example.dao.user.UserDaoI;
 import com.example.domain.UserOrders;
-import com.example.domain.menu.PlaceMenuTags;
-import com.example.domain.users.PlaceOwner;
-import com.example.domain.users.PlaceUser;
 import com.example.domain.menu.PlaceMenu;
-import com.example.pojo.dto.*;
+import com.example.domain.menu.PlaceMenuTags;
+import com.example.domain.owner.PlaceOwner;
+import com.example.domain.place.Place;
+import com.example.domain.users.PlaceUser;
+import com.example.pojo.dto.MenuDTO;
+import com.example.pojo.dto.PlaceDTO;
+import com.example.pojo.dto.ServiceDTO;
+import com.example.pojo.dto.UserDTO;
 import com.example.services.EmployeeService;
 import com.example.services.imageservice.ImageService;
+import com.example.services.menu.MenuService;
 import com.example.services.placeservice.PlaceService;
-import com.example.services.placeservice.menu.MenuService;
 import com.example.services.registration.RegistrationService;
 import com.example.services.userservice.UserService;
+import com.example.validators.PlaceFormValidator;
 import com.example.validators.PlaceMenuValidator;
-import com.example.validators.PlaceRegistrationFormValidator;
 import com.example.validators.ServiceValidator;
 import com.example.validators.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +50,25 @@ public class DemoController {
 
 
     @Autowired
-    IDBBean dao;
+    PlaceDAO dao;
+
+    @Autowired
+    UserDaoI userDaoI;
+
+    @Autowired
+    EmployeeDAO employeeDAO;
+
+    @Autowired
+    MenuDAO menuDAO;
+    @Autowired
+    OrderDAO ordersDAO;
+    @Autowired
+    ServiceDAO serviceDAO;
+    @Autowired
+    PhotoDAO photoDAO;
+
+    @Autowired
+    TagDAO tagDAO;
 
     @Autowired
     UserService userService;
@@ -64,7 +92,7 @@ public class DemoController {
     PlaceMenuValidator placeMenuValidator;
 
     @Autowired
-    PlaceRegistrationFormValidator placeValidator;
+    PlaceFormValidator placeValidator;
 
     @Autowired
     ServiceValidator serviceValidator;
@@ -83,34 +111,37 @@ public class DemoController {
     public String getIndexPage(@RequestParam(required = false, defaultValue = "1") int page,
                                Model model) {
         model.addAttribute("places", dao.getMainPlaces());
-        model.addAttribute("manus", dao.getBestMenus(page*20-20, page * 20));
+        model.addAttribute("manus", menuDAO.getBestMenus(page * 20 - 20, page * 20));
         return "index";
     }
 
     @RequestMapping(value = "/find")
-    public @ResponseBody List<String> autocompliteTags(@RequestParam("tags")String query){
-        List<String>response=new LinkedList<>();
+    public
+    @ResponseBody
+    List<String> autocompliteTags(@RequestParam("tags") String query) {
+        List<String> response = new LinkedList<>();
         //noinspection Convert2streamapi
-        for(PlaceMenuTags tag :dao.findTagsByName(query))
+        for (PlaceMenuTags tag : tagDAO.findTagsByName(query))
             response.add(tag.getName());
         return response;
     }
 
     @RequestMapping("/menu")
     public String findMenuWithTags(@RequestParam("tagsId") List<Long> tagsId,
-                                   @RequestParam(required = false,value = "num",defaultValue = "1") int num,
-                                   Model model){
-        model.addAttribute(dao.findMenuWithTag(tagsId, num*20-20,num*20));
+                                   @RequestParam(required = false, value = "num", defaultValue = "1") int num,
+                                   Model model) {
+        model.addAttribute(tagDAO.findMenuWithTag(tagsId, num * 20 - 20, num * 20));
         return "menu_list";
     }
+
     @RequestMapping(value = "/registration", method = RequestMethod.GET)
     public ModelAndView goToRegistration() {
-        return new ModelAndView("registration", "user", new UserCreateForm());
+        return new ModelAndView("registration", "user", new UserDTO());
     }
 
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public String newOwner(UserCreateForm userDTO,
+    public String newOwner(UserDTO userDTO,
                            HttpServletRequest request,
                            Model model,
                            BindingResult result) {
@@ -225,7 +256,7 @@ public class DemoController {
             produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE})
     public byte[] getUserPhoto(@PathVariable("id") long id,
                                HttpServletResponse respose) throws IOException {
-        byte[] photo = dao.getUserPhotoBodyByName("small", id);
+        byte[] photo = photoDAO.getUserPhotoBodyByName("small", id);
         if (photo == null)
             respose.sendRedirect("/static/images/user.png");
         else {
@@ -238,7 +269,7 @@ public class DemoController {
     @RequestMapping(value = "/photo/place/{id}/{name}", method = RequestMethod.GET,
             produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE})
     public byte[] getPlaceMainPhoto(@PathVariable("id") long id, @PathVariable("name") String name) {
-        return dao.getPlaceImageBodyByName(id, name);
+        return photoDAO.getPlaceImageBodyByName(id, name);
     }
 
     @ResponseBody
@@ -246,7 +277,7 @@ public class DemoController {
             produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_PNG_VALUE})
     public byte[] getMenuPhoto(@PathVariable("id") long id,
                                @PathVariable("name") String name) {
-        return dao.getMenuImageBodyByName(id, name);
+        return photoDAO.getMenuImageBodyByName(id, name);
     }
 
 
@@ -261,7 +292,7 @@ public class DemoController {
             return "place-owner-page";
         }
         PlaceUser user = userService.placeUser();
-        if (place.getPlaceOwner().getId() == user.getId()) placeService.registerNewPlaceMenu(place, menuDTO, idS);
+        if (place.getPlaceOwner().getId() == user.getId()) menuService.registerNewPlaceMenu(place, menuDTO, idS);
         else return "redirect:/page/login";
         return "redirect:/place/" + place.getId();
     }
@@ -278,9 +309,9 @@ public class DemoController {
         }
         PlaceOwner owner = userService.placeOwner();
         if (place != null) {
-            PlaceMenu menu = dao.getMenuById(serviceDTO.getMenuId());
-            if (placeService.isMenuFromPlace(menu, place)) {
-                placeService.registerNewPlaceMenuService(menu, serviceDTO);
+            PlaceMenu menu = menuDAO.getMenuById(serviceDTO.getMenuId());
+            if (menuDAO.isMenuFromPlace(menu, place)) {
+                menuService.registerNewPlaceMenuService(menu, serviceDTO);
             }
             return "redirect:/place/" + placeId;
         }
@@ -292,25 +323,25 @@ public class DemoController {
     @ResponseBody
     void activateOrder(@PathVariable("id") long id, HttpServletResponse response,
                        @ModelAttribute PlaceUser user) {
-        UserOrders orders = dao.findOrderById(id, user);
+        UserOrders orders = ordersDAO.findOrderById(id, user);
         if (orders != null) {
-            dao.activateOrder(orders);
+            ordersDAO.activateOrder(orders);
             response.setStatus(HttpStatus.OK.value());
         } else response.setStatus(HttpStatus.NOT_FOUND.value());
     }
 
-   /* @RequestMapping(value = "/place/{placeId}/menu/{menuId}", method = RequestMethod.POST)
-    public
-    @ResponseBody
-    List<EmployeeTimePeriod> createOrder(@PathVariable("placeId") long placeId,
-                                         @PathVariable("menuId") long menuId,
-                                         @RequestParam(value = "services", required = false) List<Long> services,
-                                         @RequestParam("employeeId") long employeeID) {
-        PlaceUser user = userService.placeUser();
-        UserOrders orders = dao.newOrder(user, dao.getPlaceById(placeId), dao.getMenuById(menuId), services, dao.getEmployeeById(employeeID));
-        return employeeService.findEmployeeFreeTime(orders);
-    }
-*/
+    /* @RequestMapping(value = "/place/{placeId}/menu/{menuId}", method = RequestMethod.POST)
+     public
+     @ResponseBody
+     List<EmployeeTimePeriod> createOrder(@PathVariable("placeId") long placeId,
+                                          @PathVariable("menuId") long menuId,
+                                          @RequestParam(value = "services", required = false) List<Long> services,
+                                          @RequestParam("employeeId") long employeeID) {
+         PlaceUser user = userService.placeUser();
+         UserOrders orders = dao.newOrder(user, dao.getPlaceById(placeId), dao.getMenuById(menuId), services, dao.getEmployeeById(employeeID));
+         return employeeService.findEmployeeFreeTime(orders);
+     }
+ */
     @RequestMapping(value = "/user/orders", method = RequestMethod.GET)
     public String toUserProfile(Model model) {
         PlaceUser user = userService.placeUser();

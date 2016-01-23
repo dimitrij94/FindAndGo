@@ -1,20 +1,21 @@
 package com.example.dao.employee;
 
-import com.example.domain.photos.PlaceEmployeePhoto;
-import com.example.domain.users.employee.PlaceEmployee;
+import com.example.dao.DBBean;
+import com.example.domain.UserOrders;
+import com.example.domain.employee.EmployeePauses;
+import com.example.domain.employee.PlaceEmployee;
+import com.example.domain.employee.PlaceEmployeePhoto;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Created by Dmitrij on 22.12.2015.
  */
 @Component
-public class EmployeeDAO  implements IEmployeeDAO{
-    @PersistenceContext
-    EntityManager em;
+public class EmployeeDAO extends DBBean implements IEmployeeDAO {
 
     @Override
     public void saveEmployeePhoto(PlaceEmployeePhoto placeEmployeePhoto) {
@@ -35,5 +36,30 @@ public class EmployeeDAO  implements IEmployeeDAO{
         em.merge(employee);
         return employee;
     }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<UserOrders> getEmployeeTodayOrders(PlaceEmployee employee, LocalDate date) {
+        return em.createQuery("SELECT e FROM UserOrders e " +
+                "WHERE e.employee.id=:eId AND e.startTime=:oD ORDER BY e.startTime", UserOrders.class)
+                .setParameter("eId", employee.getId())
+                .setParameter("oD", date)
+                .getResultList();
+    }
+
+    @Override
+    public List<EmployeePauses> getEmployeeTodayPauses(PlaceEmployee employee, LocalDateTime localDate) {
+        return em.createQuery("SELECT e FROM EmployeePauses e " +
+                "WHERE e.start =:date AND e.employee.id=:eId ORDER BY e.start", EmployeePauses.class)
+                .setParameter("eId", employee.getId())
+                .setParameter("date", localDate)
+                .getResultList();
+    }
+
+    @Override
+    public PlaceEmployee getEmployeeById(long employeeID) {
+        return em.find(PlaceEmployee.class, employeeID);
+    }
+
 
 }

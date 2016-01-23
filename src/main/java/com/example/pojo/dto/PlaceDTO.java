@@ -1,7 +1,5 @@
 package com.example.pojo.dto;
 
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-
 /**
  * Created by Dmitrij on 02.11.2015.
  */
@@ -9,8 +7,11 @@ public class PlaceDTO {
     private String name;
     private String description;
     private String specialization;
-    private AddressDTO address;
-    private PhotoDTO photo;
+    private ScheduleDTO[] schedules;
+
+    public PlaceDTO() {
+        schedules = new ScheduleDTO[7];
+    }
 
     public String getName() {
         return name;
@@ -36,19 +37,11 @@ public class PlaceDTO {
         this.specialization = specialization;
     }
 
-    public AddressDTO getAddress() {
-        return address;
+    public ScheduleDTO[] getSchedules() {
+        return schedules;
     }
 
-    public void setAddress(AddressDTO address) {
-        this.address = address;
-    }
-
-    public PhotoDTO getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(PhotoDTO photo) {
-        this.photo = photo;
+    public void setSchedules(ScheduleDTO[] schedules) {
+        this.schedules = schedules;
     }
 }

@@ -4,7 +4,7 @@
     <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="myValues">
         <value>
-          <list size="18">
+          <list size="24">
             <item index="0" class="java.lang.String" itemvalue="md-menu-align-target" />
             <item index="1" class="java.lang.String" itemvalue="flex" />
             <item index="2" class="java.lang.String" itemvalue="layout-padding" />
@@ -23,6 +23,12 @@
             <item index="15" class="java.lang.String" itemvalue="hide-gt-sm" />
             <item index="16" class="java.lang.String" itemvalue="md-border-bottom" />
             <item index="17" class="java.lang.String" itemvalue="ng-disabled" />
+            <item index="18" class="java.lang.String" itemvalue="ngf-resize-if" />
+            <item index="19" class="java.lang.String" itemvalue="ngf-resize" />
+            <item index="20" class="java.lang.String" itemvalue="ngf-accept" />
+            <item index="21" class="java.lang.String" itemvalue="ngf-multiple" />
+            <item index="22" class="java.lang.String" itemvalue="ngf-min-width" />
+            <item index="23" class="java.lang.String" itemvalue="ngf-min-height" />
           </list>
         </value>
       </option>

@@ -1,9 +1,10 @@
 package com.example.domain;
 
+import com.example.domain.employee.PlaceEmployee;
 import com.example.domain.menu.PlaceMenu;
 import com.example.domain.menu.PlaceMenuOptionalService;
+import com.example.domain.place.Place;
 import com.example.domain.users.PlaceUser;
-import com.example.domain.users.employee.PlaceEmployee;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

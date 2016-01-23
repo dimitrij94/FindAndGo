@@ -1,48 +1,20 @@
 <div>
-    <md-toolbar layout="row">
-        <md-button hide-gt-sm class="md-icon-button" aria-label="show stuff">
-            <md-icon ng-click="toggleLeft()">
-                <i class="fa fa-home"></i>
-            </md-icon>
-        </md-button>
+    <md-toolbar layout="row" layout-align="start stretch">
         <header>
-            <h1 class="md-toolbar-tools">Angular style for KeyStyle</h1>
+            <h1 class="md-toolbar-tools">Home</h1>
         </header>
         <span flex></span>
-        <md-menu md-position-mode="target-right target">
-            <md-button ng-click="openMenu($mdOpenMenu,$event)" class="md-icon-button"
-                       aria-label="login button">
+
+        <div layout="column" layout-align="center center">
+            <md-button class="md-icon-button"
+                       ng-click="toggleRight()"
+                       aria-label="user navigation button">
                 <md-icon>
                     <i class="fa fa-user"></i>
                 </md-icon>
             </md-button>
-            <md-menu-content width="4">
-                <md-menu-item>
-                    <md-button>
-                        <md-icon md-menu-align-target>
-
-                        </md-icon>
-                        <span md-menu-align-target>Profile</span>
-                    </md-button>
-                </md-menu-item>
-                <md-menu-item>
-                    <md-button>
-                        <md-icon md-menu-align-target>
-
-                        </md-icon>
-                        <span md-menu-align-target>Orders</span>
-                    </md-button>
-                </md-menu-item>
-            </md-menu-content>
-        </md-menu>
+        </div>
     </md-toolbar>
 
-    <md-tabs md-dynamic-height md-border-bottom class="md-primary md-hue-2">
-        <md-tab label="Search" md-active="$state.is('KeyStyle.home.login')" data-ui-sref="KeyStyle.home.search">
-        </md-tab>
-
-        <md-tab label="Register" md-active="$state.is('KeyStyle.home.register')" data-ui-sref="KeyStyle.home.register">
-        </md-tab>
-    </md-tabs>
 
 </div>
