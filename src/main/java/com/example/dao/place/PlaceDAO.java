@@ -4,7 +4,6 @@ import com.example.domain.owner.PlaceOwner;
 import com.example.domain.place.Place;
 import com.example.domain.place.PlaceAddress;
 import com.example.domain.place.PlaceSchedule;
-import com.example.domain.place.PlaceSpeciality;
 import com.example.domain.users.PlaceUser;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +18,7 @@ public interface PlaceDAO {
     Place getOwnerPlaceById(long id, PlaceOwner owner);
 
     @Transactional
-    void addNewPlace(Place place, PlaceAddress placeAddress, PlaceOwner owner, PlaceSpeciality speciality, List<PlaceSchedule> schedules);
+    void addNewPlace(Place place, PlaceAddress placeAddress, PlaceOwner owner, List<PlaceSchedule> schedules);
 
     List<Place> getMainPlaces();
 
@@ -30,8 +29,6 @@ public interface PlaceDAO {
 
     @Transactional
     void removePlaceLike(PlaceUser user, long placeId);
-
-    PlaceSpeciality getPlaceSpeciality(String specialization);
 
     boolean isUserUsedPlace(Place p, PlaceUser user);
 

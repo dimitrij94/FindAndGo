@@ -5,22 +5,39 @@ package com.example.constants;
  */
 public enum WeekDays {
 
-    Monday("mon", "mo", "monday"),
-    Tuesday("tue", "tu", "tuesday"),
-    Wednesday("wed", "we", "wednesday"),
-    Thursday("thu", "th", "thursday"),
-    Friday("fri", "fr", "friday"),
-    Saturday("sat", "sa", "saturday"),
-    Sunday("sun", "su", "sunday");
+    Monday("mon", "mo", "monday",1),
+    Tuesday("tue", "tu", "tuesday",2),
+    Wednesday("wed", "we", "wednesday",3),
+    Thursday("thu", "th", "thursday",4),
+    Friday("fri", "fr", "friday",5),
+    Saturday("sat", "sa", "saturday",6),
+    Sunday("sun", "su", "sunday",7);
 
-    String threeLetters;
-    String twoLetters;
-    String fullName;
+    private String threeLetters;
+    private String twoLetters;
+    private String fullName;
+    private int dayNum;
 
-    WeekDays(String threeLetters, String twoLetters, String fullName) {
+    WeekDays(String threeLetters, String twoLetters, String fullName, int dayNum) {
         this.threeLetters = threeLetters;
         this.twoLetters = twoLetters;
         this.fullName = fullName;
+        this.dayNum = dayNum;
+    }
+
+    public static WeekDays getInstace(int dayNum){
+        for (WeekDays w : WeekDays.values())
+            if (w.getDayNum()==dayNum)
+                return w;
+        throw new IllegalArgumentException();
+    }
+
+    public int getDayNum() {
+        return dayNum;
+    }
+
+    public void setDayNum(int dayNum) {
+        this.dayNum = dayNum;
     }
 
     public String getThreeLetters() {

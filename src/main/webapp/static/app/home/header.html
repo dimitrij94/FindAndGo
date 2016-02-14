@@ -1,8 +1,14 @@
 <div>
     <md-toolbar layout="row" layout-align="start stretch">
+
         <header>
-            <h1 class="md-toolbar-tools">Home</h1>
+            <h1 class="md-toolbar-tools">Logo</h1>
         </header>
+
+        <div ng-repeat="breadcrumb in breadcrumbs"  layout="column" layout-align="center center">
+            <md-button ui-sref="{{breadcrumb.link}}"> {{breadcrumb.title}}</md-button>
+        </div>
+
         <span flex></span>
 
         <div layout="column" layout-align="center center">
@@ -14,7 +20,6 @@
                 </md-icon>
             </md-button>
         </div>
+
     </md-toolbar>
-
-
 </div>

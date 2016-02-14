@@ -1,4 +1,4 @@
-package com.example.services.authorization;
+package com.example.services.authentication;
 
 
 import org.springframework.security.core.userdetails.UserDetails;

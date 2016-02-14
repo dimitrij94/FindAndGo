@@ -1,36 +1,36 @@
-package com.example.services.authorization;
+package com.example.services.authentication;
 
 import com.example.interfaces.Authenticational;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
 /**
  * Created by Dmitrij on 03.11.2015.
  */
-public class CustomUserDetails extends User {
+public class CustomUserDetails extends User implements UserDetails {
 
     private Long id;
-    private String userEmail;
 
 
     public CustomUserDetails(Authenticational user,
                              Collection<? extends GrantedAuthority> authorities) {
         super(
-                user.getName(),
-                user.getPassword().toLowerCase(),
+                user.getEmail(),
+                user.getPassword(),
                 user.isEnabled(),
                 true,
                 true,
                 true,
                 authorities);
+
         upadateValues(user);
     }
 
     private void upadateValues(Authenticational user) {
         this.id = user.getId();
-        this.userEmail = user.getEmail();
     }
 
 
@@ -42,13 +42,8 @@ public class CustomUserDetails extends User {
         this.id = id;
     }
 
-
-    public String getUserEmail() {
-        return userEmail;
+    @Override
+    public String toString() {
+        return super.toString();
     }
-
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
-    }
-
 }

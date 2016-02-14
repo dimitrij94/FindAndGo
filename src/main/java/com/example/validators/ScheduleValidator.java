@@ -1,6 +1,5 @@
 package com.example.validators;
 
-import com.example.constants.WeekDays;
 import com.example.pojo.dto.ScheduleDTO;
 import com.example.pojo.dto.ScheduleTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,21 +33,17 @@ public class ScheduleValidator implements Validator {
         String requiredError = "field.required";
         String invalidError = "field.invalid";
 
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "open", requiredError);
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "closes", requiredError);
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "day", requiredError);
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "isWorking", requiredError);
-
         ScheduleDTO schedule = (ScheduleDTO) target;
 
-        String dayName = null;
-        for (WeekDays day : WeekDays.values()) {
-            if (schedule.getDay().toLowerCase().equals(day.getTwoLetters())) {
-              dayName = day.getThreeLetters();
-            }
-        }
+        String dayName = schedule.getName();
+        if (dayName == null || dayName.equals("")) errors.rejectValue("name", requiredError);
 
-        if(dayName==null) errors.rejectValue("day",invalidError);
+        if (schedule.getDayNum() == 0) errors.rejectValue("dayNum", requiredError);
+
+        if (errors.hasErrors()) return;
+
+        if (schedule.getDayNum() > 7 || schedule.getDayNum() < 1)
+            errors.rejectValue("dayNum", invalidError, "Day number is invalid");
 
         try {
             errors.pushNestedPath("open");

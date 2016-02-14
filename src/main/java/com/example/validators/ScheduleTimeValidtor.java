@@ -25,6 +25,8 @@ public class ScheduleTimeValidtor implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "minutes", requiredError);
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "part", requiredError);
 
+        if(errors.hasErrors())return;
+
         ScheduleTime time = (ScheduleTime) target;
 
         int openHour = time.getHour();

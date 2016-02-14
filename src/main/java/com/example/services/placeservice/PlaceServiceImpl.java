@@ -1,5 +1,6 @@
 package com.example.services.placeservice;
 
+import com.example.constants.PlaceSpeciality;
 import com.example.constants.image.ImageContainerType;
 import com.example.dao.menu.MenuDAO;
 import com.example.dao.menu.menu_optional_services.ServiceDAO;
@@ -13,15 +14,17 @@ import com.example.domain.owner.PlaceOwner;
 import com.example.domain.place.Place;
 import com.example.domain.place.PlaceAddress;
 import com.example.domain.place.PlaceSchedule;
-import com.example.domain.place.PlaceSpeciality;
 import com.example.domain.users.PlaceUser;
 import com.example.pojo.dto.PhotoDTO;
 import com.example.pojo.dto.PlaceDTO;
 import com.example.pojo.dto.ScheduleDTO;
-import com.example.services.authorization.CustomUserDetails;
+import com.example.services.authentication.CustomUserDetails;
 import com.example.services.imageservice.ImageService;
 import javassist.tools.web.BadHttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.LocaleResolver;
@@ -85,28 +88,42 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public void updatePlaceSchedual(List<ScheduleDTO> newSchedual) {
-        List<PlaceSchedule> schedules = new ArrayList<>(7);
-        for (ScheduleDTO schedule : newSchedual)
-            schedules.add(new PlaceSchedule(schedule));
+    public List<PlaceSchedule> updatePlaceSchedual(List<ScheduleDTO> newSchedual) {
+        return createSchedule(newSchedual);
+    }
 
+    private List<PlaceSchedule>createSchedule(List<ScheduleDTO> scheduleDTOs){
+        List<PlaceSchedule> schedules = new ArrayList<>(7);
+        for (ScheduleDTO schedule : scheduleDTOs)
+            schedules.add(new PlaceSchedule(schedule));
+        return schedules;
     }
 
     @Override
-    public Place newPlace(PlaceDTO dto, CustomUserDetails details) {
-        return placeDAO.addNewPlace(new Place(dto), ownerDAO.getOwnerById(details.getId()));
+    public CustomUserDetails placeOwner(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication instanceof AnonymousAuthenticationToken) return null;
+        return (CustomUserDetails)authentication.getPrincipal();
+    }
+
+    @Override
+    public Place newPlace(PlaceDTO dto) {
+        Place place  = new Place(dto);
+        place.setPlaceSchedules(createSchedule(dto.getSchedules()));
+        return placeDAO.addNewPlace(new Place(dto), ownerDAO.getOwnerById(placeOwner().getId()));
     }
 
     public Place registerNewPlace(PlaceDTO placeDTO, PlaceOwner owner) {
+
         Place place = new Place(placeDTO);
         PlaceAddress placeAddress = new PlaceAddress();
-        PlaceSpeciality speciality = placeDAO.getPlaceSpeciality(placeDTO.getSpecialization());
+        place.setSpeciality(PlaceSpeciality.getInstance(placeDTO.getSpeciality()));
 
         List<PlaceSchedule> schedules = new ArrayList<>(7);
         for (ScheduleDTO schedule : placeDTO.getSchedules())
             schedules.add(new PlaceSchedule(schedule));
 
-        placeDAO.addNewPlace(place, placeAddress, owner, speciality, schedules);
+        placeDAO.addNewPlace(place, placeAddress, owner, schedules);
 
         return place;
     }

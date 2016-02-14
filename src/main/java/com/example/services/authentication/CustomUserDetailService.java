@@ -1,4 +1,4 @@
-package com.example.services.authorization;
+package com.example.services.authentication;
 
 import com.example.dao.authoriztion.AuthorizationDAO;
 import com.example.functional.user.GetUserByNameFunction;
@@ -22,6 +22,7 @@ public abstract class CustomUserDetailService implements UserDetailsService{
     protected AuthorizationDAO dao;
 
     protected CustomUserDetails getUser(GetUserByNameFunction function, String name) {
+        name = name.toLowerCase();
         return createUser(function.get(name));
     }
 

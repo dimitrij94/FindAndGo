@@ -1,7 +1,6 @@
 package com.example.filters;
 
 import org.springframework.security.web.csrf.CsrfToken;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.WebUtils;
 
@@ -21,6 +20,7 @@ public class CsrfParamToHeaderFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest httpServletRequest,
                                     HttpServletResponse httpServletResponse,
                                     FilterChain filterChain) throws ServletException, IOException {
+
         CsrfToken csrf = (CsrfToken) httpServletRequest.getAttribute(CsrfToken.class.getName());
 
         if (csrf != null) {
@@ -32,5 +32,6 @@ public class CsrfParamToHeaderFilter extends OncePerRequestFilter {
                 httpServletResponse.addCookie(cookie);
             }
         }
-        filterChain.doFilter(httpServletRequest, httpServletResponse);    }
+        filterChain.doFilter(httpServletRequest, httpServletResponse);
+    }
 }

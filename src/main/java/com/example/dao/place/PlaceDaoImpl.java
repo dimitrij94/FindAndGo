@@ -5,7 +5,6 @@ import com.example.domain.owner.PlaceOwner;
 import com.example.domain.place.Place;
 import com.example.domain.place.PlaceAddress;
 import com.example.domain.place.PlaceSchedule;
-import com.example.domain.place.PlaceSpeciality;
 import com.example.domain.users.PlaceUser;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,10 +31,8 @@ public class PlaceDaoImpl extends DBBean implements PlaceDAO {
 
     @Override
     @Transactional
-    public void addNewPlace(Place place, PlaceAddress placeAddress, PlaceOwner owner, PlaceSpeciality speciality, List<PlaceSchedule> schedules) {
+    public void addNewPlace(Place place, PlaceAddress placeAddress, PlaceOwner owner, List<PlaceSchedule> schedules) {
         place.setPlaceOwner(owner);
-
-        place.setPlaceSpeciality(speciality);
         this.em.persist(place);
 
         for (int i = 0; i < schedules.size(); i++) {
@@ -46,9 +43,6 @@ public class PlaceDaoImpl extends DBBean implements PlaceDAO {
         }
 
         place.setPlaceSchedules(schedules);
-
-        speciality.setPlace(setAsList(speciality.getPlace(), place));
-        this.em.merge(speciality);
 
         placeAddress.setPlace(place);
         this.em.persist(placeAddress);
@@ -92,13 +86,6 @@ public class PlaceDaoImpl extends DBBean implements PlaceDAO {
         place.getPlaceUsers().remove(user);
         place.setPlaceFollowersNum(place.getPlaceFollowersNum() - 1);
         em.flush();
-    }
-
-    @Override
-    public PlaceSpeciality getPlaceSpeciality(String specialization) {
-        return (PlaceSpeciality) em.createQuery("SELECT e FROM PlaceSpeciality e WHERE e.speciality=:s")
-                .setParameter("s", specialization)
-                .getSingleResult();
     }
 
     @Override
@@ -148,6 +135,7 @@ public class PlaceDaoImpl extends DBBean implements PlaceDAO {
         em.persist(place);
         owner.setPlaces(setAsList(owner.getPlaces(), place));
         em.merge(owner);
+        em.flush();
         return place;
     }
 

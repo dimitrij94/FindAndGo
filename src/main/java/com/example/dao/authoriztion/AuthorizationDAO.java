@@ -2,6 +2,7 @@ package com.example.dao.authoriztion;
 
 import com.example.domain.employee.PlaceEmployee;
 import com.example.domain.owner.PlaceOwner;
+import com.example.domain.registration.OwnerVerificationToken;
 import com.example.domain.registration.VerificationToken;
 import com.example.domain.users.PlaceUser;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,4 +26,11 @@ public interface AuthorizationDAO  {
     PlaceEmployee getEmployeeByEmail(String s);
 
     PlaceOwner getOwnerByEmail(String s);
+
+    void deleteOwnerToken(OwnerVerificationToken token);
+
+    @Transactional
+    void newOwnerAuthorizationToken(OwnerVerificationToken tokens, PlaceOwner owner);
+
+    OwnerVerificationToken findOwnerToken(String token);
 }

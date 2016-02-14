@@ -6,7 +6,7 @@
     <file url="file://$PROJECT_DIR$/src/main/java/com/example/domain" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/example/handlers/MySimpleUrlAuthenticationSuccessHendler.java" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/example/interfaces/Authenticational.java" charset="windows-1251" />
-    <file url="file://$PROJECT_DIR$/src/main/java/com/example/services/authorization/UserDetailsServiceImpl.java" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/example/services/authentication/UserDetailsServiceImpl.java" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/example/services/registration/RegistrationService.java" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/example/services/registration/RegistrationServiceImpl.java" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/pages" charset="windows-1251" />

@@ -8,8 +8,9 @@ import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -23,7 +24,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
+import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 /**
  * Created by Dmitrij on 08.10.2015.
@@ -34,12 +37,8 @@ import java.util.Locale;
 @EnableTransactionManagement
 @EnableWebMvc
 @EnableCaching
-@EnableAspectJAutoProxy
 @ComponentScan(basePackages = "com.example.*")
 public class DemoJPAConfig extends WebMvcConfigurerAdapter {
-
-
-
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -61,6 +60,11 @@ public class DemoJPAConfig extends WebMvcConfigurerAdapter {
         CommonsMultipartResolver resolver = new CommonsMultipartResolver();
         resolver.setMaxUploadSize(1000000);
         return resolver;
+    }
+
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        converters.add(new MappingJackson2HttpMessageConverter(jacksonBuilder().build()));
     }
 
     @Bean
@@ -97,12 +101,19 @@ public class DemoJPAConfig extends WebMvcConfigurerAdapter {
     @Bean
     public Jackson2ObjectMapperBuilder jacksonBuilder(){
         Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
-        builder.indentOutput(true);
+        builder.failOnUnknownProperties(false);
+
         return builder;
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor());
+    }
+
+    @Bean
+    public Pattern usernamePattern(){
+        String userNameRegexp = "^[a-zA-Z][a-zA-Z0-9_]{1,40}$";
+        return Pattern.compile(userNameRegexp);
     }
 }

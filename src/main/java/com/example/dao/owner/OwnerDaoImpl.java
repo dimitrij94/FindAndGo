@@ -35,4 +35,23 @@ public class OwnerDaoImpl extends DBBean implements OwnerDAO{
         return place;
     }
 
+    @Override
+    public long countOwnersWithName(String name) {
+        return (long) em.createQuery("SELECT count (e) FROM PlaceOwner e WHERE e.name=:name").setParameter("name",name).getSingleResult();
+    }
+
+    @Override
+    public long countOwnersWithEmail(String email) {
+        return (long) em.createQuery("SELECT count (e) FROM PlaceOwner e WHERE e.email=:email").setParameter("email",email).getSingleResult();
+    }
+
+    @Override
+    @Transactional
+    public PlaceOwner addNewOwner(PlaceOwner owner) {
+        em.persist(owner);
+        em.flush();
+        em.merge(owner);
+        return owner;
+    }
+
 }

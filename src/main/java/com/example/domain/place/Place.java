@@ -6,6 +6,7 @@
 package com.example.domain.place;
 
 
+import com.example.constants.PlaceSpeciality;
 import com.example.domain.UserOrders;
 import com.example.domain.menu.PlaceMenu;
 import com.example.domain.owner.PlaceOwner;
@@ -34,9 +35,8 @@ public class Place implements PhotoCotainable {
     private int placeFinalRating;
     private int placeFollowersNum;
 
-    @ManyToOne
-    @JoinColumn(name = "placeSpeciality")
-    private PlaceSpeciality placeSpeciality;
+    @Enumerated(EnumType.STRING)
+    PlaceSpeciality speciality;
 
     @OneToMany(mappedBy = "menuPlace")
     private List<PlaceMenu> placeMenu;
@@ -121,12 +121,12 @@ public class Place implements PhotoCotainable {
         this.placeFollowersNum = placeFollowersNum;
     }
 
-    public PlaceSpeciality getPlaceSpeciality() {
-        return placeSpeciality;
+    public PlaceSpeciality getSpeciality() {
+        return speciality;
     }
 
-    public void setPlaceSpeciality(PlaceSpeciality placeSpeciality) {
-        this.placeSpeciality = placeSpeciality;
+    public void setSpeciality(PlaceSpeciality speciality) {
+        this.speciality = speciality;
     }
 
     public List<PlaceMenu> getPlaceMenu() {

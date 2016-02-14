@@ -3,6 +3,7 @@ package com.example.dao.authoriztion;
 import com.example.dao.DBBean;
 import com.example.domain.employee.PlaceEmployee;
 import com.example.domain.owner.PlaceOwner;
+import com.example.domain.registration.OwnerVerificationToken;
 import com.example.domain.registration.VerificationToken;
 import com.example.domain.users.PlaceUser;
 import org.springframework.stereotype.Repository;
@@ -37,7 +38,7 @@ public class AuthoriztionDaoImpl extends DBBean implements AuthorizationDAO {
 
     @Override
     public PlaceUser getUserByEmail(String ownerName) {
-        return (PlaceUser) this.em.createQuery("SELECT e FROM PlaceUser e WHERE e.email=:userName")
+        return this.em.createQuery("SELECT e FROM PlaceUser e WHERE e.email=:userName",PlaceUser.class)
                 .setParameter("userName", ownerName)
                 .getSingleResult();
     }
@@ -60,8 +61,32 @@ public class AuthoriztionDaoImpl extends DBBean implements AuthorizationDAO {
 
     @Override
     public PlaceOwner getOwnerByEmail(String s) {
-        return (PlaceOwner) em.createQuery("SELECT e FROM PlaceOwner e WHERE e.email=:e")
+        PlaceOwner owner =  em.createQuery("SELECT e FROM PlaceOwner e WHERE e.email=:e",PlaceOwner.class)
                 .setParameter("e", s)
                 .getSingleResult();
+        return owner;
+    }
+
+    @Override
+    public void deleteOwnerToken(OwnerVerificationToken token) {
+        em.remove(token);
+    }
+
+    @Override
+    @Transactional
+    public void newOwnerAuthorizationToken(OwnerVerificationToken tokens, PlaceOwner owner) {
+        tokens.setOwner(owner);
+        em.persist(tokens);
+        owner.setToken(tokens);
+        em.merge(owner);
+        em.flush();
+    }
+
+    @Override
+    public OwnerVerificationToken findOwnerToken(String token) {
+        return em.createQuery("SELECT e FROM OwnerVerificationToken e WHERE e.token=:token",OwnerVerificationToken.class)
+                .setParameter("token",token)
+                .getSingleResult();
+
     }
 }

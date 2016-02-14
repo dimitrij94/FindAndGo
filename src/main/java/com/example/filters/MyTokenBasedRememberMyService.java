@@ -10,6 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 public class MyTokenBasedRememberMyService extends TokenBasedRememberMeServices {
     @Override
     protected String extractRememberMeCookie(HttpServletRequest request) {
-        return request.getHeader(getCookieName());
+        return request.getHeader(super.getCookieName());
     }
 }

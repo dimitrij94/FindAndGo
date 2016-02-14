@@ -1,4 +1,4 @@
-package com.example.services;
+package com.example.services.employee;
 
 import com.example.constants.image.ImageContainerType;
 import com.example.dao.employee.IEmployeeDAO;

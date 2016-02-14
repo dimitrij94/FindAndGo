@@ -657,6 +657,8 @@
       <column name="starts" sqlType="TIME" precision="8" scale="0" nullable="false" jdbcType="92"/>
       <column name="ends" sqlType="TIME" precision="8" scale="0" nullable="false" jdbcType="92"/>
       <column name="employee" sqlType="BIGINT" precision="19" scale="0" nullable="true" jdbcType="-5"/>
+      <column name="pauseDate" sqlType="TINYBLOB" precision="255" scale="0" nullable="true" jdbcType="-2"/>
+      <column name="start" sqlType="TINYBLOB" precision="255" scale="0" nullable="true" jdbcType="-2"/>
       <primary-key name="PRIMARY" columns="id"/>
       <foreign-key name="FK_2s8qegwlao22fpilw51nj1q2r" columns="employee" ref-table="employees" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
       <index name="FK_2s8qegwlao22fpilw51nj1q2r" unique="false" columns="employee"/>
@@ -722,6 +724,14 @@
       <index name="unique_id" unique="true" columns="id"/>
       <index name="menu_id" unique="false" columns="tag_id"/>
     </table>
+    <table name="ownerverificationtoken" schema="" catalog="myplacetogo" type="TABLE">
+      <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
+      <column name="token" sqlType="VARCHAR" precision="55" scale="0" nullable="false" jdbcType="12"/>
+      <column name="owner" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
+      <column name="expiry_date" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <index name="unique_id" unique="true" columns="id"/>
+    </table>
     <table name="place" schema="" catalog="myplacetogo" type="TABLE">
       <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
       <column name="placeName" sqlType="VARCHAR" precision="40" scale="0" nullable="false" jdbcType="12"/>
@@ -729,10 +739,9 @@
       <column name="placeFinalRating" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4" def="MQ=="/>
       <column name="placeOwner" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
       <column name="PlaceFollowersNum" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
-      <column name="placeSpeciality" sqlType="BIGINT" precision="19" scale="0" nullable="true" jdbcType="-5" def="MQ=="/>
       <column name="timeOffset" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="speciality" sqlType="ENUM" precision="14" scale="0" nullable="false" jdbcType="1"/>
       <primary-key name="PRIMARY" columns="id"/>
-      <foreign-key name="FK_sj8vmcq8i3w3ng7jrwwv71u5k" columns="placeSpeciality" ref-table="place_speciality" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
       <foreign-key name="place_ibfk_1" columns="placeOwner" ref-table="place_owner" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
       <exported-key name="employees_ibfk_2" table="employees" schema="" catalog="myplacetogo" columns="place"/>
       <exported-key name="event_ibfk_1" table="event" schema="" catalog="myplacetogo" columns="place_id"/>
@@ -829,7 +838,6 @@
       <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
       <column name="speciality" sqlType="VARCHAR" precision="20" scale="0" nullable="true" jdbcType="12"/>
       <primary-key name="PRIMARY" columns="id"/>
-      <exported-key name="FK_sj8vmcq8i3w3ng7jrwwv71u5k" table="place" schema="" catalog="myplacetogo" columns="placeSpeciality"/>
       <index name="unique_id" unique="true" columns="id"/>
     </table>
     <table name="placemenu" schema="" catalog="myplacetogo" type="TABLE">

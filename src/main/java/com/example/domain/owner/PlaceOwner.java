@@ -1,7 +1,9 @@
 package com.example.domain.owner;
 
 import com.example.domain.place.Place;
+import com.example.domain.registration.OwnerVerificationToken;
 import com.example.interfaces.Authenticational;
+import com.example.pojo.dto.OwnerDTO;
 
 import javax.persistence.*;
 import java.util.List;
@@ -12,6 +14,10 @@ import java.util.List;
 @Entity
 @Table(name = "place_owner")
 public class PlaceOwner implements Authenticational {
+
+    @Transient
+    private final static String authority = "ROLE_OWNER";
+
     @Id
     @GeneratedValue
     private long id;
@@ -20,9 +26,26 @@ public class PlaceOwner implements Authenticational {
     private String name;
     private String password;
     private boolean enabled;
+
     @OneToMany(mappedBy = "placeOwner")
     private List<Place> places;
 
+    @OneToOne(mappedBy = "owner")
+    private OwnerVerificationToken token;
+
+    public PlaceOwner(OwnerDTO ownerDTO) {
+        this.email = ownerDTO.getEmail();
+        this.name = ownerDTO.getName();
+        this.password = ownerDTO.getPassword();
+    }
+
+    public PlaceOwner() {
+    }
+
+    @Override
+    public String getAuthority() {
+        return "ROLE_OWNER";
+    }
 
     public long getId() {
         return id;
@@ -60,11 +83,6 @@ public class PlaceOwner implements Authenticational {
         return enabled;
     }
 
-    @Override
-    public String getAuthority() {
-        return "ROLE_OWNER";
-    }
-
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
@@ -75,5 +93,13 @@ public class PlaceOwner implements Authenticational {
 
     public void setPlaces(List<Place> place) {
         this.places = place;
+    }
+
+    public OwnerVerificationToken getToken() {
+        return token;
+    }
+
+    public void setToken(OwnerVerificationToken token) {
+        this.token = token;
     }
 }

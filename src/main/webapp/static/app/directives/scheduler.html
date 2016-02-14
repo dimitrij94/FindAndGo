@@ -1,16 +1,16 @@
 <md-content md-theme="dark-no-err" layout="column" layout-align="center stretch">
 
-    <div layout="row" layout-align="space-around center" layout-padding>
+    <div layout="row" layout-align="space-around center" layout-padding style="overflow-x: hidden">
         <md-button ng-repeat="day in days" ng-click="setSchedule(day)"
                    ng-disabled="!day.working"
                    style="background-color:{{day.schedule.color}}">{{day.name}}
         </md-button>
     </div>
+    <div style="text-align: center">Select the the days of the week with the same schedule</div>
     <form name="scheduleForm"  layout="column" layout-align="center stretch">
         <div layout="row" layout-align="space-around center" layout-padding>
             <div layout="row" layout-align="center stretch">
                 <div layout="column" layout-align="center stretch">
-                    <div>Select opening time</div>
                     <div>
                         <md-input-container>
                             <label>HH</label>
@@ -34,12 +34,12 @@
                             </md-select>
                         </md-input-container>
                     </div>
+                    <span style="text-align:center">Select opening time</span>
                 </div>
             </div>
 
             <div layout="row" layout-align="center stretch" layout-padding>
                 <div layout="column" layout-align="center stretch">
-                    <div>Select closing time</div>
                     <div>
                         <md-input-container>
                             <label>HH</label>
@@ -63,6 +63,7 @@
                             </md-select>
                         </md-input-container>
                     </div>
+                    <span style="text-align:center">Select closing time</span>
                 </div>
             </div>
         </div>

@@ -8,7 +8,7 @@ import com.example.domain.users.PlaceUser;
 import com.example.pojo.dto.UserDTO;
 import com.example.services.mail.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +30,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     MailService mailService;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    BCryptPasswordEncoder passwordEncoder;
+
+
+
 
     @Override
     public PlaceUser resendRegistrationToken(String email) {
@@ -71,16 +74,13 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public PlaceUser register(UserDTO blank, HttpServletRequest request) {
-            PlaceUser user = new PlaceUser();
-
-            user.setEmail(blank.getUserEmail());
-            user.setUserName(blank.getUserName());
+            PlaceUser user = new PlaceUser(blank);
             user.setPassword(passwordEncoder.encode(blank.getUserPass()));
             user.setEnabled(false);
 
             user = dao.registration(user);
             saveRegistrationToken(user);
-            //mailService.confirmEmailMessage(user, request);
+            mailService.confirmEmailMessage(user, request);
             return user;
     }
 }

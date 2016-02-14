@@ -1,0 +1,78 @@
+<div layout="row" layout-align="center center" flex>
+
+    <md-content flex="90" flex-gt-sm="70" flex-gt-md="50"
+                layout="column" layout-align="stretch center"
+                class="md-whiteframe-z2" md-border-bottom>
+
+        <md-toolbar class="md-toolbar-tools">
+            Registration of new owner
+        </md-toolbar>
+        <form name="owner_registration_form">
+            <div>
+                <md-content layout="row" layout-align="stretch center" layout-padding
+                            md-theme="docs-dark">
+
+                    <md-input-container class="darkAutofill" flex flex-gt-sm="50">
+                        <label>Email</label>
+                        <input type="email" name="email"
+                               ng-model="owner.email"
+                               ng-blur="validateOwnerEmail(email)"
+                               required minlength="5" md-maxlength="60"/>
+
+                        <div ng-messages="owner_registration_form.email.$error && owner_registration_form.email.$dirty">
+                            <div ng-messages-include="templates/common/errors_messages">
+                                <div ng-message="email">Field is not an email</div>
+                            </div>
+                        </div>
+                    </md-input-container>
+
+                    <md-input-container class="darkAutofill" flex flex-gt-sm="50">
+                        <label>Name</label>
+                        <input type="text"
+                               ng-model="owner.name"
+                               required md-maxlength="40" name="name" minlength="3">
+
+                        <div ng-messages="owner_registration_form.name.$error && owner_registration_form.name.$dirty">
+                            <div ng-messages-include="templates/common/errors_messages"></div>
+                        </div>
+                    </md-input-container>
+
+                </md-content>
+                <div layout="column" layout-align="stretch center" layout-padding>
+                    <md-input-container>
+                        <label>Password</label>
+                        <input type="password" name="password"
+                               required minlength="5" md-maxlength="18"
+                               ng-model="owner.password"
+                               ng-pattern="/^(?=.*[0-9])(?=.*[a-zA-Z])[a-zA-Z0-9]+$/"/>
+
+                        <div ng-messages="owner_registration_form.password.$error && owner_registration_form.password.$dirty">
+                            <div ng-messages-include="templates/common/errors_messages">
+                                <div ng-message="pattern">Password must contain numbers and latin letter</div>
+                            </div>
+                        </div>
+                    </md-input-container>
+
+
+                    <md-input-container>
+                        <label>Confirm password</label>
+                        <input type="password" name="password_conf" required ng-pattern="/^{{owner.password}}$/">
+
+                        <div ng-messages="owner_registration_form.password_conf && owner_registration_form.password_conf.$dirty">
+                            <div ng-messages-include="templates/common/errors_messages">
+                                <div ng-message="pattern">Passwords do not mutch</div>
+                            </div>
+                        </div>
+                    </md-input-container>
+                    <div layout="row" layout-align="end center">
+                        <md-button ng-class="{'md-raised md-hue-1':owner_registration_form.$valid}"
+                                   class="md-accent"
+                                   ng-click="registerOwner(owner)">Register
+                        </md-button>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </md-content>
+</div>

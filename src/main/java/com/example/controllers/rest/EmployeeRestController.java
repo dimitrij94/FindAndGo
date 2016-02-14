@@ -2,7 +2,7 @@ package com.example.controllers.rest;
 
 import com.example.domain.employee.PlaceEmployee;
 import com.example.pojo.dto.EmployeeDTO;
-import com.example.services.EmployeeService;
+import com.example.services.employee.EmployeeService;
 import com.example.validators.EmployeeValidtor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

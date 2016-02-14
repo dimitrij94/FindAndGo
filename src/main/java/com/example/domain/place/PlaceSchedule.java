@@ -21,12 +21,14 @@ public class PlaceSchedule {
     @JoinColumn(name = "place")
     Place place;
 
-    String day;
+    @Enumerated(EnumType.STRING)
+    WeekDays day;
 
     @Column(name = "is_working")
     boolean isWorking;
 
     LocalTime starts;
+
     LocalTime closes;
 
     public PlaceSchedule() {
@@ -44,10 +46,7 @@ public class PlaceSchedule {
 
         this.isWorking = schedule.isWorking();
 
-        for (WeekDays w : WeekDays.values())
-            if (w.getTwoLetters().toLowerCase().equals(day))
-                this.day = w.getFullName();
-
+        this.day = WeekDays.getInstace(schedule.getDayNum());
     }
 
     public long getId() {
@@ -66,11 +65,11 @@ public class PlaceSchedule {
         this.place = place;
     }
 
-    public String getDay() {
+    public WeekDays getDay() {
         return day;
     }
 
-    public void setDay(String day) {
+    public void setDay(WeekDays day) {
         this.day = day;
     }
 
@@ -97,4 +96,6 @@ public class PlaceSchedule {
     public void setCloses(LocalTime closes) {
         this.closes = closes;
     }
+
+
 }

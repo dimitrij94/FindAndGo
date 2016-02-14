@@ -1,10 +1,9 @@
 package com.example.domain.registration;
 
 import com.example.domain.users.PlaceUser;
+import com.example.services.registration.RegistrationService;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -18,22 +17,15 @@ public class VerificationToken {
     private  Long id;
     private  String token;
 
-    @Column(name = "expiry_date")
-    private   Date date;
-
     @OneToOne
     @JoinColumn(name = "user_id")
     private   PlaceUser user;
 
-    public VerificationToken() {
-        this.date=calculateExpiryDate(240);
-    }
+    @Column(name = "expiry_date")
+    private   Date date;
 
-    private Date calculateExpiryDate(int expiryMinutes) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Timestamp(cal.getTime().getTime()));
-        cal.add(Calendar.MINUTE, expiryMinutes);
-        return new Date(cal.getTime().getTime());
+    public VerificationToken() {
+        this.date= RegistrationService.calculateExpiryDate(240);
     }
 
     public long getId() {

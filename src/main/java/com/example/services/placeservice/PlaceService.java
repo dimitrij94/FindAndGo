@@ -3,10 +3,11 @@ package com.example.services.placeservice;
 import com.example.domain.employee.PlaceEmployee;
 import com.example.domain.owner.PlaceOwner;
 import com.example.domain.place.Place;
+import com.example.domain.place.PlaceSchedule;
 import com.example.domain.users.PlaceUser;
 import com.example.pojo.dto.PlaceDTO;
 import com.example.pojo.dto.ScheduleDTO;
-import com.example.services.authorization.CustomUserDetails;
+import com.example.services.authentication.CustomUserDetails;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import java.io.IOException;
@@ -24,7 +25,9 @@ public interface PlaceService {
 
     void addPhoto(CommonsMultipartFile photo, long id);
 
-    void updatePlaceSchedual(List<ScheduleDTO> newSchedual);
+    List<PlaceSchedule> updatePlaceSchedual(List<ScheduleDTO> newSchedual);
 
-    Place newPlace(PlaceDTO place, CustomUserDetails details);
+    CustomUserDetails placeOwner();
+
+    Place newPlace(PlaceDTO place);
 }

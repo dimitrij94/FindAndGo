@@ -18,7 +18,7 @@ import com.example.pojo.dto.MenuDTO;
 import com.example.pojo.dto.PlaceDTO;
 import com.example.pojo.dto.ServiceDTO;
 import com.example.pojo.dto.UserDTO;
-import com.example.services.EmployeeService;
+import com.example.services.employee.EmployeeService;
 import com.example.services.imageservice.ImageService;
 import com.example.services.menu.MenuService;
 import com.example.services.placeservice.PlaceService;

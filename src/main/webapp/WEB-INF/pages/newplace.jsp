@@ -256,11 +256,11 @@ and open the template in the editor.
                         </tr>
                         <tr>
                             <td>
-                                <spring:bind path="specialization">
+                                <spring:bind path="speciality">
                                     <div class="input-group ${status.error?'error':''}">
                                     <span id="type_addon" class="input-group-addon"><i
                                             class="glyphicon glyphicon-glass"></i></span>
-                                        <sf:select path="specialization" id="place_type" class="form-control">
+                                        <sf:select path="speciality" id="place_type" class="form-control">
                                             <sf:option value="" label="-- Спеціалізація --"/>
                                             <sf:option value="NightClub" label="Night club"/>
                                             <sf:option value="Sport"/>

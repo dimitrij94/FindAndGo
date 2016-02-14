@@ -11,7 +11,7 @@
         </md-toolbar>
 
         <md-tabs md-stretch-tabs="always" md-dynamic-height md-border-bottom>
-            <md-tab label="INFO">
+            <md-tab label="INFO" ng-disabled="!stages.info" md-active="stages.info">
                 <form name="placeForm">
                     <md-content layout="column" layout-align="center stretch"
                                 md-theme="docs-dark">
@@ -22,17 +22,23 @@
                                 <input name="name" type="text" ng-model="place.name"
                                        required minlength="5" md-maxlength="40"/>
 
-                                <div class="hint" ng-if="showHints">Enter your place name</div>
-                                <div ng-messages="placeForm.name.$error"></div>
+                                <div class="hint" ng-if="!placeForm.name.$error">Enter your place name</div>
+                                <div ng-messages="placeForm.name.$error && placeForm.name.$dirty">
+                                    <div ng-messages-include="templates/common/errors_messages"></div>
+                                </div>
                             </md-input-container>
 
                             <md-input-container flex="20" class="darkAutofill">
                                 <label>Speciality</label>
-                                <md-select ng-model="place.speciality">
+                                <md-select name="speciality" ng-model="place.speciality">
                                     <md-optgroup ng-repeat="speciality in specialities" label="{{speciality.label}}">
                                         <md-option ng-repeat="type in speciality.types">{{type}}</md-option>
                                     </md-optgroup>
                                 </md-select>
+                                <div class="hint" ng-if="!placeForm.speciality.$error">Select type</div>
+                                <div ng-messages="placeForm.speciality.$error && placeForm.speciality.$dirty">
+                                    <div ng-messages-include="templates/common/errors_messages"></div>
+                                </div>
                             </md-input-container>
                         </div>
                         <div layout="row" layout-align="start stretch" layout-padding>
@@ -43,22 +49,36 @@
 
                                 </textarea>
 
-                                <div ng-messages="placeForm.description.$error" ng-show="placeForm.$dirty">
-                                    <div ng-message="required">Field is required!</div>
-                                    <div ng-message="minlength">Field is too short</div>
-                                    <div ng-message="md-maxlength">Field is too long</div>
+                                <div class="hint" ng-if="!placeForm.description.$error">Enter short description of the
+                                    place
+                                </div>
+                                <div ng-messages="placeForm.description.$error && placeForm.description.$dirty">
+                                    <div ng-messages-include="templates/common/errors_messages"></div>
                                 </div>
                             </md-input-container>
                         </div>
+                        <div layout="row" layout-align="end center">
+                            <md-button ng-disabled="!placeForm.$valid" type="submit"
+                                       ng-click="toScheduleTab(placeForm)">
+                                FORVARD!
+                            </md-button>
+                        </div>
                     </md-content>
+
                 </form>
             </md-tab>
 
-            <md-tab label="SCHEDULE">
-                <my-scheduler days="place.schedule"></my-scheduler>
+            <md-tab label="SCHEDULE" ng-disabled="!stages.schedule" md-active="stages.schedule">
+                <my-scheduler days="place.schedules"></my-scheduler>
+                <div layout="row" layout-align="end center">
+                    <md-button ng-disabled="!placeForm.$valid" type="submit"
+                               ng-click="registerNewPlace(place)">
+                        FORVARD!
+                    </md-button>
+                </div>
             </md-tab>
 
-            <md-tab label="photos">
+            <md-tab label="photos" ng-disabled="!stages.photos" md-active="stages.photos">
                 <md-content md-theme="docs-dark" layout="column" layout-align="center center" layout-padding>
 
                     <div id="imgCropWrapper"

@@ -3,12 +3,14 @@ package com.example.pojo.dto;
 /**
  * Created by Dmitrij on 20.01.2016.
  */
+
 public class ScheduleDTO {
 
     private ScheduleTime open;
     private ScheduleTime closes;
-    private String day;
-    private boolean isWorking;
+    private int dayNum;
+    private String name;
+    private boolean working;
 
 
     public ScheduleTime getOpen() {
@@ -27,19 +29,27 @@ public class ScheduleDTO {
         this.closes = closes;
     }
 
-    public String getDay() {
-        return day;
+    public int getDayNum() {
+        return dayNum;
     }
 
-    public void setDay(String day) {
-        this.day = day;
+    public void setDayNum(int dayNum) {
+        this.dayNum = dayNum;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public boolean isWorking() {
-        return isWorking;
+        return working;
     }
 
-    public void setIsWorking(boolean isWorking) {
-        this.isWorking = isWorking;
+    public void setWorking(boolean working) {
+        this.working = working;
     }
 }

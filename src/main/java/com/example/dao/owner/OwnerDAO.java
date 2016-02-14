@@ -14,4 +14,10 @@ public interface OwnerDAO {
 
     @Transactional
     Place addNewPlace(Place place, PlaceOwner owner);
+
+    long countOwnersWithName(String name);
+
+    long countOwnersWithEmail(String email);
+
+    PlaceOwner addNewOwner(PlaceOwner owner);
 }
