@@ -41,5 +41,9 @@ public interface PlaceDAO {
 
     long countPlacesWithName(String name);
 
-    Place addNewPlace(Place place, PlaceOwner ownerById);
+    Place addNewPlace(Place place, PlaceOwner ownerById, List<PlaceSchedule> placeSchedules);
+
+    void deletePlace(Place place);
+
+    void updatePlace(Place place);
 }

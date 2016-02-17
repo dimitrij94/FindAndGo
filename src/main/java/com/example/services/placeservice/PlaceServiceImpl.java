@@ -18,7 +18,7 @@ import com.example.domain.users.PlaceUser;
 import com.example.pojo.dto.PhotoDTO;
 import com.example.pojo.dto.PlaceDTO;
 import com.example.pojo.dto.ScheduleDTO;
-import com.example.services.authentication.CustomUserDetails;
+import com.example.services.authentication.owner.CustomOwnerDetails;
 import com.example.services.imageservice.ImageService;
 import javassist.tools.web.BadHttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,18 +100,35 @@ public class PlaceServiceImpl implements PlaceService {
     }
 
     @Override
-    public CustomUserDetails placeOwner(){
+    public CustomOwnerDetails placeOwner(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication instanceof AnonymousAuthenticationToken) return null;
-        return (CustomUserDetails)authentication.getPrincipal();
+        return (CustomOwnerDetails)authentication.getPrincipal();
     }
 
     @Override
     public Place newPlace(PlaceDTO dto) {
         Place place  = new Place(dto);
-        place.setPlaceSchedules(createSchedule(dto.getSchedules()));
-        return placeDAO.addNewPlace(new Place(dto), ownerDAO.getOwnerById(placeOwner().getId()));
+        return placeDAO.addNewPlace(new Place(dto),
+                ownerDAO.getOwnerById(placeOwner().getId()),
+                createSchedule(dto.getSchedules()));
     }
+
+    @Override
+    public void deletePlace(Place place) {
+        placeDAO.deletePlace(place);
+    }
+
+    @Override
+    public void updatePlace(Place place) {
+        placeDAO.updatePlace(place);
+    }
+
+    @Override
+    public Place getPlace(long id) {
+        return placeDAO.getPlaceById(id);
+    }
+
 
     public Place registerNewPlace(PlaceDTO placeDTO, PlaceOwner owner) {
 

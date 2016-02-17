@@ -67,7 +67,7 @@ public class PlaceFormValidator implements Validator {
 
 
         int dL = place.getDescription().length();
-        if (dL > 500 || dL < 50) errors.rejectValue("description", "field.invalid");
+        if (dL > 1000 || dL < 50) errors.rejectValue("description", "field.invalid");
 
         if (place.getSchedules().isEmpty()) errors.rejectValue("schedules", "field.invalid");
 
@@ -84,7 +84,7 @@ public class PlaceFormValidator implements Validator {
             }
         }
 
-        if (!(dao.countPlacesWithName(place.getName()) == 0L)) errors.rejectValue("name", "field.is.taken");
+        if (!(dao.countPlacesWithName(place.getName()) == 0l)) errors.rejectValue("name", "field.is.taken");
     }
 
 }

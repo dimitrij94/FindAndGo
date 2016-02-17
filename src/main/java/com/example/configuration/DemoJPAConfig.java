@@ -1,5 +1,9 @@
 package com.example.configuration;
 
+import com.example.services.authentication.MyUserDetailService;
+import com.example.services.authentication.employee.EmployeeDetailServiceImpl;
+import com.example.services.authentication.owner.OwnerDetailsService;
+import com.example.services.authentication.user.UserDetailsServiceImpl;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -99,7 +103,7 @@ public class DemoJPAConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public Jackson2ObjectMapperBuilder jacksonBuilder(){
+    public Jackson2ObjectMapperBuilder jacksonBuilder() {
         Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
         builder.failOnUnknownProperties(false);
 
@@ -112,8 +116,29 @@ public class DemoJPAConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public Pattern usernamePattern(){
+    public Pattern usernamePattern() {
         String userNameRegexp = "^[a-zA-Z][a-zA-Z0-9_]{1,40}$";
         return Pattern.compile(userNameRegexp);
     }
+
+    @Bean
+    UserDetailsServiceImpl userDetailsServiceImpl() {
+        return new UserDetailsServiceImpl();
+    }
+
+    @Bean
+    EmployeeDetailServiceImpl employeeDetailService() {
+        return new EmployeeDetailServiceImpl();
+    }
+
+    @Bean
+    OwnerDetailsService ownerDetailsService() {
+        return new OwnerDetailsService();
+    }
+
+    @Bean
+    MyUserDetailService myUserDetailService () {
+        return new MyUserDetailService();
+    }
+
 }

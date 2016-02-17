@@ -1,8 +1,15 @@
 package com.example.services.authentication;
 
 import com.example.dao.authoriztion.AuthorizationDAO;
+import com.example.domain.employee.PlaceEmployee;
+import com.example.domain.owner.PlaceOwner;
+import com.example.domain.users.PlaceUser;
 import com.example.functional.user.GetUserByNameFunction;
 import com.example.interfaces.Authenticational;
+import com.example.services.MyExecutorService;
+import com.example.services.authentication.employee.CustomEmployeeDetails;
+import com.example.services.authentication.owner.CustomOwnerDetails;
+import com.example.services.authentication.user.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,6 +29,8 @@ import java.util.concurrent.Callable;
 @Component
 public class MyUserDetailService implements UserDetailsService {
 
+    @Autowired
+    MyExecutorService executorService;
 
     @Autowired
     AuthorizationDAO dao;
@@ -30,21 +39,16 @@ public class MyUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
 
-        Authenticational user = null;
-        name = name.toLowerCase();
+        PlaceUser user = dao.getUserByEmail(name);
+        if (user != null) return new CustomUserDetails(user, getAuthorities(user.getAuthority()));
 
-        user = dao.getUserByEmail(name);
-        if (user != null) return createUser(user);
+        PlaceOwner owner = dao.getOwnerByEmail(name);
+        if (owner != null) return new CustomOwnerDetails(owner, getAuthorities(owner.getAuthority()));
 
-        user =  dao.getOwnerByEmail(name);
-        if(user!=null)return createUser(user);
+        PlaceEmployee employee = dao.getEmployeeByEmail(name);
+        if (employee != null) return new CustomEmployeeDetails(employee, getAuthorities(employee.getAuthority()));
 
-        user = dao.getEmployeeByEmail(name);
-        if(user!=null)return createUser(user);
-
-
-
-        throw new BadCredentialsException("User does not exists");
+        throw new BadCredentialsException("User does not exist");
     }
 
     private Callable<Authenticational> createTask(GetUserByNameFunction function, String name) {

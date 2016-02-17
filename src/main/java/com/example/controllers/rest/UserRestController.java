@@ -1,10 +1,13 @@
 package com.example.controllers.rest;
 
 import com.example.dao.user.UserDaoI;
+import com.example.domain.users.PlaceUser;
+import com.example.json_views.UserViews;
 import com.example.pojo.dto.UserDTO;
 import com.example.services.registration.RegistrationService;
 import com.example.services.userservice.UserService;
 import com.example.validators.UserValidator;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -57,6 +60,18 @@ public class UserRestController {
 
         UserDTO user = new UserDTO(email, name, pass, (CommonsMultipartFile) image);
         return service.newUser(user, request, ucBuilder);
+    }
+
+    @JsonView(UserViews.UserWithPrivateInf.class)
+    @RequestMapping(value = "/{id}/full", method = RequestMethod.GET)
+    public ResponseEntity<PlaceUser> getUser(@PathVariable("id") long id) {
+        return new ResponseEntity<>(service.getUser(id), HttpStatus.OK);
+    }
+
+    @JsonView(UserViews.UserWithOrders.class)
+    @RequestMapping(value = "/{id}/full", method = RequestMethod.GET)
+    public ResponseEntity<PlaceUser> getUserOrders(@PathVariable("id") long id) {
+        return new ResponseEntity<>(service.getUser(id), HttpStatus.OK);
     }
 
 

@@ -6,7 +6,10 @@ import com.example.domain.owner.PlaceOwner;
 import com.example.domain.registration.OwnerVerificationToken;
 import com.example.pojo.dto.OwnerDTO;
 import com.example.services.MyExecutorService;
+import com.example.services.authentication.owner.CustomOwnerDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Calendar;
@@ -26,6 +29,9 @@ public class OwnerServiceImpl implements OwnerService {
     @Autowired
     MyExecutorService executorService;
 
+    @Autowired
+    BCryptPasswordEncoder passwordEncoder;
+
     @Override
     public boolean validateOwnerName(String name) {
         return dao.countOwnersWithName(name) == 0;
@@ -37,11 +43,29 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
+    public CustomOwnerDetails getOwner() {
+        return (CustomOwnerDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    @Override
     public PlaceOwner registerNewOwner(OwnerDTO ownerDTO) {
+        ownerDTO.setPassword(passwordEncoder.encode(ownerDTO.getPassword()));
         PlaceOwner owner = new PlaceOwner(ownerDTO);
         owner = dao.addNewOwner(owner);
         saveRegistrationToken(owner);
         return owner;
+    }
+
+    @Override
+    public void deleteOwner() {
+        dao.deleteOwner(dao.getOwnerById(getOwner().getId()));
+    }
+
+    @Override
+    public void updateOwner(OwnerDTO newOwner) {
+        PlaceOwner owner = dao.getOwnerById(getOwner().getId());
+        owner = owner.updateValues(newOwner);
+        dao.updateOwner(owner);
     }
 
 

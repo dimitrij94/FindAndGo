@@ -2,10 +2,8 @@ package com.example.configuration;
 
 import com.example.filters.CsrfParamToHeaderFilter;
 import com.example.handlers.MySimpleUrlAuthenticationSuccessHendler;
-import com.example.services.authentication.EmployeeDetailServiceImpl;
 import com.example.services.authentication.MyUserDetailService;
-import com.example.services.authentication.OwnerDetailsService;
-import com.example.services.authentication.UserDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -29,11 +27,13 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class DemoSpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    MyUserDetailService myUserDetailService;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
-                .authenticationProvider(createAuthenticationProvider(commonMyUserDetailService()));
+                .authenticationProvider(createAuthenticationProvider(myUserDetailService));
     }
 
 
@@ -41,10 +41,8 @@ public class DemoSpringSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http.httpBasic()
-                .and()
-                .userDetailsService(commonMyUserDetailService())
 
-                .sessionManagement()
+                .and().sessionManagement()
                 .maximumSessions(1).and()
                 .sessionFixation().changeSessionId()
 
@@ -72,7 +70,7 @@ public class DemoSpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .regexMatchers(HttpMethod.POST, "/place/menu/[0-9]{0,}")
                 .hasRole("OWNER")
 
-                .antMatchers(HttpMethod.GET, "/user", "/newplace")
+                .antMatchers(HttpMethod.GET, "/user")
                 .authenticated()
 
                 .antMatchers(HttpMethod.POST, "/place")
@@ -86,25 +84,6 @@ public class DemoSpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     }
 
-    @Bean
-    public MyUserDetailService commonMyUserDetailService() {
-        return new MyUserDetailService();
-    }
-
-    @Bean
-    public OwnerDetailsService ownerDetailsService() {
-        return new OwnerDetailsService();
-    }
-
-    @Bean
-    public EmployeeDetailServiceImpl employeeDetailService() {
-        return new EmployeeDetailServiceImpl();
-    }
-
-    @Bean
-    public UserDetailsServiceImpl userDetailsService() {
-        return new UserDetailsServiceImpl();
-    }
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {

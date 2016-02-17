@@ -724,13 +724,15 @@
       <index name="unique_id" unique="true" columns="id"/>
       <index name="menu_id" unique="false" columns="tag_id"/>
     </table>
-    <table name="ownerverificationtoken" schema="" catalog="myplacetogo" type="TABLE">
+    <table name="owner_verification_token" schema="" catalog="myplacetogo" type="TABLE">
       <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
       <column name="token" sqlType="VARCHAR" precision="55" scale="0" nullable="false" jdbcType="12"/>
       <column name="owner" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
       <column name="expiry_date" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
       <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="FK_jus00ew91wtnjexj0r735u334" columns="owner" ref-table="place_owner" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
       <index name="unique_id" unique="true" columns="id"/>
+      <index name="FK_jus00ew91wtnjexj0r735u334" unique="false" columns="owner"/>
     </table>
     <table name="place" schema="" catalog="myplacetogo" type="TABLE">
       <column name="id" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5" autoIncrement="true"/>
@@ -740,7 +742,6 @@
       <column name="placeOwner" sqlType="BIGINT" precision="19" scale="0" nullable="false" jdbcType="-5"/>
       <column name="PlaceFollowersNum" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
       <column name="timeOffset" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
-      <column name="speciality" sqlType="ENUM" precision="14" scale="0" nullable="false" jdbcType="1"/>
       <primary-key name="PRIMARY" columns="id"/>
       <foreign-key name="place_ibfk_1" columns="placeOwner" ref-table="place_owner" ref-schema="" ref-catalog="myplacetogo" ref-columns="id" update-rule="0" delete-rule="0" deferrability="2"/>
       <exported-key name="employees_ibfk_2" table="employees" schema="" catalog="myplacetogo" columns="place"/>
@@ -814,6 +815,7 @@
       <column name="password" sqlType="VARCHAR" precision="60" scale="0" nullable="true" jdbcType="12"/>
       <column name="enabled" sqlType="BIT" precision="1" scale="0" nullable="false" jdbcType="-7"/>
       <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="FK_jus00ew91wtnjexj0r735u334" table="owner_verification_token" schema="" catalog="myplacetogo" columns="owner"/>
       <exported-key name="place_ibfk_1" table="place" schema="" catalog="myplacetogo" columns="placeOwner"/>
     </table>
     <table name="place_photo" schema="" catalog="myplacetogo" type="TABLE">

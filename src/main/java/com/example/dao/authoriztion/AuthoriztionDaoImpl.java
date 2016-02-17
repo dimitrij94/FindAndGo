@@ -9,6 +9,8 @@ import com.example.domain.users.PlaceUser;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * Created by Dmitrij on 22.01.2016.
  */
@@ -38,9 +40,10 @@ public class AuthoriztionDaoImpl extends DBBean implements AuthorizationDAO {
 
     @Override
     public PlaceUser getUserByEmail(String ownerName) {
-        return this.em.createQuery("SELECT e FROM PlaceUser e WHERE e.email=:userName",PlaceUser.class)
-                .setParameter("userName", ownerName)
-                .getSingleResult();
+        List<PlaceUser> user = this.em.createQuery("SELECT e FROM PlaceUser e WHERE e.email=:email", PlaceUser.class)
+                .setParameter("email", ownerName)
+                .getResultList();
+        return user.isEmpty() ? null : user.get(0);
     }
 
     @Override
@@ -53,18 +56,20 @@ public class AuthoriztionDaoImpl extends DBBean implements AuthorizationDAO {
     }
 
     @Override
-    public PlaceEmployee getEmployeeByEmail(String s) {
-        return em.createQuery("SELECT e FROM PlaceEmployee e WHERE e.email =:name", PlaceEmployee.class)
-                .setParameter("name", s)
-                .getSingleResult();
+    public PlaceEmployee getEmployeeByEmail(String email) {
+        List<PlaceEmployee> employees = em.createQuery("SELECT e FROM PlaceEmployee e WHERE e.email =:email",
+                PlaceEmployee.class)
+                .setParameter("email", email)
+                .getResultList();
+        return employees.isEmpty() ? null : employees.get(0);
     }
 
     @Override
     public PlaceOwner getOwnerByEmail(String s) {
-        PlaceOwner owner =  em.createQuery("SELECT e FROM PlaceOwner e WHERE e.email=:e",PlaceOwner.class)
+        List<PlaceOwner> owners = em.createQuery("SELECT e FROM PlaceOwner e WHERE e.email=:e", PlaceOwner.class)
                 .setParameter("e", s)
-                .getSingleResult();
-        return owner;
+                .getResultList();
+        return owners.isEmpty() ? null : owners.get(0);
     }
 
     @Override
@@ -84,8 +89,8 @@ public class AuthoriztionDaoImpl extends DBBean implements AuthorizationDAO {
 
     @Override
     public OwnerVerificationToken findOwnerToken(String token) {
-        return em.createQuery("SELECT e FROM OwnerVerificationToken e WHERE e.token=:token",OwnerVerificationToken.class)
-                .setParameter("token",token)
+        return em.createQuery("SELECT e FROM OwnerVerificationToken e WHERE e.token=:token", OwnerVerificationToken.class)
+                .setParameter("token", token)
                 .getSingleResult();
 
     }

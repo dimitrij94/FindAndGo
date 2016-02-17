@@ -54,4 +54,18 @@ public class OwnerDaoImpl extends DBBean implements OwnerDAO{
         return owner;
     }
 
+    @Override
+    @Transactional
+    public void deleteOwner(PlaceOwner ownerById) {
+        em.remove(ownerById);
+        em.flush();
+    }
+
+    @Override
+    @Transactional
+    public void updateOwner(PlaceOwner owner) {
+        em.merge(owner);
+        em.flush();
+    }
+
 }

@@ -10,6 +10,7 @@ import java.util.Date;
  * Created by Dmitrij on 08.02.2016.
  */
 @Entity
+@Table(name="owner_verification_token")
 public class OwnerVerificationToken {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

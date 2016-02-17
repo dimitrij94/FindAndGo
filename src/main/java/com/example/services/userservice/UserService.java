@@ -6,6 +6,7 @@ import com.example.domain.users.PlaceUserPhoto;
 import com.example.pojo.dto.UserDTO;
 import com.example.pojo.dto.UserPlaceOrdersDTO;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -38,4 +39,7 @@ public interface UserService {
     ResponseEntity<Void> newUser(UserDTO user, HttpServletRequest request, UriComponentsBuilder ucBuilder);
 
     PlaceUserPhoto getUserPhotoByName(String name, long id);
+
+    @PreAuthorize("#id==principal.id")
+    PlaceUser getUser(long id);
 }

@@ -130,13 +130,30 @@ public class PlaceDaoImpl extends DBBean implements PlaceDAO {
 
     @Override
     @Transactional
-    public Place addNewPlace(Place place, PlaceOwner owner) {
+    public Place addNewPlace(Place place, PlaceOwner owner, List<PlaceSchedule> placeSchedules) {
+        for(PlaceSchedule schedle : placeSchedules){
+            em.persist(schedle);
+        }
         place.setPlaceOwner(owner);
         em.persist(place);
         owner.setPlaces(setAsList(owner.getPlaces(), place));
         em.merge(owner);
         em.flush();
         return place;
+    }
+
+    @Override
+    @Transactional
+    public void deletePlace(Place place) {
+        em.remove(place);
+        em.flush();
+    }
+
+    @Override
+    @Transactional
+    public void updatePlace(Place place) {
+        em.merge(place);
+        em.flush();
     }
 
 }

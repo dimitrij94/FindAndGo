@@ -20,4 +20,8 @@ public interface OwnerDAO {
     long countOwnersWithEmail(String email);
 
     PlaceOwner addNewOwner(PlaceOwner owner);
+
+    void deleteOwner(PlaceOwner ownerById);
+
+    void updateOwner(PlaceOwner owner);
 }

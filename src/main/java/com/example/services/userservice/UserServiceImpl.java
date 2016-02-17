@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
     public PlaceUser placeUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken))
-            return aDao.getUserByEmail(authentication.getName());
+            return (PlaceUser) aDao.getUserByEmail(authentication.getName());
         else return null;
     }
 
@@ -118,6 +118,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public PlaceUserPhoto getUserPhotoByName(String name, long id) {
         return null;
+    }
+
+    @Override
+    public PlaceUser getUser(long id) {
+        return userDao.getUserById(id);
     }
 
     private HttpStatus addPhoto(CommonsMultipartFile image, PlaceUser user) {

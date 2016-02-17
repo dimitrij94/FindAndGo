@@ -25,7 +25,6 @@ public abstract class DBBean {
     @PersistenceContext
     protected EntityManager em;
 
-
     protected List<PlaceUserPhoto> setUserPhotosAsList(List<PlaceUserPhoto> list,
                                                      PlaceUserPhoto photo) {
         if (list == null) {

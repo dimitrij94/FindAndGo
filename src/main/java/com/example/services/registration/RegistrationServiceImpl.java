@@ -37,7 +37,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public PlaceUser resendRegistrationToken(String email) {
-        PlaceUser user = authorizationDAO.getUserByEmail(email.toLowerCase());
+        PlaceUser user = (PlaceUser) authorizationDAO.getUserByEmail(email.toLowerCase());
         authorizationDAO.deleteToken(user.getToken());
         saveRegistrationToken(user);
         return user;

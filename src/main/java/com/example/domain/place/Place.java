@@ -71,6 +71,7 @@ public class Place implements PhotoCotainable {
     public Place(PlaceDTO place) {
         this.placeName = place.getName();
         this.placeDescription = place.getDescription();
+        this.speciality = PlaceSpeciality.getInstance(place.getSpeciality());
     }
 
     public long getId() {
@@ -207,4 +208,10 @@ public class Place implements PhotoCotainable {
     }
 
 
+    public Place updateValues(PlaceDTO place) {
+        if (place.getName() != null) this.placeName = place.getName();
+        if (place.getDescription() != null) this.placeDescription = place.getDescription();
+        if (place.getSpeciality() != null) this.speciality = PlaceSpeciality.getInstance(place.getSpeciality());
+        return this;
+    }
 }

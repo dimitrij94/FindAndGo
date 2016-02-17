@@ -102,4 +102,14 @@ public class PlaceOwner implements Authenticational {
     public void setToken(OwnerVerificationToken token) {
         this.token = token;
     }
+
+    public PlaceOwner updateValues(OwnerDTO ownerDTO) {
+        if (ownerDTO.getEmail() != null)
+            this.email = ownerDTO.getEmail();
+        if (ownerDTO.getName() != null)
+            this.name = ownerDTO.getName();
+        if (ownerDTO.getPassword() != null)
+            this.password = ownerDTO.getPassword();
+        return this;
+    }
 }
