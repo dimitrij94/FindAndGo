@@ -38,11 +38,11 @@ public class ScheduleValidator implements Validator {
         String dayName = schedule.getName();
         if (dayName == null || dayName.equals("")) errors.rejectValue("name", requiredError);
 
-        if (schedule.getDayNum() == 0) errors.rejectValue("dayNum", requiredError);
+        if (schedule.getDayOfTheWeekNum() == 0) errors.rejectValue("dayNum", requiredError);
 
         if (errors.hasErrors()) return;
 
-        if (schedule.getDayNum() > 7 || schedule.getDayNum() < 1)
+        if (schedule.getDayOfTheWeekNum() > 7 || schedule.getDayOfTheWeekNum() < 1)
             errors.rejectValue("dayNum", invalidError, "Day number is invalid");
 
         try {

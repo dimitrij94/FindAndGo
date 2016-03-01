@@ -1,20 +1,21 @@
 package com.example.controllers.rest;
 
-import com.example.dao.place.PlaceDAO;
-import com.example.domain.place.Place;
+import com.example.graph.place.Place;
+import com.example.graph_repositories.place.PlaceRepository;
+import com.example.neo_services.place.PlaceService;
+import com.example.pojo.dto.PhotoDTO;
 import com.example.pojo.dto.PlaceDTO;
-import com.example.services.placeservice.PlaceService;
+import com.example.validators.PhotoValidator;
 import com.example.validators.PlaceFormValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Dmitrij on 21.01.2016.
@@ -23,14 +24,19 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping("/place")
 public class PlaceRestController {
 
-    @Autowired
-    PlaceService service;
-
-    @Autowired
+    PlaceRepository placeRepository;
+    PlaceService placeService;
     PlaceFormValidator validator;
+    PhotoValidator photoValidator;
 
     @Autowired
-    PlaceDAO dao;
+    public PlaceRestController(PlaceRepository placeRepository,
+                               PlaceService placeService,
+                               PlaceFormValidator validator) {
+        this.placeRepository = placeRepository;
+        this.placeService = placeService;
+        this.validator = validator;
+    }
 
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -38,46 +44,43 @@ public class PlaceRestController {
                                              BindingResult errors) {
         validator.validate(place, errors);
         if (!errors.hasErrors()) {
-            return new ResponseEntity<>(service.newPlace(place), HttpStatus.OK);
+            return ResponseEntity.ok()
+                    .eTag(place.getName())
+                    .cacheControl(CacheControl.maxAge(1, TimeUnit.DAYS))
+                    .body(placeService.newPlace(place));
         } else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Place> getPlace(@PathVariable("id") long id) {
-        return new ResponseEntity<>(service.getPlace(id), HttpStatus.OK);
+
+    @RequestMapping(value = "/{name}", method = RequestMethod.GET)
+    public ResponseEntity<Place> getPlace(@PathVariable("name") String name) {
+        return new ResponseEntity<>(placeRepository.findByName(name), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Void> updatePlace(@PathVariable("id") long id,
-                                            PlaceDTO newPlace, BindingResult errors) {
-        validator.validate(newPlace, errors);
-        if (!errors.hasErrors()) {
-            Place place = dao.getPlaceById(id);
-            place.updateValues(newPlace);
-            service.updatePlace(place);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Void> deletePlace(@PathVariable("id") long id) {
-        Place place = dao.getPlaceById(id);
-        service.deletePlace(place);
+    @RequestMapping(value = "/{name}", method = RequestMethod.DELETE)
+    public ResponseEntity<Void> deletePlace(@PathVariable("name") String name) {
+        Place place = placeRepository.findByName(name);
+        placeService.deletePlace(place);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/{id}/photo", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> createPlacePhoto(@PathVariable("id") long id,
-                                                 MultipartFile file,
-                                                 UriComponentsBuilder builder) {
+    @RequestMapping(value = "/{placeName}/photo", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> addPlacePhoto(@PathVariable("placeName") String placeName,
+                                              MultipartFile file,
+                                              UriComponentsBuilder builder,
+                                              BindingResult result) {
         if (!file.isEmpty()) {
             CommonsMultipartFile photo = (CommonsMultipartFile) file;
-            service.addPhoto(photo, id);
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(builder.path("/{id}/photo/{name}").buildAndExpand(id, "main").toUri());
-            return new ResponseEntity<>(headers, HttpStatus.OK);
-        } else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            PhotoDTO photoDTO = new PhotoDTO(photo);
+            photoValidator.validate(photoDTO, result);
+            if (!result.hasErrors()) {
+                placeService.addPhoto(photoDTO, placeName);
+                HttpHeaders headers = new HttpHeaders();
+                headers.setLocation(builder.path("/{placeName}/photo/{name}").buildAndExpand(placeName, "main").toUri());
+                return new ResponseEntity<>(headers, HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

@@ -1,6 +1,6 @@
 package com.example.pojo.dto;
 
-import com.example.domain.users.PlaceUser;
+import com.example.graph.user.PlaceUser;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -38,8 +38,7 @@ public class UserDTO {
     public UserDTO(PlaceUser user) {
         this.userEmail = user.getEmail();
         this.userName = user.getUserName();
-        this.name = user.getName();
-        this.sname = user.getSname();
+        this.name = user.getUserName();
     }
 
     public UserDTO(MultipartHttpServletRequest request) {

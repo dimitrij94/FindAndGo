@@ -1,7 +1,7 @@
 package com.example.pojo.dto;
 
-import com.example.domain.UserOrders;
-import com.example.domain.place.Place;
+import com.example.graph.PlaceUserOrder;
+import com.example.graph.place.Place;
 
 import java.util.List;
 
@@ -10,9 +10,7 @@ import java.util.List;
  */
 public class UserPlaceOrdersDTO {
     Place place;
-    List<UserOrders> userUserOrderses;
-
-
+    List<PlaceUserOrder> userUserOrderses;
 
     public Place getPlace() {
         return place;
@@ -22,11 +20,11 @@ public class UserPlaceOrdersDTO {
         this.place = place;
     }
 
-    public List<UserOrders> getUserUserOrderses() {
+    public List<PlaceUserOrder> getUserUserOrderses() {
         return userUserOrderses;
     }
 
-    public void setUserUserOrderses(List<UserOrders> userUserOrderses) {
+    public void setUserUserOrderses(List<PlaceUserOrder> userUserOrderses) {
         this.userUserOrderses = userUserOrderses;
     }
 }

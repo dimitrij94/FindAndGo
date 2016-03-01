@@ -1,8 +1,8 @@
 package com.example.validators;
 
+import com.example.neo_services.user.UserService;
 import com.example.pojo.dto.PhotoDTO;
 import com.example.pojo.dto.UserDTO;
-import com.example.services.registration.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -18,14 +18,13 @@ import java.util.regex.Pattern;
 public class UserValidator implements Validator {
 
 
-    @Autowired
-    RegistrationService service;
+    private PhotoValidator photoValidator;
+    private UserService userService;
+
 
     @Autowired
-    PhotoValidator photoValidator;
-
-    @Autowired
-    public UserValidator(PhotoValidator photoValidator) {
+    public UserValidator(PhotoValidator photoValidator, UserService userService) {
+        this.userService = userService;
         if (photoValidator == null) {
             throw new IllegalArgumentException("The supplied [Validator] is " +
                     "required and must not be null.");
@@ -54,11 +53,11 @@ public class UserValidator implements Validator {
         if (Pattern.compile("^[a-zA-Z][a-zA-Z0-9-_\\.]{1,20}$").matcher(user.getName()).matches())
             errors.rejectValue("name", "field.invalid");
 
-        if (Pattern.compile("^(?=.*\\d)(?=.*[a-zA-Z])(?!.*\\s).*$").matcher(user.getUserPass()).matches()){
-            errors.rejectValue("pass","field.invalid");
+        if (Pattern.compile("^(?=.*\\d)(?=.*[a-zA-Z])(?!.*\\s).*$").matcher(user.getUserPass()).matches()) {
+            errors.rejectValue("pass", "field.invalid");
         }
 
-        if (!service.checkCredetials(user.getUserEmail(), user.getUserName()))
+        if (!userService.checkCredetials(user.getUserEmail(), user.getUserName()))
             errors.reject("credentials.not.unique", "Такий логін вже зайнятий");
 
         errors.pushNestedPath("photo");

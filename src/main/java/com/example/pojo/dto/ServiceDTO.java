@@ -9,6 +9,7 @@ public class ServiceDTO {
     long menuId;
     int serviceHours;
     int serviceMinutes;
+    private String name;
 
     public String getServiceDescription() {
         return serviceDescription;
@@ -48,5 +49,13 @@ public class ServiceDTO {
 
     public void setServiceMinutes(int serviceMinutes) {
         this.serviceMinutes = serviceMinutes;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

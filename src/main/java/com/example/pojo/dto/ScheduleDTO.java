@@ -8,7 +8,7 @@ public class ScheduleDTO {
 
     private ScheduleTime open;
     private ScheduleTime closes;
-    private int dayNum;
+    private int dayOfTheWeekNum;
     private String name;
     private boolean working;
 
@@ -29,12 +29,12 @@ public class ScheduleDTO {
         this.closes = closes;
     }
 
-    public int getDayNum() {
-        return dayNum;
+    public int getDayOfTheWeekNum() {
+        return dayOfTheWeekNum;
     }
 
-    public void setDayNum(int dayNum) {
-        this.dayNum = dayNum;
+    public void setDayOfTheWeekNum(int dayOfTheWeekNum) {
+        this.dayOfTheWeekNum = dayOfTheWeekNum;
     }
 
     public String getName() {

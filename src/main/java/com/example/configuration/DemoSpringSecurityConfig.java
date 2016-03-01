@@ -2,7 +2,7 @@ package com.example.configuration;
 
 import com.example.filters.CsrfParamToHeaderFilter;
 import com.example.handlers.MySimpleUrlAuthenticationSuccessHendler;
-import com.example.services.authentication.MyUserDetailService;
+import com.example.neo_services.authentication.MyUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,7 +42,8 @@ public class DemoSpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.httpBasic()
 
-                .and().sessionManagement()
+                .and()
+                .sessionManagement()
                 .maximumSessions(1).and()
                 .sessionFixation().changeSessionId()
 

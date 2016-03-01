@@ -2,7 +2,6 @@ package com.example.validators;
 
 import com.example.pojo.dto.MenuDTO;
 import com.example.pojo.dto.PhotoDTO;
-import com.example.services.imageservice.ImageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

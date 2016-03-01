@@ -11,6 +11,7 @@ public class MenuDTO {
     private PhotoDTO photo;
     private int hours;
     private int minutes;
+    private int durationMinutes;
 
     public String getName() {
         return name;
@@ -58,5 +59,13 @@ public class MenuDTO {
 
     public void setMinutes(int minutes) {
         this.minutes = minutes;
+    }
+
+    public int getDurationMinutes() {
+        return durationMinutes;
+    }
+
+    public void setDurationMinutes(int durationMinutes) {
+        this.durationMinutes = durationMinutes;
     }
 }

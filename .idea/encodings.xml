@@ -2,18 +2,10 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/com/example/dao/DBBean.java" charset="windows-1251" />
-    <file url="file://$PROJECT_DIR$/src/main/java/com/example/domain" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/example/handlers/MySimpleUrlAuthenticationSuccessHendler.java" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/example/interfaces/Authenticational.java" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/example/json_views/UserViews.java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/src/main/java/com/example/services/authentication/user/UserDetailsServiceImpl.java" charset="windows-1251" />
-    <file url="file://$PROJECT_DIR$/src/main/java/com/example/services/registration/RegistrationService.java" charset="windows-1251" />
-    <file url="file://$PROJECT_DIR$/src/main/java/com/example/services/registration/RegistrationServiceImpl.java" charset="windows-1251" />
-    <file url="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/pages" charset="windows-1251" />
-    <file url="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/test-pages/place_registration.html" charset="windows-1251" />
-    <file url="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/test-pages/user_profile.html" charset="windows-1251" />
-    <file url="file://$PROJECT_DIR$/src/main/webapp/static/app/index.html" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/templates/index.html" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/src/main/webapp/static/images/1381543232_party-girls.jpg" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/src/main/webapp/static/images/background.gif" charset="windows-1251" />
     <file url="PROJECT" charset="UTF-8" />

@@ -1,6 +1,6 @@
 package com.example.validators;
 
-import com.example.dao.place.PlaceDAO;
+import com.example.graph_repositories.place.PlaceRepository;
 import com.example.pojo.dto.PlaceDTO;
 import com.example.pojo.dto.ScheduleDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +19,12 @@ import java.util.regex.Pattern;
 @Component
 public class PlaceFormValidator implements Validator {
 
-    @Autowired
-    PlaceDAO dao;
 
     @Autowired
     @Qualifier("usernamePattern")
     Pattern usernamePattern;
+    @Autowired
+    PlaceRepository placeRepository;
 
     private final ScheduleValidator scheduleValidator;
 
@@ -84,7 +84,7 @@ public class PlaceFormValidator implements Validator {
             }
         }
 
-        if (!(dao.countPlacesWithName(place.getName()) == 0l)) errors.rejectValue("name", "field.is.taken");
+        if (!(placeRepository.countPlacesWithName(place.getName()) == 0l)) errors.rejectValue("name", "field.is.taken");
     }
 
 }

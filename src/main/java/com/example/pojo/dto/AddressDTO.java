@@ -1,7 +1,5 @@
 package com.example.pojo.dto;
 
-import com.example.domain.users.UserAddress;
-
 /**
  * Created by Dmitrij on 17.10.2015.
  */
@@ -15,9 +13,9 @@ public class AddressDTO {
     private String town;
     private String district;
 
-    public AddressDTO(UserAddress address) {
-        this.latitude=Float.valueOf(address.getLatitude());
-        this.longitude=Float.valueOf(address.getLongitude());
+    public AddressDTO(AddressDTO address) {
+        this.latitude= address.getLatitude();
+        this.longitude= address.getLongitude();
     }
 
     public float getLongitude() {

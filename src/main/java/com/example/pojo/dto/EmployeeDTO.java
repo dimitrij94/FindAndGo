@@ -1,5 +1,6 @@
 package com.example.pojo.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,13 +9,18 @@ import java.util.List;
 public class EmployeeDTO {
     String email;
     String password;
+    String userName;
     String name;
     String secondName;
     String description;
+    int age;
     int startAt;
     int endAt;
     List<Long>menuList;
     PhotoDTO photo;
+    private String sex;
+    private List<ScheduleDTO> schedules = new ArrayList<>(7);
+
 
     public String getEmail() {
         return email;
@@ -86,5 +92,37 @@ public class EmployeeDTO {
 
     public void setPhoto(PhotoDTO photo) {
         this.photo = photo;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public List<ScheduleDTO> getSchedules() {
+        return schedules;
+    }
+
+    public void setSchedules(List<ScheduleDTO> schedules) {
+        this.schedules = schedules;
     }
 }
