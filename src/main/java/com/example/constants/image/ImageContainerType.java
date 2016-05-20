@@ -7,10 +7,10 @@ import com.example.constants.image.sizes.*;
  */
 public enum ImageContainerType {
 
-    PLACE_USER(UserImageSizes.values(),"/users"),
-    PLACE(PlaceImageSizes.values(),"/places"),
-    PLACE_EMPLOYEE(EmployeeImageSizes.values(),"/employees"),
-    PLACE_MENU(MenuImageSizes.values(),"/menus");
+    PLACE_USER(UserImageSizes.values(),"//users"),
+    PLACE(PlaceImageSizes.values(),"//places"),
+    PLACE_EMPLOYEE(EmployeeImageSizes.values(),"//employees"),
+    PLACE_MENU(MenuImageSizes.values(),"//menus");
 
     private ImageSize[] sizes;
     private String location;

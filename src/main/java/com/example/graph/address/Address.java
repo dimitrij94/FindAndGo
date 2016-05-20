@@ -55,4 +55,25 @@ public class Address {
     public void setPlace(Place place) {
         this.place = place;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Address address1 = (Address) o;
+
+        if (!id.equals(address1.id)) return false;
+        if (address != null ? !address.equals(address1.address) : address1.address != null) return false;
+        return !(street != null ? !street.equals(address1.street) : address1.street != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + (address != null ? address.hashCode() : 0);
+        result = 31 * result + (street != null ? street.hashCode() : 0);
+        return result;
+    }
 }

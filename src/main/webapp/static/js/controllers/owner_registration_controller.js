@@ -32,8 +32,8 @@ angular.module("OwnerRegistrationController", ["OwnerFactory", "DomainService", 
             function updateBreadcrumbs() {
                 $scope.$applyAsync(function () {
                     breadcrumbsService.updateBreadcrumbs(
-                        [{title: "Home", link: "KeyStyle.home"},
-                            {title: "New owner", link: "KeyStyle.home.owner.registration"}]);
+                        [{title: "Home", link: "KeyStyle"},
+                            {title: "New owner", link: "KeyStyle.owner.registration"}]);
                 });
             }
         }]);

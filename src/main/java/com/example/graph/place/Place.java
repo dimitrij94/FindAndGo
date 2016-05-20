@@ -7,7 +7,7 @@ import com.example.graph.photos.PlacePhoto;
 import com.example.graph.schedules.Schedule;
 import com.example.graph.service.PlaceMenuService;
 import com.example.graph.user.PlaceUser;
-import com.example.interfaces.PhotoCotainable;
+import com.example.interfaces.PhotoContainable;
 import com.example.pojo.dto.PlaceDTO;
 import org.neo4j.graphdb.Direction;
 import org.springframework.data.neo4j.annotation.GraphId;
@@ -18,7 +18,7 @@ import org.springframework.data.neo4j.annotation.RelatedTo;
 import java.util.Set;
 
 @NodeEntity
-public class Place implements PhotoCotainable {
+public class Place implements PhotoContainable {
 
     public final static String PHOTO = "PHOTO";
     public final static String HIRES = "HIRES";

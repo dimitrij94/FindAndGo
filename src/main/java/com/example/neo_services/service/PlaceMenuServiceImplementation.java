@@ -56,7 +56,7 @@ public class PlaceMenuServiceImplementation implements MenuService {
 
     public void savePlaceMenuServicePhoto(PhotoDTO photoDTO, String placeMenuServiceName) throws IOException, BadHttpRequest {
         PlaceMenuService menuService = placeMenuServiceRepository.findByName(placeMenuServiceName);
-        imageService.savePlaceMenuServicePhoto(photoDTO, menuService);
+        imageService.savePhoto(photoDTO, menuService);
     }
 
     @Override

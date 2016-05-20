@@ -14,9 +14,16 @@ public class PlaceUserPhoto extends Photo{
     @RelatedTo(type = "PHOTO", direction = Direction.INCOMING)
     PlaceUser user;
 
-    public PlaceUserPhoto(int width, int height) {
+    public PlaceUserPhoto(int width, int height, String name) {
         this.width = width;
         this.heigth = height;
+        setName(name);
+    }
+
+
+    public PlaceUserPhoto user(PlaceUser user){
+        this.user = user;
+        return this;
     }
 
     public PlaceUser getUser() {

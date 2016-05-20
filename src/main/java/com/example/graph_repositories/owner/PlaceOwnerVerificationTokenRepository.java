@@ -1,6 +1,6 @@
 package com.example.graph_repositories.owner;
 
-import com.example.graph.owner.PlaceOwnerVerificationToken;
+import com.example.graph.verification_tokens.PlaceOwnerVerificationToken;
 import org.springframework.data.repository.CrudRepository;
 
 /**

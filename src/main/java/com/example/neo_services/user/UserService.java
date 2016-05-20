@@ -9,8 +9,9 @@ import com.example.pojo.dto.UserDTO;
 /**
  * Created by Dmitrij on 21.02.2016.
  */
-public interface UserService  {
-    PlaceUser placeUser();
+public interface UserService {
+
+    PlaceUser find();
 
     void addMembership(String name);
 
@@ -18,13 +19,13 @@ public interface UserService  {
 
     void newUserComment(String comment, int rating, PlaceUserOrder order);
 
-    PlaceUser newUser(UserDTO userDTO);
+    PlaceUser create(UserDTO userDTO);
 
-    PlaceUser placeUser(String name);
+    PlaceUser find(String name);
 
     void savePhoto(String userName, PhotoDTO photoDTO);
 
     boolean confirmToken(String name, String token);
 
-    boolean checkCredetials(String userEmail, String userName);
+    boolean isUsersWithThisCredentialsExist(String userEmail, String userName);
 }

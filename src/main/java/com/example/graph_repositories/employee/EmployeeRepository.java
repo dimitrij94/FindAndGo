@@ -1,6 +1,7 @@
 package com.example.graph_repositories.employee;
 
 import com.example.graph.employee.PlaceEmployee;
+import com.example.graph.place.Place;
 import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -9,7 +10,7 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface EmployeeRepository extends CrudRepository<PlaceEmployee, String> {
     //Create ,@QueryResult annotated, class, later
-    @Query("MATCH (place:Place{name:{placeName}})-[:HIRES]->(e:PlaceEmployee{employeeName})" +
+    @Query("MATCH (place:Place{name:{placeName}})-[:"+ Place.HIRES+"]->(e:PlaceEmployee{employeeName})" +
             "RETURN e")
     PlaceEmployee findByNameAndPlaceName(String placeName, String employeeName);
 }

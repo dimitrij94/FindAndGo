@@ -5,6 +5,7 @@ import com.example.graph.photos.PlaceEmployeePhoto;
 import com.example.graph.place.Place;
 import com.example.graph.schedules.EmployeeSchedule;
 import com.example.graph.service.PlaceMenuService;
+import com.example.graph.verification_tokens.PlaceEmployeeVerificationToken;
 import com.example.pojo.dto.EmployeeDTO;
 import org.neo4j.graphdb.Direction;
 import org.springframework.data.neo4j.annotation.NodeEntity;
@@ -22,6 +23,7 @@ public class PlaceEmployee extends Person {
     public transient static final String PHOTO = "PHOTO";
     public transient static final String SCHEDULE = "SCHEDULE";
     public transient static final String ROLE = "ROLE_EMPLOYEE";
+    public transient static final String VERIFICATION_TOKEN = "VERIFICATION_TOKEN";
 
     private String firstName;
     private String secondName;
@@ -40,6 +42,9 @@ public class PlaceEmployee extends Person {
     @RelatedTo(type = SCHEDULE, direction = Direction.OUTGOING)
     Set<EmployeeSchedule> employeeSchedules;
 
+    @RelatedTo(type = VERIFICATION_TOKEN, direction = Direction.OUTGOING)
+    PlaceEmployeeVerificationToken verificationToken;
+
     public PlaceEmployee(EmployeeDTO employeeDto) {
         setUserName(employeeDto.getUserName());
         setEmail(employeeDto.getEmail());
@@ -52,6 +57,14 @@ public class PlaceEmployee extends Person {
     @Override
     public String getAuthority() {
         return ROLE;
+    }
+
+    public PlaceEmployeeVerificationToken getVerificationToken() {
+        return verificationToken;
+    }
+
+    public void setVerificationToken(PlaceEmployeeVerificationToken verificationToken) {
+        this.verificationToken = verificationToken;
     }
 
     public String getFirstName() {
@@ -117,4 +130,5 @@ public class PlaceEmployee extends Person {
     public void setEmployeeSchedules(Set<EmployeeSchedule> employeeSchedules) {
         this.employeeSchedules = employeeSchedules;
     }
+
 }

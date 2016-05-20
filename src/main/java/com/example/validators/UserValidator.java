@@ -1,7 +1,6 @@
 package com.example.validators;
 
 import com.example.neo_services.user.UserService;
-import com.example.pojo.dto.PhotoDTO;
 import com.example.pojo.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,22 +17,13 @@ import java.util.regex.Pattern;
 public class UserValidator implements Validator {
 
 
-    private PhotoValidator photoValidator;
     private UserService userService;
-
+    private Pattern userNamePattern = Pattern.compile("^[a-zA-Z][a-zA-Z0-9-_\\.]{1,20}$");
+    private Pattern userPasswordPattern = Pattern.compile("^(?=.*\\d)(?=.*[a-zA-Z])(?!.*\\s).*$");
 
     @Autowired
-    public UserValidator(PhotoValidator photoValidator, UserService userService) {
+    public UserValidator(UserService userService) {
         this.userService = userService;
-        if (photoValidator == null) {
-            throw new IllegalArgumentException("The supplied [Validator] is " +
-                    "required and must not be null.");
-        }
-        if (!(photoValidator.supports(PhotoDTO.class))) {
-            throw new IllegalArgumentException("The supplied [Validator] must " +
-                    "support the validation of [Image] instances.");
-        }
-        this.photoValidator = photoValidator;
     }
 
     @Override
@@ -50,17 +40,16 @@ public class UserValidator implements Validator {
 
         UserDTO user = (UserDTO) target;
 
-        if (Pattern.compile("^[a-zA-Z][a-zA-Z0-9-_\\.]{1,20}$").matcher(user.getName()).matches())
+        if (!userNamePattern.matcher(user.getUserName()).matches())
             errors.rejectValue("name", "field.invalid");
 
-        if (Pattern.compile("^(?=.*\\d)(?=.*[a-zA-Z])(?!.*\\s).*$").matcher(user.getUserPass()).matches()) {
+        if (!userPasswordPattern.matcher(user.getUserPass()).matches()) {
             errors.rejectValue("pass", "field.invalid");
         }
 
-        if (!userService.checkCredetials(user.getUserEmail(), user.getUserName()))
+        if (userService.isUsersWithThisCredentialsExist(user.getUserEmail(), user.getUserName()))
             errors.reject("credentials.not.unique", "Такий логін вже зайнятий");
 
-        errors.pushNestedPath("photo");
 
     }
 }

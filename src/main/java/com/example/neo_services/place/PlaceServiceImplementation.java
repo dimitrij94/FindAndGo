@@ -3,6 +3,7 @@ package com.example.neo_services.place;
 import com.example.graph.PlaceUserOrder;
 import com.example.graph.employee.PlaceEmployee;
 import com.example.graph.owner.PlaceOwner;
+import com.example.graph.photos.PlacePhoto;
 import com.example.graph.place.Place;
 import com.example.graph.schedules.PlaceSchedule;
 import com.example.graph.schedules.Schedule;
@@ -26,6 +27,7 @@ import com.example.pojo.dto.ScheduleDTO;
 import javassist.tools.web.BadHttpRequest;
 import org.neo4j.graphdb.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.neo4j.core.GraphDatabase;
 import org.springframework.stereotype.Service;
 
@@ -50,7 +52,7 @@ public class PlaceServiceImplementation implements PlaceService {
                                       UserService userService,
                                       PlaceOwnerService ownerService,
                                       PlaceOwnerRepository ownerRepository,
-                                      ImageService imageService,
+                                      @Qualifier("placePhotoService") ImageService<PlacePhoto, Place> imageService,
                                       ScheduleRepository scheduleRepository) {
         this.userRepository = userRepository;
         this.placeRepository = placeRepository;
@@ -106,7 +108,7 @@ public class PlaceServiceImplementation implements PlaceService {
         try (Transaction tx = db.beginTx()) {
             LocalDate now = LocalDate.now();
             orderRepository.saveOrder(orderDTO.getPlaceName(),
-                    userService.placeUser().getUserName(),
+                    userService.find().getUserName(),
                     orderDTO.getPlaceEmployeeName(),
                     orderDTO.getPlaceServiceName(),
                     orderDTO.getPlaceAdditionalServicesNamesList(),
@@ -134,7 +136,7 @@ public class PlaceServiceImplementation implements PlaceService {
     public void addPhoto(PhotoDTO photo, String placeName) {
         Place place = placeRepository.findByName(placeName);
         try {
-            imageService.savePlacePhoto(photo, place);
+            imageService.savePhoto(photo, place);
         } catch (IOException | BadHttpRequest e) {
             e.printStackTrace();
         }
@@ -157,7 +159,7 @@ public class PlaceServiceImplementation implements PlaceService {
 
     @Override
     public void deletePlace(Place place) {
-        try(Transaction tx = db.beginTx()){
+        try (Transaction tx = db.beginTx()) {
             placeRepository.delete(place);
             tx.success();
         }

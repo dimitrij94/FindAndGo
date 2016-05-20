@@ -56,4 +56,23 @@ public class City {
     public void setStreets(Set<Street> streets) {
         this.streets = streets;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        City city = (City) o;
+
+        if (!id.equals(city.id)) return false;
+        return name.equals(city.name);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + name.hashCode();
+        return result;
+    }
 }

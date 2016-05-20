@@ -7,4 +7,6 @@ import org.springframework.data.repository.CrudRepository;
  * Created by Dmitrij on 25.02.2016.
  */
 public interface PlacePhotoRepository extends CrudRepository<PlacePhoto,String> {
+
+    PlacePhoto findByName(String photoName);
 }

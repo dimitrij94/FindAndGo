@@ -20,4 +20,19 @@ public class PlacePhoto extends Photo {
     public void setPlace(Place place) {
         this.place = place;
     }
+
+    public PlacePhoto place(Place place) {
+        this.place = place;
+        return this;
+    }
+
+    public PlacePhoto(int width, int height, String name, Place place) {
+        super.width = width;
+        super.heigth = height;
+        super.name = name;
+        this.place = place;
+    }
+
+    public PlacePhoto() {
+    }
 }

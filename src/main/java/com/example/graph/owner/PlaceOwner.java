@@ -2,6 +2,7 @@ package com.example.graph.owner;
 
 import com.example.graph.Person;
 import com.example.graph.place.Place;
+import com.example.graph.verification_tokens.PlaceOwnerVerificationToken;
 import com.example.pojo.dto.OwnerDTO;
 import org.neo4j.graphdb.Direction;
 import org.springframework.data.neo4j.annotation.NodeEntity;
@@ -49,4 +50,6 @@ public class PlaceOwner extends Person {
     public void setVerificationToken(PlaceOwnerVerificationToken verificationToken) {
         this.verificationToken = verificationToken;
     }
+
+
 }

@@ -1,6 +1,6 @@
 package com.example.graph_repositories.user;
 
-import com.example.graph.user.PlaceUserVerificationToken;
+import com.example.graph.verification_tokens.PlaceUserVerificationToken;
 import org.springframework.data.repository.CrudRepository;
 
 /**

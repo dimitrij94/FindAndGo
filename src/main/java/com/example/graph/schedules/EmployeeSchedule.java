@@ -13,9 +13,8 @@ public class EmployeeSchedule extends Schedule {
     @RelatedTo(type = PlaceEmployee.SCHEDULE, direction = Direction.INCOMING)
     private PlaceEmployee placeEmployee;
 
-    public EmployeeSchedule(ScheduleDTO dto, PlaceEmployee employee) {
+    public EmployeeSchedule(ScheduleDTO dto) {
         super(dto);
-        this.placeEmployee = employee;
     }
 
     public PlaceEmployee getPlaceEmployee() {

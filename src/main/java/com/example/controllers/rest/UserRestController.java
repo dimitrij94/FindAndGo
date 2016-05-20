@@ -43,26 +43,26 @@ public class UserRestController {
     @JsonView(UserJsonView.class)
     @RequestMapping(value = "/{name}", method = RequestMethod.GET)
     public ResponseEntity<PlaceUser> getUserById(@PathVariable("name") String name) {
-        return new ResponseEntity<>(userService.placeUser(name), HttpStatus.OK);
+        return new ResponseEntity<>(userService.find(name), HttpStatus.OK);
     }
 
     @JsonView(UserJsonView.class)
     @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<PlaceUser> newUser(UserDTO userDTO,
+    public ResponseEntity<PlaceUser> newUser(@RequestBody UserDTO userDTO,
                                              BindingResult errors) throws IOException {
         userValidator.validate(userDTO, errors);
         if (!errors.hasErrors()) {
-            PlaceUser user = userService.newUser(userDTO);
+            PlaceUser user = userService.create(userDTO);
             return new ResponseEntity<>(user, HttpStatus.CREATED);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
-    @RequestMapping(value = "/{name}/token", method = RequestMethod.POST)
+
+    @RequestMapping(value = "/{name}/token/{token}", method = RequestMethod.GET)
     public ResponseEntity<Void> confirmUserEmailToken(@PathVariable("name") String name,
-                                                     @RequestBody String token){
-        boolean confirmed = userService.confirmToken(name, token);
-        if(confirmed) return new ResponseEntity<>(HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.OK);
+                                                      @PathVariable("token") String token) {
+        if (userService.confirmToken(name, token)) return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/{name}/image", method = RequestMethod.POST)

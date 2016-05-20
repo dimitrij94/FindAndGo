@@ -55,4 +55,20 @@ public class OrderComment {
     public void setOrder(PlaceUserOrder order) {
         this.order = order;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OrderComment that = (OrderComment) o;
+
+        return id.equals(that.id);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

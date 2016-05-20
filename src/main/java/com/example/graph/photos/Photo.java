@@ -24,6 +24,25 @@ public class Photo  {
 
     protected int heigth;
 
+    public Photo name(String name){
+        this.name = name;
+        return this;
+    }
+    public Photo path(String path){
+        this.path= path;
+        return this;
+    }
+
+    public Photo width(int width){
+        this.width= width;
+        return this;
+    }
+    public Photo heigth(int heigth){
+        this.heigth = heigth;
+        return this;
+    }
+
+
     public Long getId() {
         return id;
     }
@@ -62,5 +81,21 @@ public class Photo  {
 
     public void setHeigth(int heigth) {
         this.heigth = heigth;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Photo photo = (Photo) o;
+
+        return id.equals(photo.id);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 }

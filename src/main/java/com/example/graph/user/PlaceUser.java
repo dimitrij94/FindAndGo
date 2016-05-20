@@ -4,6 +4,7 @@ import com.example.graph.Person;
 import com.example.graph.PlaceUserOrder;
 import com.example.graph.photos.PlaceUserPhoto;
 import com.example.graph.place.Place;
+import com.example.graph.verification_tokens.PlaceUserVerificationToken;
 import com.example.json_views.UserJsonView;
 import com.example.pojo.dto.UserDTO;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -38,10 +39,21 @@ public class PlaceUser extends Person{
     @RelatedTo(type = VERIFICATION_TOKEN, direction = Direction.OUTGOING)
     PlaceUserVerificationToken token;
 
+    public PlaceUser() {
+    }
+
     public PlaceUser(UserDTO userDTO) {
-        this.setUserName(userDTO.getName());
-        setEmail(userDTO.getUserEmail());
-        setPassword(userDTO.getUserPass());
+        super.userName = userDTO.getUserName();
+        super.email = userDTO.getUserEmail();
+    }
+
+    public PlaceUser(Long id, String userName, String email, String password, boolean enabled, String authority) {
+        setId(id);
+        setUserName(userName);
+        setEmail(email);
+        setPassword(password);
+        setEnabled(enabled);
+        setAuthority(authority);
     }
 
     public PlaceUser addMemebership(Place place) {
@@ -80,5 +92,15 @@ public class PlaceUser extends Person{
 
     public void setToken(PlaceUserVerificationToken token) {
         this.token = token;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
     }
 }

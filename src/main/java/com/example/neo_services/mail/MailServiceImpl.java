@@ -17,17 +17,18 @@ import javax.mail.internet.MimeMessage;
 @Service
 public class MailServiceImpl implements MailService {
 
-    @Autowired
     private JavaMailSender javaMailSender;
-
     public static final String domainName = "http://localhost:8080/";
 
-
+    @Autowired
+    public MailServiceImpl(JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
 
     @Override
-    public void confirmEmailMessage(Person user) {
+    public void confirmEmailMessage(Person user, String token) {
         String massageText = "Please go with the following link, to confirm your email " +
-                domainName + "/"+user.getUserName()+"/"+"/token/" +
+                "<a>" + domainName + "user/" + user.getUserName() + "/token/" + token + "</a>" +
                 " Else ,just ignore this email";
         String subject = "Please confirm your email";
         sendEmail(massageText, user.getEmail(), subject);

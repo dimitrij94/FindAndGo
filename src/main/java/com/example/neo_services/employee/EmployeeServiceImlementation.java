@@ -5,6 +5,7 @@ import com.example.graph.employee.PlaceEmployee;
 import com.example.graph.place.Place;
 import com.example.graph.schedules.EmployeeSchedule;
 import com.example.graph.timeline.DayOfTheWeek;
+import com.example.graph.verification_tokens.PlaceEmployeeVerificationToken;
 import com.example.graph_repositories.employee.EmployeeRepository;
 import com.example.graph_repositories.place.PlaceRepository;
 import com.example.graph_repositories.timeline.DayOfTheWeekRepository;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Created by Dmitrij on 28.02.2016.
@@ -46,24 +49,33 @@ public class EmployeeServiceImlementation implements EmployeeService {
 
     @Override
     public PlaceEmployee addEmployee(EmployeeDTO employeeDto, String placeName) {
-        PlaceEmployee employee;
+        PlaceEmployee employee = new PlaceEmployee(employeeDto);
+        String tokenValue = UUID.randomUUID().toString();
+        PlaceEmployeeVerificationToken verificationToken = new PlaceEmployeeVerificationToken(tokenValue);
         try (Transaction tx = db.beginTx()) {
-            employee = new PlaceEmployee(employeeDto);
             Place place = placeRepository.findByName(placeName);
             employee.setPlace(place);
-
-            Set<EmployeeSchedule> employeeSchedules = new HashSet<>(7);
-            for (ScheduleDTO dto : employeeDto.getSchedules()) {
-                EmployeeSchedule schedule = new EmployeeSchedule(dto, employee);
-                DayOfTheWeek dayOfTheWeek = dayOfTheWeekRepository.findByDayName(WeekDays.getInstace(dto.getDayOfTheWeekNum()).getFullName());
-                schedule.setDay(dayOfTheWeek);
-                employeeSchedules.add(schedule);
-            }
-            employee.setEmployeeSchedules(employeeSchedules);
+            employee.setVerificationToken(verificationToken);
+            employee.setEmployeeSchedules(createEmployeeSchedualsList(employeeDto));
             employee = employeeRepository.save(employee);
             tx.success();
         }
-        mailService.confirmEmailMessage(employee);
+        mailService.confirmEmailMessage(employee, tokenValue);
         return employee;
+    }
+
+    private Set<EmployeeSchedule> createEmployeeSchedualsList(EmployeeDTO employeeDto) {
+
+        Set<EmployeeSchedule> employeeSchedules = new HashSet<>(7);
+        employeeSchedules.addAll(employeeDto.getSchedules().stream().map(this::createSchedule).collect(Collectors.toList()));
+        return employeeSchedules;
+    }
+
+    private EmployeeSchedule createSchedule(ScheduleDTO dto) {
+        EmployeeSchedule schedule = new EmployeeSchedule(dto);
+        DayOfTheWeek dayOfTheWeek = dayOfTheWeekRepository.findByDayName(
+                WeekDays.getInstace(dto.getDayOfTheWeekNum()).getFullName());
+        schedule.setDay(dayOfTheWeek);
+        return schedule;
     }
 }

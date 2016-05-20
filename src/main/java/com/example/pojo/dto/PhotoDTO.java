@@ -1,5 +1,6 @@
 package com.example.pojo.dto;
 
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 /**
@@ -13,8 +14,8 @@ public class PhotoDTO {
 
     private CommonsMultipartFile image;
 
-    public PhotoDTO(CommonsMultipartFile image) {
-        this.image = image;
+    public PhotoDTO(MultipartFile image) {
+        this.image = (CommonsMultipartFile) image;
     }
 
     public PhotoDTO() {

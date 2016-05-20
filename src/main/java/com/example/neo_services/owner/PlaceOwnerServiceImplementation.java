@@ -1,7 +1,7 @@
 package com.example.neo_services.owner;
 
 import com.example.graph.owner.PlaceOwner;
-import com.example.graph.owner.PlaceOwnerVerificationToken;
+import com.example.graph.verification_tokens.PlaceOwnerVerificationToken;
 import com.example.graph_repositories.owner.PlaceOwnerRepository;
 import com.example.graph_repositories.owner.PlaceOwnerVerificationTokenRepository;
 import com.example.neo_services.authentication.CustomUserDetails;
@@ -15,6 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 /**
  * Created by Dmitrij on 24.02.2016.
@@ -65,18 +67,18 @@ public class PlaceOwnerServiceImplementation implements PlaceOwnerService {
 
     @Override
     public PlaceOwner newOwner(OwnerDTO ownerDTO) {
-
         PlaceOwner owner = new PlaceOwner(ownerDTO);
-        PlaceOwnerVerificationToken verificationToken = new PlaceOwnerVerificationToken();
+        String tokenValue = UUID.randomUUID().toString();
+        PlaceOwnerVerificationToken verificationToken = new PlaceOwnerVerificationToken(tokenValue);
+        owner.setPassword(passwordEncoder.encode(ownerDTO.getPassword()));
 
         try (Transaction tx = db.beginTx()) {
-            owner.setPassword(passwordEncoder.encode(ownerDTO.getPassword()));
+            owner.setVerificationToken(verificationToken);
             ownerRepository.save(owner);
-            verificationToken.setPlaceOwner(owner);
-            ownerVerificationTokenRepository.save(verificationToken);
             tx.success();
         }
-        mailService.confirmEmailMessage(owner);
+
+        mailService.confirmEmailMessage(owner, tokenValue);
         return owner;
     }
 

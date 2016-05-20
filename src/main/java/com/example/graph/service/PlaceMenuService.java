@@ -4,7 +4,7 @@ import com.example.graph.PlaceUserOrder;
 import com.example.graph.employee.PlaceEmployee;
 import com.example.graph.photos.PlaceMenuServicePhoto;
 import com.example.graph.place.Place;
-import com.example.interfaces.PhotoCotainable;
+import com.example.interfaces.PhotoContainable;
 import com.example.pojo.dto.MenuDTO;
 import org.neo4j.graphdb.Direction;
 import org.springframework.data.neo4j.annotation.GraphId;
@@ -18,7 +18,7 @@ import java.util.Set;
  * Created by Dmitrij on 20.02.2016.
  */
 @NodeEntity
-public class PlaceMenuService implements PhotoCotainable {
+public class PlaceMenuService implements PhotoContainable {
     //OUTGOING RELATIONSHIPS NAMES
     public transient static final String PHOTO = "PHOTO";
     public transient static final String CAN_INCLUDE  = "CAN_INCLUDE";

@@ -1,39 +1,8 @@
 package com.example.neo_services.image;
 
-import com.example.constants.image.ImageContainerType;
-import com.example.constants.image.sizes.ImageSize;
-import com.example.constants.image.sizes.MenuImageSizes;
-import com.example.constants.image.sizes.PlaceImageSizes;
-import com.example.constants.image.sizes.UserImageSizes;
-import com.example.graph.photos.PlaceMenuServicePhoto;
-import com.example.graph.photos.PlacePhoto;
-import com.example.graph.photos.PlaceUserPhoto;
-import com.example.graph.place.Place;
-import com.example.graph.service.PlaceMenuService;
-import com.example.graph.user.PlaceUser;
-import com.example.graph_repositories.menu.PlaceServicePhotoRepository;
-import com.example.graph_repositories.place.PlacePhotoRepository;
-import com.example.graph_repositories.user.PlaceUserPhotoRepository;
-import com.example.interfaces.PhotoCotainable;
-import com.example.neo_services.MyExecutorService;
-import com.example.pojo.dto.PhotoDTO;
-import javassist.tools.web.BadHttpRequest;
-import org.neo4j.graphdb.Transaction;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.neo4j.core.GraphDatabase;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-
-@Service
-public class ImageServiceImpl implements ImageService {
+public class ImageServiceImpl  {
+/*
+    private static String IMAGE_ROOT_LOCATION = "Z:\\home\\localhost\\KeyStyle\\images\\";
 
     @Autowired
     public ImageServiceImpl(PlacePhotoRepository placePhotoRepository,
@@ -57,24 +26,23 @@ public class ImageServiceImpl implements ImageService {
 
 
     @Override
-    public void savePlaceUserPhoto(PhotoDTO photoDTO, PlaceUser placeUser) throws IOException, BadHttpRequest {
+    public void savePhoto(PhotoDTO photoDTO, PlaceUser placeUser) throws IOException, BadHttpRequest {
         CommonsMultipartFile imageFile = photoDTO.getImage();
         BufferedImage image = ImageIO.read(imageFile.getInputStream());
+        ImageSize[] sizes = UserImageSizes.values();
 
-        List<Long> ids = new ArrayList<>();
         try (Transaction tx = db.beginTx()) {
-            PlaceUserPhoto photo = new PlaceUserPhoto(image.getWidth(), image.getHeight());
+            PlaceUserPhoto photo = new PlaceUserPhoto(image.getWidth(), image.getHeight(), ImageSize.MAIN_PHOTO_NAME);
+            photo.user(placeUser);
             placeUserPhotoRepository.save(photo);
-            ids.add(photo.getId());
 
-            for (ImageSize size : UserImageSizes.values()) {
-                photo = new PlaceUserPhoto(size.getWidth(), size.getHeight());
+            for (ImageSize size : sizes) {
+                photo = (PlaceUserPhoto) photo.width(size.getWidth()).heigth(size.getHeight()).name(size.getName());
                 placeUserPhotoRepository.save(photo);
-                ids.add(photo.getId());
             }
             tx.success();
         }
-        upload(image, placeUser, ImageContainerType.PLACE_USER, imageFile.getContentType(), ids);
+        upload(image, placeUser, ImageContainerType.PLACE_USER, imageFile.getContentType());
 
     }
 
@@ -82,62 +50,54 @@ public class ImageServiceImpl implements ImageService {
     public void savePlaceMenuServicePhoto(PhotoDTO photoDTO, PlaceMenuService service) throws IOException, BadHttpRequest {
         CommonsMultipartFile imageFile = photoDTO.getImage();
         BufferedImage image = ImageIO.read(imageFile.getInputStream());
-        List<Long> ids = new ArrayList<>();
+        PlaceMenuServicePhoto photo = new PlaceMenuServicePhoto();
+        photo.service(service).width(image.getWidth()).heigth(image.getHeight()).name(ImageSize.MAIN_PHOTO_NAME);
 
         try (Transaction tx = db.beginTx()) {
-            PlaceMenuServicePhoto photo = new PlaceMenuServicePhoto(image.getWidth(), image.getHeight());
             placeServicePhotoRepository.save(photo);
-            ids.add(photo.getId());
 
             for (ImageSize size : MenuImageSizes.values()) {
-                photo = new PlaceMenuServicePhoto(size.getWidth(), size.getHeight());
-
+                photo = (PlaceMenuServicePhoto) photo.name(size.getName()).width(size.getWidth()).heigth(size.getHeight());
                 placeServicePhotoRepository.save(photo);
-                ids.add(photo.getId());
             }
             tx.success();
         }
-        upload(image, service, ImageContainerType.PLACE_MENU, imageFile.getContentType(), ids);
+        upload(image, service, ImageContainerType.PLACE_MENU, imageFile.getContentType());
     }
 
 
     @Override
     public void savePlacePhoto(PhotoDTO photoDTO, Place place) throws IOException, BadHttpRequest {
         CommonsMultipartFile photoFile = photoDTO.getImage();
+
         BufferedImage image = ImageIO.read(photoFile.getInputStream());
+        upload(image, place, ImageContainerType.PLACE, photoFile.getContentType());
+
         PlacePhoto photo = new PlacePhoto();
-        List<Long> ids = new ArrayList<>(PlaceImageSizes.values().length);
+        photo = (PlacePhoto) photo.place(place).name(ImageSize.MAIN_PHOTO_NAME).width(image.getWidth()).heigth(image.getHeight());
 
         try (Transaction tx = db.beginTx()) {
-
+            placePhotoRepository.save(photo);
             for (ImageSize size : PlaceImageSizes.values()) {
-                photo.setPlace(place);
-                photo.setWidth(size.getWidth());
-                photo.setHeigth(size.getHeight());
+                photo = (PlacePhoto) photo.name(size.getName()).width(size.getWidth()).heigth(size.getHeight());
                 photo = placePhotoRepository.save(photo);
-                ids.add(photo.getId());
             }
             tx.success();
         }
-        upload(image, place, ImageContainerType.PLACE, photoFile.getContentType(), ids);
     }
 
     private void upload(BufferedImage image,
-                        PhotoCotainable domain,
+                        PhotoContainable domain,
                         ImageContainerType type,
-                        String contentType,
-                        List<Long> photoId) throws BadHttpRequest, IOException {
+                        String contentType) throws BadHttpRequest, IOException {
 
         ExecutorService threadPool = threadPoolContainer.getExecutor();
-        String mainPath = getImageLocation(contentType, type, domain, photoId.get(0));
+        String mainPath = getImageLocation(contentType, type, domain, ImageSize.MAIN_PHOTO_NAME);
         savePhoto(image, mainPath, contentType);
 
+        final BufferedImage finalBufferedImage = getPhoto(type, domain, ImageSize.MAIN_PHOTO_NAME, contentType);
 
-        final BufferedImage finalBufferedImage = getPhoto(type, domain, photoId.get(0));
-
-        for (int i = 1; i < photoId.size(); i++) {
-            ImageSize size = type.getSizes()[i];
-            final int finalI = i;
+        for (ImageSize size : type.getSizes()) {
             threadPool.execute(() -> {
                 BufferedImage bufferedImage = null;
                 try {
@@ -145,7 +105,7 @@ public class ImageServiceImpl implements ImageService {
                     bufferedImage = imageWidth <= size.getWidth() ?
                             finalBufferedImage :
                             scaleImage(finalBufferedImage, size);
-                    String path = getImageLocation(contentType, type, domain, photoId.get(finalI));
+                    String path = getImageLocation(contentType, type, domain, size.getName());
                     savePhoto(bufferedImage, path, contentType);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -156,9 +116,14 @@ public class ImageServiceImpl implements ImageService {
 
 
     @Override
-    public BufferedImage getPhoto(ImageContainerType type, PhotoCotainable user, long id) throws IOException {
-        File file = new File(String.join("webapp/", type.getLocation(), "/", user.getUserName(), "/"));
+    public BufferedImage getPhoto(ImageContainerType type, PhotoContainable user, String name, String contentType) throws IOException {
+        File file = new File(getImageLocation(contentType, type, user, name));
         return ImageIO.read(file);
+    }
+
+    @Override
+    public PlaceUserPhoto getPhoto(String photoName) {
+        return placeUserPhotoRepository.findByName(photoName);
     }
 
     private void savePhoto(InputStream imageInputStram, String path) {
@@ -180,9 +145,13 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
-    private String getImageLocation(String contentType, ImageContainerType type, PhotoCotainable user, long id) {
+    private String getImageLocation(String contentType, ImageContainerType type, PhotoContainable container, String name) {
         String imageType = getFileExtention(contentType);
-        return "webapp/static/images/" + type.getLocation() + "/" + user.getUserName() + "/" + id + "." + imageType;
+        return IMAGE_ROOT_LOCATION + type.getLocation() + "//" + container.getUserName() + "//" + name + "." + imageType;
+    }
+
+    private String getImageLocation(ImageContainerType type, PhotoContainable container) {
+        return IMAGE_ROOT_LOCATION + type.getLocation() + "//" + container.getUserName() + "//";
     }
 
     private String getFileExtention(String contentType) {
@@ -241,5 +210,5 @@ public class ImageServiceImpl implements ImageService {
         throw new IOException("failed to read bytes from image");
     }
 
-
+*/
 }
